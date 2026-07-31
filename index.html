@@ -28,6 +28,7 @@
         background: var(--bg-color);
         color: var(--text-light);
         overflow-x: hidden;
+        min-height: 100vh;
     }
 
     /* CABEÇALHO MODERNO NEON */
@@ -276,25 +277,39 @@
 
     .lista-eps {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
         gap: 10px;
         margin-top: 15px;
+        max-height: 250px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .lista-eps::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .lista-eps::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 4px;
     }
 
     .ep-item {
         background: var(--card-bg);
         border: 1px solid #444;
-        padding: 10px;
+        padding: 12px 10px;
         text-align: center;
         border-radius: 8px;
         font-size: 14px;
         transition: 0.3s;
+        cursor: pointer;
     }
 
     .ep-item:hover {
         background: var(--primary);
         border-color: var(--neon);
-        cursor: pointer;
+        box-shadow: 0 0 10px var(--neon);
+        font-weight: bold;
     }
 
     button.btn-voltar {
@@ -429,6 +444,4 @@
     </div>
 
     <!-- 14. The Angel Next Door Spoils Me Rotten -->
-    <div class="card" onclick="abrirAnime(this)" data-nome="The Angel Next Door" data-img="img/the-angel-next-door.jpg" data-ano="2023" data-eps="12" data-temp="1" data-genero="Romance, Slice of Life" data-nota="7.8" data-status="Em andamento" data-sinopse="Amane vive sozinho e é um desastre nas tarefas domésticas. Quando ele empresta seu guarda-chuva para Mahiru, a garota mais popular da escola que mora no apartamento vizinho, ela decide começar a cozinhar para ele." data-personagens="Amane Fujimiya, Mahiru Shiina">
-        <div class="img-wrapper"><span class="badge badge-status status-andamento">Em andamento</span><span class="badge badge-score">⭐ 7.8</span><img src="img/the-angel-next-door.jpg"></div>
-        <div class="card-info"><h3>The Ange
+    <div class="card" onclick="abrirAnime(this)" data-nome="The Angel Next Door" data-img="img/the-angel-next-door.jpg" data-ano="2023" data-eps="12" data-temp="1" data-genero="Romance, Slice of Life" data-nota="7.8" data-status="Em andamento" data-sinopse="Amane vive sozinho e é um desastre nas tarefas domésticas. Quando ele empresta seu guarda-chuva para Mahiru, a garota mais popular da esc
