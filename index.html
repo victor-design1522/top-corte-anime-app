@@ -1,179 +1,127 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>💜 Romance Anime Dublado</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<title>TOP CORTE ANIME</title>
 
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
 
 body{
-    background:#080808;
-    color:white;
+background:#0d0d0d;
+color:white;
 }
 
-/* TOPO */
-
 header{
-    background:linear-gradient(90deg,#8b00ff,#ff0080);
-    padding:20px;
-    text-align:center;
-    box-shadow:0 0 30px #ff0080;
+background:#6a00ff;
+padding:20px;
+text-align:center;
+box-shadow:0 0 20px #6a00ff;
 }
 
 header h1{
-    font-size:32px;
-    font-weight:800;
+font-size:30px;
 }
 
-header p{
-    margin-top:5px;
+.search{
+padding:20px;
 }
 
-
-/* CONTAINER */
-
-.container{
-    max-width:1400px;
-    margin:auto;
-    padding:30px;
+.search input{
+width:100%;
+padding:15px;
+border-radius:12px;
+border:none;
+background:#1c1c1c;
+color:white;
+font-size:16px;
 }
-
-
-/* TITULO */
 
 .titulo{
-    font-size:28px;
-    margin-bottom:25px;
-    color:#ff66cc;
+padding:20px;
+font-size:22px;
 }
 
-
-/* GRID DOS ANIMES */
-
-.catalogo{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fill,minmax(180px,1fr));
-
-    gap:25px;
-
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:15px;
+padding:20px;
 }
-
-
-/* CARD */
 
 .card{
-
-    background:#151515;
-    border-radius:15px;
-    overflow:hidden;
-    cursor:pointer;
-    transition:.3s;
-    border:1px solid #333;
-
+background:#1c1c1c;
+border:2px solid #6a00ff;
+border-radius:12px;
+overflow:hidden;
+cursor:pointer;
+transition:.3s;
 }
-
 
 .card:hover{
-
-    transform:translateY(-10px);
-
-    box-shadow:
-    0 0 20px #ff0080;
-
-    border-color:#ff0080;
-
+transform:scale(1.05);
 }
-
-
-/* IMAGEM */
 
 .card img{
-
-    width:100%;
-    height:260px;
-    object-fit:cover;
-
+width:100%;
+height:230px;
+object-fit:cover;
 }
 
+.card h3{
+text-align:center;
+padding:10px;
+}
 
-/* INFORMAÇÕES */
+.card p{
+text-align:center;
+font-size:14px;
+color:#ccc;
+padding-bottom:8px;
+}
+
+.card a{
+text-decoration:none;
+color:white;
+}
+
+#animePage{
+display:none;
+padding:20px;
+}
+
+.capa{
+width:220px;
+display:block;
+margin:auto;
+border-radius:15px;
+}
 
 .info{
-
-    padding:15px;
-
+background:#1c1c1c;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
 }
 
-
-.info h2{
-
-    font-size:18px;
-    color:#fff;
-
-}
-
-
-.info span{
-
-    display:block;
-    color:#bbb;
-    font-size:13px;
-    margin-top:5px;
-
-}
-
-
-/* TAG */
-
-.tag{
-
-    display:inline-block;
-
-    background:#ff0080;
-
-    padding:5px 10px;
-
-    border-radius:20px;
-
-    font-size:12px;
-
-    margin-top:10px;
-
-}
-
-
-/* MOBILE */
-
-@media(max-width:600px){
-
-.catalogo{
-
-grid-template-columns:
-repeat(2,1fr);
-
-}
-
-
-.card img{
-
-height:220px;
-
-}
-
+button{
+width:100%;
+padding:15px;
+margin-top:20px;
+background:#6a00ff;
+color:white;
+border:none;
+border-radius:10px;
+font-size:18px;
 }
 
 </style>
@@ -186,98 +134,164 @@ height:220px;
 
 <header>
 
-<h1>💜 ROMANCE ANIME</h1>
-
-<p>Catálogo completo de animes de romance dublados</p>
+<h1>🎬 TOP CORTE ANIME</h1>
+<p>📚 Informações e novidades de animes</p>
 
 </header>
 
 
 
-<div class="container">
+<div class="search">
+
+<input type="text" placeholder="Pesquisar anime...">
+
+</div>
+
 
 
 <h2 class="titulo">
-❤️ Todos os Animes de Romance
+🔥 Lista de Animes
 </h2>
 
 
-<div class="catalogo" id="catalogo">
+
+<div class="grid">
 
 
-<!-- OS ANIMES VÃO ENTRAR AQUI -->
+<!-- COPIE ESSE CARD PARA ADICIONAR OUTROS ANIMES -->
 
+<div class="card" onclick="abrirAnime()">
+
+<img src="img/capa.jpg">
+
+<h3>Nome do Anime</h3>
+
+<p>📅 Lançamento: Data</p>
+
+<p>🔥 Próximo episódio: Data</p>
+
+</div>
+
+
+<div class="card" onclick="abrirAnime()">
+
+<img src="img/capa.jpg">
+
+<h3>Nome do Anime</h3>
+
+<p>📅 Lançamento: Data</p>
+
+<p>🔥 Próximo episódio: Data</p>
 
 </div>
 
 
 </div>
+
+
+
+
+<section id="animePage">
+
+
+<h2 style="text-align:center;">
+🎬 Nome do Anime
+</h2>
+
+
+<img class="capa" src="img/capa.jpg">
+
+
+
+<div class="info">
+
+<h3>📌 Informações</h3>
+
+<br>
+
+<p>📅 Lançamento:</p>
+
+<p>📺 Temporadas:</p>
+
+<p>🎬 Episódios:</p>
+
+<p>🔥 Próximo episódio:</p>
+
+<p>🎭 Gêneros:</p>
+
+<p>⭐ Nota:</p>
+
+
+<br>
+
+<h3>📖 Sinopse</h3>
+
+<br>
+
+<p>
+Coloque aqui a história do anime.
+</p>
+
+
+<br>
+
+<h3>👥 Personagens</h3>
+
+<br>
+
+<p>
+Coloque os personagens principais aqui.
+</p>
+
+
+</div>
+
+
+
+<button onclick="voltar()">
+⬅ Voltar
+</button>
+
+
+</section>
+
 
 
 
 <script>
 
 
-const animes = [
+function abrirAnime(){
+
+document.querySelector(".grid").style.display="none";
+
+document.querySelector(".titulo").style.display="none";
+
+document.querySelector(".search").style.display="none";
+
+document.getElementById("animePage").style.display="block";
+
+window.scrollTo(0,0);
+
+}
 
 
-/* OS ANIMES VÃO SER COLOCADOS NA PARTE 2 */
 
+function voltar(){
 
-];
+document.querySelector(".grid").style.display="grid";
 
+document.querySelector(".titulo").style.display="block";
 
+document.querySelector(".search").style.display="block";
 
-const catalogo =
-document.getElementById("catalogo");
+document.getElementById("animePage").style.display="none";
 
-
-
-animes.forEach(anime=>{
-
-
-catalogo.innerHTML += `
-
-
-<div class="card">
-
-
-<img src="${anime.capa}">
-
-
-<div class="info">
-
-
-<h2>${anime.nome}</h2>
-
-
-<span>📅 ${anime.ano}</span>
-
-<span>🎬 ${anime.ep} episódios</span>
-
-<span>🎙️ ${anime.dublado}</span>
-
-
-<div class="tag">
-
-${anime.genero}
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-`;
-
-
-});
+}
 
 
 </script>
+
 
 
 </body>
