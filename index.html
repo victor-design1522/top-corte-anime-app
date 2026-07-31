@@ -2,329 +2,312 @@
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>TOP CORTE ANIME</title>
 
+
 <style>
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
 }
+
 
 body{
-background:#0d0d0d;
-color:white;
+
+    background:#080808;
+    color:white;
+
 }
+
+
+
+/* CABEÇALHO */
 
 header{
-background:#6a00ff;
-padding:20px;
-text-align:center;
-box-shadow:0 0 20px #6a00ff;
+
+    background:linear-gradient(90deg,#6a00ff,#9b00ff);
+
+    padding:25px;
+
+    text-align:center;
+
+    box-shadow:0 0 25px #6a00ff;
+
 }
+
 
 header h1{
-font-size:30px;
+
+    font-size:32px;
+
 }
+
+
+
+header p{
+
+    margin-top:8px;
+
+    color:#ddd;
+
+}
+
+
+
+
+
+/* PESQUISA */
 
 .search{
-padding:20px;
+
+    padding:20px;
+
 }
+
+
 
 .search input{
-width:100%;
-padding:15px;
-border-radius:12px;
-border:none;
-background:#1c1c1c;
-color:white;
-font-size:16px;
+
+    width:100%;
+
+    padding:16px;
+
+    border-radius:15px;
+
+    border:none;
+
+    outline:none;
+
+    background:#1c1c1c;
+
+    color:white;
+
+    font-size:16px;
+
 }
+
+
+
+
+
+/* TITULO */
 
 .titulo{
-padding:20px;
-font-size:22px;
+
+    padding:0 20px;
+
+    margin-bottom:10px;
+
+    font-size:24px;
+
 }
+
+
+
+
+
+/* GRID DOS CARDS */
 
 .grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-gap:15px;
-padding:20px;
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+
+    gap:20px;
+
+    padding:20px;
+
 }
+
+
+
+
+
+/* CARD */
 
 .card{
-background:#1c1c1c;
-border:2px solid #6a00ff;
-border-radius:12px;
-overflow:hidden;
-cursor:pointer;
-transition:.3s;
+
+    background:#151515;
+
+    border:2px solid #6a00ff;
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    transition:.3s;
+
 }
+
+
 
 .card:hover{
-transform:scale(1.05);
+
+    transform:scale(1.05);
+
+    box-shadow:0 0 20px #6a00ff;
+
 }
+
+
+
+
 
 .card img{
-width:100%;
-height:230px;
-object-fit:cover;
+
+    width:100%;
+
+    height:240px;
+
+    object-fit:cover;
+
 }
+
+
+
+
 
 .card h3{
-text-align:center;
-padding:10px;
+
+    text-align:center;
+
+    padding:12px 5px;
+
+    font-size:17px;
+
 }
+
+
+
+
 
 .card p{
-text-align:center;
-font-size:14px;
-color:#ccc;
-padding-bottom:8px;
+
+    text-align:center;
+
+    color:#ccc;
+
+    font-size:14px;
+
+    padding-bottom:8px;
+
 }
 
-.card a{
-text-decoration:none;
-color:white;
-}
+
+
+
+
+/* PAGINA DE INFORMAÇÃO */
 
 #animePage{
-display:none;
-padding:20px;
+
+    display:none;
+
+    padding:20px;
+
 }
+
+
+
+
 
 .capa{
-width:220px;
-display:block;
-margin:auto;
-border-radius:15px;
+
+    width:230px;
+
+    display:block;
+
+    margin:auto;
+
+    border-radius:15px;
+
 }
+
+
+
+
 
 .info{
-background:#1c1c1c;
-padding:20px;
-border-radius:15px;
-margin-top:20px;
+
+    background:#151515;
+
+    border:2px solid #6a00ff;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    margin-top:20px;
+
 }
 
-button{
-width:100%;
-padding:15px;
-margin-top:20px;
-background:#6a00ff;
-color:white;
-border:none;
-border-radius:10px;
-font-size:18px;
+
+
+
+
+.info h3{
+
+    margin-bottom:15px;
+
 }
+
+
+
+
+
+.info p{
+
+    margin:10px 0;
+
+    color:#ddd;
+
+}
+
+
+
+
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    margin-top:20px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#6a00ff;
+
+    color:white;
+
+    font-size:18px;
+
+    cursor:pointer;
+
+}
+
+
+
+button:hover{
+
+    background:#8500ff;
+
+}
+
 
 </style>
 
 </head>
-
-
-<body>
-
-
-<header>
-
-<h1>🎬 TOP CORTE ANIME</h1>
-<p>📚 Informações e novidades de animes</p>
-
-</header>
-
-
-
-<div class="search">
-
-<input type="text" placeholder="Pesquisar anime...">
-
-</div>
-
-
-
-<h2 class="titulo">
-🔥 Lista de Animes
-</h2>
-
-
-
-<div class="grid">
-
-
-<!-- COPIE ESSE CARD PARA ADICIONAR OUTROS ANIMES -->
-
-<div class="card" onclick="abrirAnime()">
-
-<img src="img/game.jpg" alt="Aishiteru Game">
-
-<h3>🎬 Aishiteru Game</h3>
-
-<p>📅 Lançamento: 14/04/2026</p>
-
-<p>🔥 Próximo episódio: Finalizado (12 episódios)</p>
-
-<p>📺 Temporadas: 1</p>
-
-<p>🎬 Episódios: 12</p>
-
-</div>
-  
-<<div class="card" onclick="abrirAnime()">
-
-<img src="img/tomo.jpg" alt="Tomo-chan Is a Girl!">
-
-<h3>🎬 Tomo-chan Is a Girl!</h3>
-
-<p>📅 Lançamento: 04/01/2023</p>
-
-<p>🔥 Próximo episódio: Finalizado</p>
-
-<p>📺 Temporadas: 1</p>
-
-<p>🎬 Episódios: 13</p>
-
-</div>
-
-<div class="card" onclick="abrirAnime()">
-
-<img src="img/capa.jpg">
-
-<h3>Nome do Anime</h3>
-
-<p>📅 Lançamento: Data</p>
-
-<p>🔥 Próximo episódio: Data</p>
-
-</div>
-
-<div class="card" onclick="abrirAnime()">
-
-<img src="img/capa.jpg">
-
-<h3>Nome do Anime</h3>
-
-<p>📅 Lançamento: Data</p>
-
-<p>🔥 Próximo episódio: Data</p>
-
-</div>
-
-
-</div>
-
-
-
-
-<section id="animePage">
-
-
-<h2 style="text-align:center;">
-🎬 Nome do Anime
-</h2>
-
-
-<img class="capa" src="img/capa.jpg">
-
-
-
-<div class="info">
-
-<h3>📌 Informações</h3>
-
-<br>
-
-<p>📅 Lançamento:</p>
-
-<p>📺 Temporadas:</p>
-
-<p>🎬 Episódios:</p>
-
-<p>🔥 Próximo episódio:</p>
-
-<p>🎭 Gêneros:</p>
-
-<p>⭐ Nota:</p>
-
-
-<br>
-
-<h3>📖 Sinopse</h3>
-
-<br>
-
-<p>
-Coloque aqui a história do anime.
-</p>
-
-
-<br>
-
-<h3>👥 Personagens</h3>
-
-<br>
-
-<p>
-Coloque os personagens principais aqui.
-</p>
-
-
-</div>
-
-
-
-<button onclick="voltar()">
-⬅ Voltar
-</button>
-
-
-</section>
-
-
-
-
-<script>
-
-
-function abrirAnime(){
-
-document.querySelector(".grid").style.display="none";
-
-document.querySelector(".titulo").style.display="none";
-
-document.querySelector(".search").style.display="none";
-
-document.getElementById("animePage").style.display="block";
-
-window.scrollTo(0,0);
-
-}
-
-
-
-function voltar(){
-
-document.querySelector(".grid").style.display="grid";
-
-document.querySelector(".titulo").style.display="block";
-
-document.querySelector(".search").style.display="block";
-
-document.getElementById("animePage").style.display="none";
-
-}
-
-
-</script>
-
-
-
-</body>
-
-</html>
