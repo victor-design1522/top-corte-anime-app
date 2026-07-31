@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>TOP CORTE ANIME</title>
 
 <style>
+
 *{
 margin:0;
 padding:0;
@@ -15,12 +18,12 @@ font-family:Arial,sans-serif;
 
 body{
 background:#0d0d0d;
-color:#fff;
+color:white;
 }
 
 header{
 background:#6a00ff;
-padding:18px;
+padding:20px;
 text-align:center;
 box-shadow:0 0 20px #6a00ff;
 }
@@ -36,169 +39,261 @@ padding:20px;
 .search input{
 width:100%;
 padding:15px;
-border:none;
 border-radius:12px;
-font-size:16px;
+border:none;
 background:#1c1c1c;
-color:#fff;
+color:white;
+font-size:16px;
 }
 
 .titulo{
-padding:0 20px;
-margin-bottom:15px;
+padding:20px;
 font-size:22px;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
 gap:15px;
 padding:20px;
 }
 
 .card{
 background:#1c1c1c;
+border:2px solid #6a00ff;
 border-radius:12px;
 overflow:hidden;
-transition:.3s;
 cursor:pointer;
-border:2px solid #6a00ff;
+transition:.3s;
 }
 
 .card:hover{
 transform:scale(1.05);
 }
 
-.card a{
-text-decoration:none;
-color:#fff;
-display:block;
-}
-
 .card img{
 width:100%;
-height:220px;
+height:230px;
 object-fit:cover;
 }
 
 .card h3{
-padding:10px 10px 5px;
 text-align:center;
-font-size:16px;
+padding:10px;
 }
 
 .card p{
 text-align:center;
 font-size:14px;
 color:#ccc;
-padding-bottom:6px;
+padding-bottom:8px;
 }
+
+.card a{
+text-decoration:none;
+color:white;
+}
+
+#animePage{
+display:none;
+padding:20px;
+}
+
+.capa{
+width:220px;
+display:block;
+margin:auto;
+border-radius:15px;
+}
+
+.info{
+background:#1c1c1c;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:20px;
+background:#6a00ff;
+color:white;
+border:none;
+border-radius:10px;
+font-size:18px;
+}
+
 </style>
 
 </head>
 
+
 <body>
 
+
 <header>
+
 <h1>🎬 TOP CORTE ANIME</h1>
+<p>📚 Informações e novidades de animes</p>
+
 </header>
 
+
+
 <div class="search">
+
 <input type="text" placeholder="Pesquisar anime...">
+
 </div>
 
-<h2 class="titulo">🔥 Meus Cortes</h2>
+
+
+<h2 class="titulo">
+🔥 Lista de Animes
+</h2>
+
+
 
 <div class="grid">
 
-<div class="card">
-<a href="#" onclick="abrirSolo(); return false;">
-<img src="img/solo.jpg" alt="Solo Leveling">
-<h3>Solo Leveling</h3>
-<p>📺 2 Temporadas</p>
-<p>🎬 25 Episódios</p>
-</a>
-</div>
 
-<div class="card">
-<a href="anime.html">
-<img src="img/violet.jpg" alt="Violet Evergarden">
-<h3>Violet Evergarden</h3>
-<p>📺 1 Temporada</p>
-<p>🎬 13 Episódios</p>
-</a>
-</div>
+<!-- COPIE ESSE CARD PARA ADICIONAR OUTROS ANIMES -->
 
-<div class="card">
-<a href="anime.html">
-<img src="img/seijo.jpg" alt="Seijo no Maryoku">
-<h3>Seijo no Maryoku</h3>
-<p>📺 2 Temporadas</p>
-<p>🎬 24 Episódios</p>
-</a>
-</div>
+<div class="card" onclick="abrirAnime()">
 
-<div class="card">
-<a href="anime.html">
-<img src="img/naruto.jpg" alt="Naruto">
-<h3>Naruto</h3>
-<p>📺 5 Temporadas</p>
-<p>🎬 220 Episódios</p>
-</a>
-</div>
+<img src="img/capa.jpg">
+
+<h3>Nome do Anime</h3>
+
+<p>📅 Lançamento: Data</p>
+
+<p>🔥 Próximo episódio: Data</p>
 
 </div>
-<div id="soloPage" style="display:none;padding:20px;">
 
-<h2 style="text-align:center;">🎬 Solo Leveling</h2>
 
-<img src="img/solo.jpg" style="width:220px;display:block;margin:auto;border-radius:15px;">
+<div class="card" onclick="abrirAnime()">
 
-<p style="text-align:center;margin-top:15px;">
-📺 2 Temporadas<br>
-🎬 25 Episódios
+<img src="img/capa.jpg">
+
+<h3>Nome do Anime</h3>
+
+<p>📅 Lançamento: Data</p>
+
+<p>🔥 Próximo episódio: Data</p>
+
+</div>
+
+
+</div>
+
+
+
+
+<section id="animePage">
+
+
+<h2 style="text-align:center;">
+🎬 Nome do Anime
+</h2>
+
+
+<img class="capa" src="img/capa.jpg">
+
+
+
+<div class="info">
+
+<h3>📌 Informações</h3>
+
+<br>
+
+<p>📅 Lançamento:</p>
+
+<p>📺 Temporadas:</p>
+
+<p>🎬 Episódios:</p>
+
+<p>🔥 Próximo episódio:</p>
+
+<p>🎭 Gêneros:</p>
+
+<p>⭐ Nota:</p>
+
+
+<br>
+
+<h3>📖 Sinopse</h3>
+
+<br>
+
+<p>
+Coloque aqui a história do anime.
 </p>
 
-<button onclick="assistirSolo()" style="width:100%;padding:15px;margin-top:20px;background:#6a00ff;color:white;border:none;border-radius:10px;font-size:18px;">
-▶ Episódio 1
-</button>
 
-<br><br>
+<br>
 
-<video id="videoSolo" controls style="width:100%;display:none;border-radius:12px;">
-<source src="videos/solo-ep1.mp4" type="video/mp4">
-</video>
+<h3>👥 Personagens</h3>
 
-<br><br>
+<br>
 
-<button onclick="voltarInicio()" style="width:100%;padding:15px;background:#333;color:white;border:none;border-radius:10px;">
+<p>
+Coloque os personagens principais aqui.
+</p>
+
+
+</div>
+
+
+
+<button onclick="voltar()">
 ⬅ Voltar
 </button>
 
-</div>
+
+</section>
+
+
+
 
 <script>
-function abrirSolo(){
+
+
+function abrirAnime(){
+
 document.querySelector(".grid").style.display="none";
+
 document.querySelector(".titulo").style.display="none";
+
 document.querySelector(".search").style.display="none";
-document.getElementById("soloPage").style.display="block";
+
+document.getElementById("animePage").style.display="block";
+
 window.scrollTo(0,0);
+
 }
 
-function assistirSolo(){
-const video=document.getElementById("videoSolo");
-video.style.display="block";
-video.play();
-}
 
-function voltarInicio(){
-document.getElementById("soloPage").style.display="none";
+
+function voltar(){
+
 document.querySelector(".grid").style.display="grid";
+
 document.querySelector(".titulo").style.display="block";
+
 document.querySelector(".search").style.display="block";
+
+document.getElementById("animePage").style.display="none";
+
 }
-  </script>
-  
+
+
+</script>
+
+
+
 </body>
+
 </html>
