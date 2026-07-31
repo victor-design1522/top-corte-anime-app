@@ -7,115 +7,126 @@
 
 <style>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
 
 body{
-    background:#111;
-    color:#fff;
+background:#0d0d0d;
+color:#fff;
 }
 
-.banner{
-    width:100%;
-    height:300px;
-    overflow:hidden;
+header{
+background:#6a00ff;
+padding:18px;
+text-align:center;
+box-shadow:0 0 20px #6a00ff;
 }
 
-.banner img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+header h1{
+font-size:30px;
 }
 
-.container{
-    padding:20px;
+.search{
+padding:20px;
 }
 
-h1{
-    font-size:34px;
-    margin-bottom:10px;
+.search input{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+font-size:16px;
+background:#1c1c1c;
+color:#fff;
 }
 
-.tags{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
+.titulo{
+padding:0 20px;
+margin-bottom:15px;
+font-size:22px;
 }
 
-.tag{
-    background:#1f1f1f;
-    padding:8px 15px;
-    border-radius:8px;
-    font-size:14px;
-}
-
-.descricao{
-    color:#d1d1d1;
-    line-height:1.7;
-    margin-bottom:25px;
-}
-
-.botao{
-    display:inline-block;
-    background:#00c853;
-    color:#fff;
-    text-decoration:none;
-    padding:12px 25px;
-    border-radius:10px;
-    font-weight:bold;
-}
-
-.episodios{
-    margin-top:35px;
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+gap:15px;
+padding:20px;
 }
 
 .card{
-    background:#222;
-    padding:15px;
-    border-radius:12px;
-    margin-bottom:15px;
+background:#1c1c1c;
+border-radius:12px;
+overflow:hidden;
+transition:.3s;
+cursor:pointer;
+border:2px solid #6a00ff;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;
+height:220px;
+object-fit:cover;
+}
+
+.card h3{
+padding:10px;
+text-align:center;
+font-size:16px;
 }
 </style>
 
 </head>
+
 <body>
 
-<div class="banner">
-<img src="banner.jpg" alt="Banner do Anime">
+<header>
+<h1>🎬 TOP CORTE ANIME</h1>
+</header>
+
+<div class="search">
+<input type="text" placeholder="Pesquisar anime...">
 </div>
 
-<div class="container">
+<h2 class="titulo">🔥 Meus Cortes</h2>
 
-<h1>Seijo no Maryoku wa Bannou desu</h1>
+<div class="grid">
 
-<div class="tags">
-<div class="tag">Fantasia</div>
-<div class="tag">Romance</div>
-<div class="tag">Isekai</div>
-<div class="tag">2023</div>
+<div class="card">
+<a href="anime.html">
+<img src="img/solo.jpg">
+<h3>Solo Leveling</h3>
+</a>
 </div>
 
-<p class="descricao">
-Após ser invocada para outro mundo, uma jovem descobre um poder raro capaz de criar poções sagradas e curar qualquer doença. Entre aventuras, magia e romance, ela conquista o respeito de todos enquanto busca uma vida tranquila.
-</p>
+<div class="card">
+<a href="anime.html">
+<img src="img/violet.jpg">
+<h3>Violet Evergarden</h3>
+</a>
+</div>
 
-<a href="#" class="botao">▶ Assistir Agora</a>
+<div class="card">
+<a href="anime.html">
+<img src="img/seijo.jpg">
+<h3>Seijo no Maryoku</h3>
+</a>
+</div>
 
-<div class="episodios">
-<h2>Episódios</h2>
-
-<div class="card">Episódio 01</div>
-<div class="card">Episódio 02</div>
-<div class="card">Episódio 03</div>
-<div class="card">Episódio 04</div>
-
+<div class="card">
+<a href="anime.html">
+<img src="img/naruto.jpg">
+<h3>Naruto</h3>
+</a>
 </div>
 
 </div>
 
 </body>
-    </html>
+</html>
