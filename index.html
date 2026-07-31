@@ -148,6 +148,57 @@ padding-bottom:6px;
 </div>
 
 </div>
+<div id="soloPage" style="display:none;padding:20px;">
 
+<h2 style="text-align:center;">🎬 Solo Leveling</h2>
+
+<img src="img/solo.jpg" style="width:220px;display:block;margin:auto;border-radius:15px;">
+
+<p style="text-align:center;margin-top:15px;">
+📺 2 Temporadas<br>
+🎬 25 Episódios
+</p>
+
+<button onclick="assistirSolo()" style="width:100%;padding:15px;margin-top:20px;background:#6a00ff;color:white;border:none;border-radius:10px;font-size:18px;">
+▶ Episódio 1
+</button>
+
+<br><br>
+
+<video id="videoSolo" controls style="width:100%;display:none;border-radius:12px;">
+<source src="videos/solo-ep1.mp4" type="video/mp4">
+</video>
+
+<br><br>
+
+<button onclick="voltarInicio()" style="width:100%;padding:15px;background:#333;color:white;border:none;border-radius:10px;">
+⬅ Voltar
+</button>
+
+</div>
+
+<script>
+function abrirSolo(){
+document.querySelector(".grid").style.display="none";
+document.querySelector(".titulo").style.display="none";
+document.querySelector(".search").style.display="none";
+document.getElementById("soloPage").style.display="block";
+window.scrollTo(0,0);
+}
+
+function assistirSolo(){
+const video=document.getElementById("videoSolo");
+video.style.display="block";
+video.play();
+}
+
+function voltarInicio(){
+document.getElementById("soloPage").style.display="none";
+document.querySelector(".grid").style.display="grid";
+document.querySelector(".titulo").style.display="block";
+document.querySelector(".search").style.display="block";
+}
+  </script>
+  
 </body>
 </html>
