@@ -158,10 +158,6 @@
         color: white;
     }
 
-    .status-andamento {
-        background: #e63946;
-    }
-
     .card-info {
         padding: 15px;
         flex-grow: 1;
@@ -514,6 +510,9 @@
             btnBaixar.style.display = 'none';
         }
 
+        // Pega o nome base do anime pela imagem (ex: 'kimi-ni-todoke' de 'img/kimi-ni-todoke.jpg')
+        const baseName = ds.img.split('/').pop().split('.')[0];
+
         // Geração automática dos blocos de episódios clicáveis
         const listaEps = document.getElementById('listaEpisodios');
         listaEps.innerHTML = '';
@@ -524,17 +523,24 @@
             epDiv.className = 'ep-item';
             epDiv.textContent = `EP ${i}`;
             
-            // Evento de clique para assistir o episódio específico
+            // Evento de clique para carregar e assistir o vídeo do episódio específico
             epDiv.onclick = function() {
                 // Remove a classe ativo de todos e adiciona no clicado
                 document.querySelectorAll('.ep-item').forEach(el => el.classList.remove('ativo'));
                 epDiv.classList.add('ativo');
 
+                // Define o caminho do vídeo do episódio (Padrão: videos/nome-do-anime-ep1.mp4)
+                const videoEpPath = `videos/${baseName}-ep${i}.mp4`;
+                
+                videoElement.src = videoEpPath;
+                btnBaixar.href = videoEpPath;
+                btnBaixar.style.display = 'block';
+
                 // Atualiza o player para indicar o episódio selecionado
                 tituloPlayer.textContent = `📺 Assistindo: ${ds.nome} - Episódio ${i}`;
                 subtituloPlayer.textContent = `Você está assistindo ao EP ${i} de ${ds.eps} episódios.`;
 
-                // Rola a tela suavemente para o player de vídeo
+                // Rola a tela suavemente para o player de vídeo e dá play
                 document.getElementById('secaoVideo').scrollIntoView({ behavior: 'smooth' });
                 videoElement.play();
             };
@@ -577,4 +583,4 @@
 </script>
 
 </body>
-    </html
+    </html>
