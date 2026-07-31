@@ -1,1 +1,0 @@
-# top-corte-anime-app
