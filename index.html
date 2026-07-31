@@ -404,7 +404,7 @@
 
 <h2 class="titulo" id="tituloSecao">🔥 Catálogo de Romance</h2>
 
-<!-- CONTEINER DOS CARDS GERADOS AUTOMATICAMENTE -->
+<!-- CONTEINER DOS CARDS -->
 <div class="grid" id="listaAnimes"></div>
 
 <!-- PÁGINA DE DETALHES COMPLETA -->
@@ -454,12 +454,12 @@
 </div>
 
 <script>
-    // LISTA DE ANIMES (Com links separados para Trailer e cada Episódio do GitHub)
+    // LISTA DE ANIMES
     const catalogoAnimes = [
         {
             nome: "Kimi ni Todoke",
             img: "img/kimi-ni-todoke.jpg",
-            trailer: "videos/kimi-ni-todoke-trailer.mp4", // Coloque seu link do GitHub aqui
+            trailer: "videos/kimi-ni-todoke-trailer.mp4",
             ano: "2009",
             temp: "3",
             genero: "Romance, Escolar",
@@ -468,9 +468,9 @@
             sinopse: "Sawako Kuronuma, apelidada de Sadako por sua aparência, é incompreendida pelos colegas. Sua vida muda quando Kazehaya, o garoto mais popular, começa a conversar com ela.",
             personagens: "Sawako Kuronuma, Shota Kazehaya",
             episodios: [
-                "videos/kimi-ep1.mp4", // Link exato do EP 1 no GitHub
-                "videos/kimi-ep2.mp4", // Link exato do EP 2 no GitHub
-                "videos/kimi-ep3.mp4"  // Link exato do EP 3 no GitHub
+                "videos/kimi-ep1.mp4",
+                "videos/kimi-ep2.mp4",
+                "videos/kimi-ep3.mp4"
             ]
         },
         {
@@ -587,7 +587,7 @@
         }
     ];
 
-    // CARREGA OS CARDS NA TELA AUTOMATICAMENTE
+    // FUNÇÃO QUE RENDERIZA OS CARDS (EXECUTADA IMEDIATAMENTE)
     function renderizarCatalogo() {
         const grid = document.getElementById('listaAnimes');
         grid.innerHTML = '';
@@ -634,13 +634,11 @@
         const tituloPlayer = document.getElementById('tituloPlayer');
         const subtituloPlayer = document.getElementById('subtituloPlayer');
 
-        // Configura o Trailer inicial
         tituloPlayer.textContent = `🎬 Reproduzindo: Trailer de ${anime.nome}`;
         subtituloPlayer.textContent = "Clique em qualquer episódio abaixo para assistir:";
         videoElement.src = anime.trailer;
         btnBaixar.href = anime.trailer;
 
-        // Gera os botões dos episódios com links individuais
         const listaEps = document.getElementById('listaEpisodios');
         listaEps.innerHTML = '';
 
@@ -650,4 +648,11 @@
             epDiv.className = 'ep-item';
             epDiv.textContent = `EP ${epNum}`;
             
-            epDiv.onclick
+            epDiv.onclick = function() {
+                document.querySelectorAll('.ep-item').forEach(el => el.classList.remove('ativo'));
+                epDiv.classList.add('ativo');
+
+                videoElement.src = linkEp;
+                btnBaixar.href = linkEp;
+
+                tituloPlayer.textContent = `📺 Assistind
