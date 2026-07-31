@@ -351,6 +351,13 @@
         font-weight: bold;
     }
 
+    .ep-item.ativo {
+        background: var(--primary);
+        border-color: var(--neon);
+        box-shadow: 0 0 12px var(--neon);
+        font-weight: bold;
+    }
+
     button.btn-voltar {
         width: 100%;
         padding: 18px;
@@ -392,7 +399,7 @@
 
 <header>
     <h1>🎬 TOP CORTE ANIME</h1>
-    <p>Encontre o anime e baixe os melhores cortes e trailers!</p>
+    <p>Encontre o anime, assista aos episódios e baixe os melhores cortes!</p>
 </header>
 
 <div class="search">
@@ -401,7 +408,7 @@
 
 <h2 class="titulo" id="tituloSecao">🔥 Catálogo de Romance</h2>
 
-<!-- CONTEINER PRINCIPAL DOS CARDS (Adicionado o data-video em cada card) -->
+<!-- CONTEINER PRINCIPAL DOS CARDS -->
 <div class="grid" id="listaAnimes">
 
     <!-- 1. Kimi ni Todoke -->
@@ -421,8 +428,6 @@
         <div class="img-wrapper"><span class="badge badge-status">Finalizado</span><span class="badge badge-score">⭐ 8.1</span><img src="img/toradora.jpg"></div>
         <div class="card-info"><h3>Toradora!</h3><div class="detalhes-rapidos"><p>Ano: <span>2008</span> | Temp: <span>1</span></p><p>Episódios: <span>25</span></p></div></div>
     </div>
-
-    <!-- Demais cards continuam seguindo o mesmo padrão... -->
 
 </div>
 
@@ -454,18 +459,18 @@
         </div>
     </div>
 
-    <!-- SEÇÃO DE VÍDEO / CORTE / TRAILER -->
-    <div class="video-box">
-        <h3>🎬 Corte / Trailer em Vídeo</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 5px;">Assista ou baixe o vídeo divulgado no Instagram:</p>
+    <!-- SEÇÃO DE VÍDEO / CORTE / TRAILER / EPISÓDIOS -->
+    <div class="video-box" id="secaoVideo">
+        <h3 id="tituloPlayer">🎬 Reproduzindo: Corte / Trailer Oficial</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 5px;" id="subtituloPlayer">Clique em qualquer episódio abaixo para assistir:</p>
         <div class="video-container">
             <video id="detalhesVideo" controls></video>
         </div>
-        <a id="btnBaixarVideo" class="btn-baixar-video" href="#" download target="_blank">⬇️ Baixar Vídeo / Trailer</a>
+        <a id="btnBaixarVideo" class="btn-baixar-video" href="#" download target="_blank">⬇️ Baixar Vídeo Atual</a>
     </div>
 
     <div class="episodios-box">
-        <h3>Lista de Episódios</h3>
+        <h3>Lista de Episódios (Clique para Assistir)</h3>
         <div id="listaEpisodios" class="lista-eps">
             <!-- Blocos gerados automaticamente via JS -->
         </div>
@@ -491,10 +496,15 @@
         document.getElementById('detalhesSinopse').textContent = ds.sinopse;
         document.getElementById('detalhesPersonagens').textContent = ds.personagens;
 
-        // Configura o Vídeo e o Botão de Download (Corte ou Trailer)
+        // Configura o Vídeo inicial (Corte / Trailer) e Botão de Download
         const videoElement = document.getElementById('detalhesVideo');
         const btnBaixar = document.getElementById('btnBaixarVideo');
-        
+        const tituloPlayer = document.getElementById('tituloPlayer');
+        const subtituloPlayer = document.getElementById('subtituloPlayer');
+
+        tituloPlayer.textContent = `🎬 Reproduzindo: Corte / Trailer de ${ds.nome}`;
+        subtituloPlayer.textContent = "Clique em qualquer episódio abaixo para assistir:";
+
         if (ds.video) {
             videoElement.src = ds.video;
             btnBaixar.href = ds.video;
@@ -504,7 +514,7 @@
             btnBaixar.style.display = 'none';
         }
 
-        // Geração automática dos blocos de episódios
+        // Geração automática dos blocos de episódios clicáveis
         const listaEps = document.getElementById('listaEpisodios');
         listaEps.innerHTML = '';
         const totalEps = parseInt(ds.eps) || 0;
@@ -513,6 +523,22 @@
             const epDiv = document.createElement('div');
             epDiv.className = 'ep-item';
             epDiv.textContent = `EP ${i}`;
+            
+            // Evento de clique para assistir o episódio específico
+            epDiv.onclick = function() {
+                // Remove a classe ativo de todos e adiciona no clicado
+                document.querySelectorAll('.ep-item').forEach(el => el.classList.remove('ativo'));
+                epDiv.classList.add('ativo');
+
+                // Atualiza o player para indicar o episódio selecionado
+                tituloPlayer.textContent = `📺 Assistindo: ${ds.nome} - Episódio ${i}`;
+                subtituloPlayer.textContent = `Você está assistindo ao EP ${i} de ${ds.eps} episódios.`;
+
+                // Rola a tela suavemente para o player de vídeo
+                document.getElementById('secaoVideo').scrollIntoView({ behavior: 'smooth' });
+                videoElement.play();
+            };
+
             listaEps.appendChild(epDiv);
         }
 
@@ -525,7 +551,6 @@
     }
 
     function voltarCatalogo() {
-        // Pausa o vídeo ao voltar para não continuar rodando o som no fundo
         const videoElement = document.getElementById('detalhesVideo');
         videoElement.pause();
         videoElement.currentTime = 0;
@@ -552,4 +577,4 @@
 </script>
 
 </body>
-    </html>
+    </html
