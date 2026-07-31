@@ -4,296 +4,698 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>TOP CORTE ANIME</title>
+<title>Catálogo de Romance | TOP CORTE ANIME</title>
 
 <style>
+    /* VARIÁVEIS DE CORES PARA FACILITAR ALTERAÇÕES */
+    :root {
+        --bg-color: #0a0a0f;
+        --card-bg: #1a1a24;
+        --primary: #8a2be2;
+        --neon: #b829ea;
+        --text-light: #e0e0e0;
+        --text-muted: #a0a0b0;
+    }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-body{
-background:#0d0d0d;
-color:white;
-}
+    body {
+        background: var(--bg-color);
+        color: var(--text-light);
+        overflow-x: hidden;
+    }
 
-header{
-background:#6a00ff;
-padding:20px;
-text-align:center;
-box-shadow:0 0 20px #6a00ff;
-}
+    /* CABEÇALHO MODERNO NEON */
+    header {
+        background: linear-gradient(135deg, #110022 0%, #2a0055 100%);
+        padding: 25px 20px;
+        text-align: center;
+        border-bottom: 2px solid var(--primary);
+        box-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
+    }
 
-header h1{
-font-size:30px;
-}
+    header h1 {
+        font-size: 32px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px var(--neon);
+    }
 
-.search{
-padding:20px;
-}
+    header p {
+        color: var(--text-muted);
+        margin-top: 5px;
+        font-size: 15px;
+    }
 
-.search input{
-width:100%;
-padding:15px;
-border-radius:12px;
-border:none;
-background:#1c1c1c;
-color:white;
-font-size:16px;
-}
+    /* BARRA DE PESQUISA */
+    .search {
+        padding: 30px 20px 10px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
 
-.titulo{
-padding:20px;
-font-size:22px;
-}
+    .search input {
+        width: 100%;
+        padding: 16px 20px;
+        border-radius: 50px;
+        border: 2px solid #333;
+        background: var(--card-bg);
+        color: white;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.3s ease;
+    }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-gap:15px;
-padding:20px;
-}
+    .search input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+    }
 
-.card{
-background:#1c1c1c;
-border:2px solid #6a00ff;
-border-radius:12px;
-overflow:hidden;
-cursor:pointer;
-transition:.3s;
-}
+    .titulo {
+        padding: 20px;
+        font-size: 24px;
+        text-align: center;
+        text-transform: uppercase;
+        color: var(--neon);
+        text-shadow: 0 0 5px rgba(184, 41, 234, 0.3);
+    }
 
-.card:hover{
-transform:scale(1.05);
-}
+    /* GRID DOS CARDS */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 25px;
+        padding: 20px 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
 
-.card img{
-width:100%;
-height:230px;
-object-fit:cover;
-}
+    /* DESIGN DOS CARDS */
+    .card {
+        background: var(--card-bg);
+        border: 1px solid #333;
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
 
-.card h3{
-text-align:center;
-padding:10px;
-}
+    .card:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: var(--primary);
+        box-shadow: 0 15px 25px rgba(138, 43, 226, 0.2);
+    }
 
-.card p{
-text-align:center;
-font-size:14px;
-color:#ccc;
-padding-bottom:8px;
-}
+    .img-wrapper {
+        position: relative;
+        width: 100%;
+        height: 300px;
+    }
 
-.card a{
-text-decoration:none;
-color:white;
-}
+    .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.4s;
+    }
 
-#animePage{
-display:none;
-padding:20px;
-}
+    .card:hover img {
+        opacity: 0.8;
+    }
 
-.capa{
-width:220px;
-display:block;
-margin:auto;
-border-radius:15px;
-}
+    /* BADGES (Nota e Status) */
+    .badge {
+        position: absolute;
+        padding: 5px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 2;
+    }
 
-.info{
-background:#1c1c1c;
-padding:20px;
-border-radius:15px;
-margin-top:20px;
-}
+    .badge-score {
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #ffd700;
+        border: 1px solid #ffd700;
+    }
 
-button{
-width:100%;
-padding:15px;
-margin-top:20px;
-background:#6a00ff;
-color:white;
-border:none;
-border-radius:10px;
-font-size:18px;
-}
+    .badge-status {
+        top: 10px;
+        left: 10px;
+        background: var(--primary);
+        color: white;
+    }
 
+    .status-andamento {
+        background: #e63946;
+    }
+
+    .card-info {
+        padding: 15px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .detalhes-rapidos {
+        font-size: 13px;
+        color: var(--text-muted);
+        text-align: center;
+        line-height: 1.6;
+    }
+
+    .detalhes-rapidos span {
+        color: var(--neon);
+        font-weight: bold;
+    }
+
+    /* PÁGINA DE DETALHES DO ANIME */
+    #animePage {
+        display: none;
+        padding: 40px 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+        animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detalhes-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 20px;
+        border: 1px solid var(--primary);
+        box-shadow: 0 0 20px rgba(138, 43, 226, 0.1);
+    }
+
+    .detalhes-capa {
+        width: 300px;
+        height: 430px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+    .detalhes-texto {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .detalhes-texto h2 {
+        font-size: 32px;
+        color: var(--neon);
+        margin-bottom: 15px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .info-item {
+        background: #252533;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .info-item strong {
+        color: var(--primary);
+        display: block;
+        margin-bottom: 3px;
+    }
+
+    .sinopse-box, .personagens-box, .episodios-box {
+        margin-top: 25px;
+        background: #252533;
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .sinopse-box h3, .personagens-box h3, .episodios-box h3 {
+        color: var(--neon);
+        margin-bottom: 10px;
+        border-bottom: 1px solid #444;
+        padding-bottom: 5px;
+    }
+
+    .sinopse-box p, .personagens-box p {
+        line-height: 1.7;
+        color: #ccc;
+    }
+
+    .lista-eps {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .ep-item {
+        background: var(--card-bg);
+        border: 1px solid #444;
+        padding: 10px;
+        text-align: center;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .ep-item:hover {
+        background: var(--primary);
+        border-color: var(--neon);
+        cursor: pointer;
+    }
+
+    button.btn-voltar {
+        width: 100%;
+        padding: 18px;
+        margin-top: 30px;
+        background: linear-gradient(90deg, var(--primary), var(--neon));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    button.btn-voltar:hover {
+        box-shadow: 0 0 20px var(--neon);
+        transform: scale(1.02);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .detalhes-header {
+            flex-direction: column;
+            align-items: center;
+        }
+        .detalhes-capa {
+            width: 100%;
+            max-width: 300px;
+        }
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
-
 </head>
-
 
 <body>
 
-
 <header>
-
-<h1>🎬 TOP CORTE ANIME</h1>
-<p>📚 Informações e novidades de animes</p>
-
+    <h1>🎬 TOP CORTE ANIME</h1>
+    <p>O melhor catálogo de animes de romance</p>
 </header>
 
-
-
 <div class="search">
+    <input type="text" id="searchInput" placeholder="Pesquisar anime..." onkeyup="pesquisarAnime()">
+</div>
 
-<input type="text" placeholder="Pesquisar anime...">
+<h2 class="titulo" id="tituloSecao">🔥 Catálogo de Romance</h2>
+
+<!-- CONTEINER PRINCIPAL DOS CARDS -->
+<div class="grid" id="listaAnimes">
+
+    <!-- ANIME 1 -->
+    <div class="card" onclick="abrirAnime(this)" 
+         data-nome="Kimi ni Todoke" 
+         data-img="img/kimi-ni-todoke.jpg" 
+         data-ano="2009" 
+         data-eps="38" 
+         data-temp="3" 
+         data-genero="Romance, Slice of Life" 
+         data-nota="8.3" 
+         data-status="Finalizado" 
+         data-sinopse="Sawako Kuronuma, apelidada de Sadako por sua aparência assustadora, é incompreendida pelos colegas. Sua vida muda quando Kazehaya, o garoto mais popular da escola, começa a conversar com ela, abrindo um novo mundo de amizades e um doce romance." 
+         data-personagens="Sawako Kuronuma, Shota Kazehaya, Ayane Yano, Chizuru Yoshida">
+        <div class="img-wrapper">
+            <span class="badge badge-status">Finalizado</span>
+            <span class="badge badge-score">⭐ 8.3</span>
+            <img src="img/kimi-ni-todoke.jpg" alt="Kimi ni Todoke">
+        </div>
+        <div class="card-info">
+            <h3>Kimi ni Todoke</h3>
+            <div class="detalhes-rapidos">
+                <p>Ano: <span>2009</span> | Temp: <span>3</span></p>
+                <p>Episódios: <span>38</span></p>
+                <p>Gênero: Romance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANIME 2 -->
+    <div class="card" onclick="abrirAnime(this)" 
+         data-nome="Horimiya" 
+         data-img="img/horimiya.jpg" 
+         data-ano="2021" 
+         data-eps="26" 
+         data-temp="2" 
+         data-genero="Romance, Comédia Escolar" 
+         data-nota="8.2" 
+         data-status="Finalizado" 
+         data-sinopse="Hori é uma aluna popular e inteligente, mas em casa é uma garota caseira que cuida do irmão. Miyamura parece um nerd sombrio na escola, mas fora dela tem piercings e tatuagens. Quando eles descobrem o segredo um do outro, um romance leve e natural surge." 
+         data-personagens="Kyoko Hori, Izumi Miyamura, Toru Ishikawa, Yuki Yoshikawa">
+        <div class="img-wrapper">
+            <span class="badge badge-status">Finalizado</span>
+            <span class="badge badge-score">⭐ 8.2</span>
+            <img src="img/horimiya.jpg" alt="Horimiya">
+        </div>
+        <div class="card-info">
+            <h3>Horimiya</h3>
+            <div class="detalhes-rapidos">
+                <p>Ano: <span>2021</span> | Temp: <span>2</span></p>
+                <p>Episódios: <span>26</span></p>
+                <p>Gênero: Romance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANIME 3 -->
+    <div class="card" onclick="abrirAnime(this)" 
+         data-nome="Toradora!" 
+         data-img="img/toradora.jpg" 
+         data-ano="2008" 
+         data-eps="25" 
+         data-temp="1" 
+         data-genero="Romance, Drama, Comédia" 
+         data-nota="8.1" 
+         data-status="Finalizado" 
+         data-sinopse="Ryuji tem cara de delinquente, mas é gentil e ama limpeza. Taiga é pequena e fofa, mas agressiva (a 'Tigresa de Bolso'). Eles descobrem que são apaixonados pelos melhores amigos um do outro e fazem um acordo para se ajudarem, mas acabam se aproximando." 
+         data-personagens="Taiga Aisaka, Ryuji Takasu, Minori Kushieda, Ami Kawashima">
+        <div class="img-wrapper">
+            <span class="badge badge-status">Finalizado</span>
+            <span class="badge badge-score">⭐ 8.1</span>
+            <img src="img/toradora.jpg" alt="Toradora!">
+        </div>
+        <div class="card-info">
+            <h3>Toradora!</h3>
+            <div class="detalhes-rapidos">
+                <p>Ano: <span>2008</span> | Temp: <span>1</span></p>
+                <p>Episódios: <span>25</span></p>
+                <p>Gênero: Romance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANIME 4 -->
+    <div class="card" onclick="abrirAnime(this)" 
+         data-nome="My Dress-Up Darling" 
+         data-img="img/my-dress-up-darling.jpg" 
+         data-ano="2022" 
+         data-eps="12" 
+         data-temp="1" 
+         data-genero="Romance, Slice of Life, Cosplay" 
+         data-nota="8.3" 
+         data-status="Em andamento" 
+         data-sinopse="Wakana Gojo é um estudante recluso que sonha em se tornar um artesão de bonecas tradicionais. Sua vida vira de cabeça para baixo quando Marin Kitagawa, a garota mais popular da escola, descobre seu talento com costura e pede para ele fazer suas roupas de cosplay." 
+         data-personagens="Marin Kitagawa, Wakana Gojo, Sajuna Inui">
+        <div class="img-wrapper">
+            <span class="badge badge-status status-andamento">Em andamento</span>
+            <span class="badge badge-score">⭐ 8.3</span>
+            <img src="img/my-dress-up-darling.jpg" alt="My Dress-Up Darling">
+        </div>
+        <div class="card-info">
+            <h3>My Dress-Up Darling</h3>
+            <div class="detalhes-rapidos">
+                <p>Ano: <span>2022</span> | Temp: <span>1</span></p>
+                <p>Episódios: <span>12</span></p>
+                <p>Gênero: Romance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANIME 5 -->
+    <div class="card" onclick="abrirAnime(this)" 
+         data-nome="Your Lie in April" 
+         data-img="img/your-lie-in-april.jpg" 
+         data-ano="2014" 
+         data-eps="22" 
+         data-temp="1" 
+         data-genero="Romance, Drama, Música" 
+         data-nota="8.6" 
+         data-status="Finalizado" 
+         data-sinopse="Kousei Arima era um prodígio do piano que perdeu a habilidade de ouvir o som do próprio instrumento após a morte de sua mãe. Sua vida monótona ganha cor novamente ao conhecer Kaori Miyazono, uma violinista excêntrica e cheia de vida que o arrasta de volta ao mundo da música." 
+         data-personagens="Kousei Arima, Kaori Miyazono, Tsubaki Sawabe, Ryouta Watari">
+        <div class="img-wrapper">
+            <span class="badge badge-status">Finalizado</span>
+            <span class="badge badge-score">⭐ 8.6</span>
+            <img src="img/your-lie-in-april.jpg" alt="Your Lie in April">
+        </div>
+        <div class="card-info">
+            <h3>Your Lie in April</h3>
+            <div class="detalhes-rapidos">
+                <p>Ano: <span>2014</span> | Temp: <span>1</span></p>
+                <p>Episódios: <span>22</span></p>
+                <p>Gênero: Drama/Romance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANIME 6 -->
+    <div class="card" onclick="abrirAnime(this)" 
+         data-nome="Fruits Basket" 
+         data-img="img/fruits-basket.jpg" 
+         data-ano="2019" 
+         data-eps="63" 
+         data-temp="3" 
+         data-genero="Romance, Drama, Sobrenatural" 
+         data-nota="8.9" 
+         data-status="Finalizado" 
+         data-sinopse="Tohru Honda é uma órfã que acaba indo morar com a misteriosa família Soma. Ela logo descobre o grande segredo da família: eles são amaldiçoados pelos espíritos do zodíaco chinês e se transformam em animais quando abraçados pelo sexo oposto." 
+         data-personagens="Tohru Honda, Kyo Soma, Yuki Soma, Shigure Soma">
+        <div class="img-wrapper">
+            <span class="badge badge-status">Finalizado</span>
+            <span class="badge badge-score">⭐ 8.9</span>
+            <img src="img/fruits-basket.jpg" alt="Fruits Basket">
+        </div>
+        <div class="card-info">
+            <h3>Fruits Basket</h3>
+            <div class="detalhes-rapidos">
+                <p>Ano: <span>2019</span> | Temp: <span>3</span></p>
+                <p>Episódios: <span>63</span></p>
+                <p>Gênero: Romance/Drama</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANIME 7 -->
+    <div class="card" onclick="abrirAnime(this)" 
+         data-nome="Oregairu" 
+         data-img="img/oregairu.jpg" 
+         data-ano="2013" 
+         data-eps="38" 
+         data-temp="3" 
+         data-genero="Romance, Comédia, Psicológico" 
+         data-nota="8.4" 
+         data-status="Finalizado" 
+         data-sinopse="Hachiman Hikigaya é um estudante cínico e solitário que é forçado por sua professora a se juntar ao Clube de Serviço Voluntário. Lá ele conhece Yukino Yukinoshita e Yui Yuigahama. Juntos, eles resolvem problemas dos alunos enquanto lidam com seus próprios dilemas." 
+         data-personagens="Hachiman Hikigaya, Yukino Yukinoshita, Yui Yuigahama">
+        <div class="img-wrapper">
+            <span class="badge badge-status">Finalizado</span>
+            <span class="badge badge-score">⭐ 8.4</span>
+            <img src="img/oregairu.jpg" alt="Oregairu">
+        </div>
+        <div class="card-info">
+            <h3>Oregairu</h3>
+            <div class="detalhes-rapidos">
+                <p>Ano: <span>2013</span> | Temp: <span>3</span></p>
+                <p>Episódios: <span>38</span></p>
+                <p>Gênero: Romance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANIME 8 -->
+    <div class="card" onclick="abrirAnime(this)" 
+         data-nome="Kaguya-sama: Love Is War" 
+         data-img="img/kaguya-sama.jpg" 
+         data-ano="2019" 
+         data-eps="37" 
+         data-temp="3" 
+         data-genero="Comédia Romântica, Escolar" 
+         data-nota="8.7" 
+         data-status="Finalizado" 
+         data-sinopse="Miyuki Shirogane e Kaguya Shinomiya são os líderes do conselho estudantil da prestigiada Academia Shuchiin. Ambos são orgulhosos e estão apaixonados um pelo outro, mas acreditam que quem se confessar primeiro será o perdedor. Começa a guerra para fazer o outro se declarar!" 
+         data-personagens="Kaguya Shinomiya, Miyuki Shirogane, Chika Fujiwara, Yu Ishigami">
+        <div class="img-wrapper">
+            <span class="badge badge-status">Finalizado</span>
+            <span class="badge badge-score">⭐ 8.7</span>
+            <img src="img/kaguya-sama.jpg" alt="Kaguya-sama">
+        </div>
+        <div class="card-info">
+            <h3>Kaguya-sama</h3>
+            <div class="detalhes-rapidos">
+                <p>Ano: <span>2019</span> | Temp: <span>3</span></p>
+                <p>Episódios: <span>37</span></p>
+                <p>Gênero: Comédia Romântica</p>
+            </div>
+        </div>
+    </div>
 
 </div>
 
 
-
-<h2 class="titulo">
-🔥 Lista de Animes
-</h2>
-
-
-
-<div class="grid">
-
-
-<!-- COPIE ESSE CARD PARA ADICIONAR OUTROS ANIMES -->
-
-<div class="card" onclick="abrirAnime()">
-
-<img src="img/capa.jpg">
-
-<h3>Nome do Anime</h3>
-
-<p>📅 Lançamento: Data</p>
-
-<p>🔥 Próximo episódio: Data</p>
-
-</div>
-
-
-<div class="card" onclick="abrirAnime()">
-
-<img src="img/capa.jpg">
-
-<h3>Nome do Anime</h3>
-
-<p>📅 Lançamento: Data</p>
-
-<p>🔥 Próximo episódio: Data</p>
-
-</div>
-
-
-</div>
-
-
-
-
+<!-- PÁGINA DE DETALHES (Oculta por padrão) -->
 <section id="animePage">
+    <div class="detalhes-header">
+        <img id="detalheCapa" class="detalhes-capa" src="" alt="Capa do Anime">
+        
+        <div class="detalhes-texto">
+            <h2 id="detalheNome">Nome do Anime</h2>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>📅 Lançamento:</strong> <span id="detalheAno"></span>
+                </div>
+                <div class="info-item">
+                    <strong>📺 Temporadas:</strong> <span id="detalheTemp"></span>
+                </div>
+                <div class="info-item">
+                    <strong>🎬 Episódios:</strong> <span id="detalheEps"></span>
+                </div>
+                <div class="info-item">
+                    <strong>⭐ Nota:</strong> <span id="detalheNota"></span>
+                </div>
+                <div class="info-item">
+                    <strong>🎭 Gênero:</strong> <span id="detalheGenero"></span>
+                </div>
+                <div class="info-item">
+                    <strong>📡 Status:</strong> <span id="detalheStatus"></span>
+                </div>
+            </div>
 
+            <div class="sinopse-box">
+                <h3>📖 Sinopse</h3>
+                <p id="detalheSinopse"></p>
+            </div>
 
-<h2 style="text-align:center;">
-🎬 Nome do Anime
-</h2>
+            <div class="personagens-box">
+                <h3>👥 Personagens Principais</h3>
+                <p id="detalhePersonagens"></p>
+            </div>
+        </div>
+    </div>
 
+    <div class="episodios-box">
+        <h3>📺 Lista de Episódios</h3>
+        <div class="lista-eps" id="detalheListaEps">
+            <!-- Gerado via JavaScript -->
+        </div>
+    </div>
 
-<img class="capa" src="img/capa.jpg">
-
-
-
-<div class="info">
-
-<h3>📌 Informações</h3>
-
-<br>
-
-<p>📅 Lançamento:</p>
-
-<p>📺 Temporadas:</p>
-
-<p>🎬 Episódios:</p>
-
-<p>🔥 Próximo episódio:</p>
-
-<p>🎭 Gêneros:</p>
-
-<p>⭐ Nota:</p>
-
-
-<br>
-
-<h3>📖 Sinopse</h3>
-
-<br>
-
-<p>
-Coloque aqui a história do anime.
-</p>
-
-
-<br>
-
-<h3>👥 Personagens</h3>
-
-<br>
-
-<p>
-Coloque os personagens principais aqui.
-</p>
-
-
-</div>
-
-
-
-<button onclick="voltar()">
-⬅ Voltar
-</button>
-
-
+    <button class="btn-voltar" onclick="voltar()">⬅ Voltar para o Catálogo</button>
 </section>
 
-
-
-
 <script>
+    // Função para abrir detalhes sem precisar de banco de dados
+    function abrirAnime(card) {
+        // Pega os dados do card clicado usando os data-attributes
+        const nome = card.getAttribute('data-nome');
+        const img = card.getAttribute('data-img');
+        const ano = card.getAttribute('data-ano');
+        const eps = card.getAttribute('data-eps');
+        const temp = card.getAttribute('data-temp');
+        const genero = card.getAttribute('data-genero');
+        const nota = card.getAttribute('data-nota');
+        const status = card.getAttribute('data-status');
+        const sinopse = card.getAttribute('data-sinopse');
+        const personagens = card.getAttribute('data-personagens');
 
+        // Preenche a página de detalhes
+        document.getElementById('detalheNome').innerText = nome;
+        document.getElementById('detalheCapa').src = img;
+        document.getElementById('detalheAno').innerText = ano;
+        document.getElementById('detalheEps').innerText = eps;
+        document.getElementById('detalheTemp').innerText = temp;
+        document.getElementById('detalheGenero').innerText = genero;
+        document.getElementById('detalheNota').innerText = nota;
+        document.getElementById('detalheStatus').innerText = status;
+        document.getElementById('detalheSinopse').innerText = sinopse;
+        document.getElementById('detalhePersonagens').innerText = personagens;
 
-function abrirAnime(){
+        // Gera a lista de episódios dinamicamente com base na quantidade
+        const listaEpsContainer = document.getElementById('detalheListaEps');
+        listaEpsContainer.innerHTML = ''; // Limpa os antigos
+        
+        for(let i = 1; i <= parseInt(eps); i++) {
+            let div = document.createElement('div');
+            div.className = 'ep-item';
+            div.innerText = 'Episódio ' + i;
+            listaEpsContainer.appendChild(div);
+        }
 
-document.querySelector(".grid").style.display="none";
+        // Esconde o catálogo e mostra a página
+        document.getElementById("listaAnimes").style.display = "none";
+        document.getElementById("tituloSecao").style.display = "none";
+        document.querySelector(".search").style.display = "none";
+        document.getElementById("animePage").style.display = "block";
 
-document.querySelector(".titulo").style.display="none";
+        // Rola pro topo suavemente
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-document.querySelector(".search").style.display="none";
+    // Função para voltar ao catálogo
+    function voltar() {
+        document.getElementById("listaAnimes").style.display = "grid";
+        document.getElementById("tituloSecao").style.display = "block";
+        document.querySelector(".search").style.display = "block";
+        document.getElementById("animePage").style.display = "none";
+        
+        // Limpa a busca ao voltar
+        document.getElementById("searchInput").value = "";
+        pesquisarAnime();
+    }
 
-document.getElementById("animePage").style.display="block";
+    // Função bônus: Filtro de pesquisa funcional
+    function pesquisarAnime() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let cards = document.getElementsByClassName('card');
 
-window.scrollTo(0,0);
-
-}
-
-
-
-function voltar(){
-
-document.querySelector(".grid").style.display="grid";
-
-document.querySelector(".titulo").style.display="block";
-
-document.querySelector(".search").style.display="block";
-
-document.getElementById("animePage").style.display="none";
-
-}
-
-
+        for (let i = 0; i < cards.length; i++) {
+            let titulo = cards[i].getAttribute('data-nome').toLowerCase();
+            if (titulo.includes(input)) {
+                cards[i].style.display = "flex";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
 </script>
 
-
-
 </body>
-
 </html>
