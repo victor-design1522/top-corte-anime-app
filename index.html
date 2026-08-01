@@ -7,645 +7,716 @@
 <title>Catálogo de Romance | TOP CORTE ANIME</title>
 
 <style>
-    /* VARIÁVEIS DE CORES */
-    :root {
-        --bg-color: #0a0a0f;
-        --card-bg: #1a1a24;
-        --primary: #8a2be2;
-        --neon: #b829ea;
-        --text-light: #e0e0e0;
-        --text-muted: #a0a0b0;
-    }
+    /* VARIÁVEIS DE CORES */
+    :root {
+        --bg-color: #0a0a0f;
+        --card-bg: #1a1a24;
+        --primary: #8a2be2;
+        --neon: #b829ea;
+        --text-light: #e0e0e0;
+        --text-muted: #a0a0b0;
+    }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-    body {
-        background: var(--bg-color);
-        color: var(--text-light);
-        overflow-x: hidden;
-        min-height: 100vh;
-    }
+    body {
+        background: var(--bg-color);
+        color: var(--text-light);
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
 
-    /* CABEÇALHO MODERNO NEON */
-    header {
-        background: linear-gradient(135deg, #110022 0%, #2a0055 100%);
-        padding: 25px 20px;
-        text-align: center;
-        border-bottom: 2px solid var(--primary);
-        box-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
-    }
+    /* CABEÇALHO MODERNO NEON */
+    header {
+        background: linear-gradient(135deg, #110022 0%, #2a0055 100%);
+        padding: 25px 20px;
+        text-align: center;
+        border-bottom: 2px solid var(--primary);
+        box-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
+    }
 
-    header h1 {
-        font-size: 32px;
-        color: #fff;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        text-shadow: 0 0 10px var(--neon);
-    }
+    header h1 {
+        font-size: 32px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px var(--neon);
+    }
 
-    header p {
-        color: var(--text-muted);
-        margin-top: 5px;
-        font-size: 15px;
-    }
+    header p {
+        color: var(--text-muted);
+        margin-top: 5px;
+        font-size: 15px;
+    }
 
-    /* BARRA DE PESQUISA */
-    .search {
-        padding: 30px 20px 10px;
-        max-width: 800px;
-        margin: 0 auto;
-    }
+    /* BARRA DE NAVEGAÇÃO / MENU RÁPIDO */
+    .nav-bar {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background: #111118;
+        border-bottom: 1px solid #222;
+        flex-wrap: wrap;
+    }
 
-    .search input {
-        width: 100%;
-        padding: 16px 20px;
-        border-radius: 50px;
-        border: 2px solid #333;
-        background: var(--card-bg);
-        color: white;
-        font-size: 16px;
-        outline: none;
-        transition: all 0.3s ease;
-    }
+    .nav-btn {
+        background: var(--card-bg);
+        border: 1px solid #444;
+        color: white;
+        padding: 8px 18px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
 
-    .search input:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
-    }
+    .nav-btn:hover, .nav-btn.ativo {
+        background: var(--primary);
+        border-color: var(--neon);
+        box-shadow: 0 0 10px rgba(184, 41, 234, 0.4);
+    }
 
-    .titulo {
-        padding: 20px;
-        font-size: 24px;
-        text-align: center;
-        text-transform: uppercase;
-        color: var(--neon);
-        text-shadow: 0 0 5px rgba(184, 41, 234, 0.3);
-    }
+    /* HERO BANNER (DESTAQUE) */
+    .hero-banner {
+        max-width: 1300px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
 
-    /* GRID DOS CARDS */
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 25px;
-        padding: 20px 40px;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
+    .hero-content {
+        background: linear-gradient(90deg, rgba(26,26,36,0.95) 0%, rgba(17,0,34,0.8) 100%), url('img/bisque-doll.jpg');
+        background-size: cover;
+        background-position: center;
+        border-radius: 20px;
+        border: 1px solid var(--primary);
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 15px;
+        box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
+        min-height: 350px;
+    }
 
-    /* DESIGN DOS CARDS */
-    .card {
-        background: var(--card-bg);
-        border: 1px solid #333;
-        border-radius: 16px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: all 0.4s ease;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
+    .hero-content h2 {
+        font-size: 36px;
+        color: #fff;
+        text-shadow: 0 0 10px var(--neon);
+    }
 
-    .card:hover {
-        transform: translateY(-10px) scale(1.02);
-        border-color: var(--primary);
-        box-shadow: 0 15px 25px rgba(138, 43, 226, 0.2);
-    }
+    .hero-content p {
+        max-width: 600px;
+        color: #ccc;
+        font-size: 15px;
+        line-height: 1.6;
+    }
 
-    .img-wrapper {
-        position: relative;
-        width: 100%;
-        height: 300px;
-    }
+    .hero-btn {
+        display: inline-block;
+        width: fit-content;
+        background: linear-gradient(90deg, var(--primary), var(--neon));
+        color: white;
+        padding: 12px 25px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+        box-shadow: 0 0 15px rgba(184, 41, 234, 0.4);
+    }
 
-    .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: 0.4s;
-    }
+    .hero-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px var(--neon);
+    }
 
-    .card:hover img {
-        opacity: 0.8;
-    }
+    /* FILTROS POR TAGS / GÊNERO */
+    .tags-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 20px 20px;
+        flex-wrap: wrap;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
 
-    /* BADGES (Nota e Status) */
-    .badge {
-        position: absolute;
-        padding: 5px 10px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: bold;
-        z-index: 2;
-    }
+    .tag-btn {
+        background: #1e1e2d;
+        border: 1px solid #333;
+        color: var(--text-muted);
+        padding: 6px 15px;
+        border-radius: 15px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-    .badge-score {
-        top: 10px;
-        right: 10px;
-        background: rgba(0, 0, 0, 0.8);
-        color: #ffd700;
-        border: 1px solid #ffd700;
-    }
+    .tag-btn:hover, .tag-btn.ativo {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--neon);
+    }
 
-    .badge-status {
-        top: 10px;
-        left: 10px;
-        background: var(--primary);
-        color: white;
-    }
+    /* BARRA DE PESQUISA */
+    .search {
+        padding: 10px 20px 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
 
-    .card-info {
-        padding: 15px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+    .search input {
+        width: 100%;
+        padding: 16px 20px;
+        border-radius: 50px;
+        border: 2px solid #333;
+        background: var(--card-bg);
+        color: white;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.3s ease;
+    }
 
-    .card h3 {
-        font-size: 18px;
-        margin-bottom: 10px;
-        color: #fff;
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+    .search input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+    }
 
-    .detalhes-rapidos {
-        font-size: 13px;
-        color: var(--text-muted);
-        text-align: center;
-        line-height: 1.6;
-    }
+    .titulo {
+        padding: 20px 20px 10px;
+        font-size: 24px;
+        text-align: center;
+        text-transform: uppercase;
+        color: var(--neon);
+        text-shadow: 0 0 5px rgba(184, 41, 234, 0.3);
+    }
 
-    .detalhes-rapidos span {
-        color: var(--neon);
-        font-weight: bold;
-    }
+    /* GRID DOS CARDS */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 25px;
+        padding: 20px 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
 
-    /* PÁGINA DE DETALHES DO ANIME */
-    #animePage {
-        display: none;
-        padding: 40px 20px;
-        max-width: 1000px;
-        margin: 0 auto;
-        animation: fadeIn 0.5s ease;
-    }
+    /* DESIGN DOS CARDS */
+    .card {
+        background: var(--card-bg);
+        border: 1px solid #333;
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+    .card:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: var(--primary);
+        box-shadow: 0 15px 25px rgba(138, 43, 226, 0.2);
+    }
 
-    .detalhes-header {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 30px;
-        background: var(--card-bg);
-        padding: 30px;
-        border-radius: 20px;
-        border: 1px solid var(--primary);
-        box-shadow: 0 0 20px rgba(138, 43, 226, 0.1);
-    }
+    .img-wrapper {
+        position: relative;
+        width: 100%;
+        height: 300px;
+    }
 
-    .detalhes-capa {
-        width: 300px;
-        height: 430px;
-        object-fit: cover;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-    }
+    .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.4s;
+    }
 
-    .detalhes-texto {
-        flex: 1;
-        min-width: 300px;
-    }
+    .card:hover img {
+        opacity: 0.8;
+    }
 
-    .detalhes-texto h2 {
-        font-size: 32px;
-        color: var(--neon);
-        margin-bottom: 15px;
-    }
+    /* BOTÃO DE FAVORITO NO CARD */
+    .btn-fav {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid #444;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        font-size: 18px;
+        transition: 0.3s;
+    }
 
-    .info-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
+    .btn-fav:hover {
+        transform: scale(1.15);
+        background: var(--primary);
+    }
 
-    .info-item {
-        background: #252533;
-        padding: 12px;
-        border-radius: 10px;
-        font-size: 14px;
-    }
+    /* BADGES (Nota e Status) */
+    .badge {
+        position: absolute;
+        padding: 5px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 2;
+    }
 
-    .info-item strong {
-        color: var(--primary);
-        display: block;
-        margin-bottom: 3px;
-    }
+    .badge-score {
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #ffd700;
+        border: 1px solid #ffd700;
+    }
 
-    .sinopse-box, .personagens-box, .episodios-box, .video-box {
-        margin-top: 25px;
-        background: #252533;
-        padding: 20px;
-        border-radius: 15px;
-    }
+    .badge-status {
+        top: 10px;
+        left: 10px;
+        background: var(--primary);
+        color: white;
+    }
 
-    .sinopse-box h3, .personagens-box h3, .episodios-box h3, .video-box h3 {
-        color: var(--neon);
-        margin-bottom: 10px;
-        border-bottom: 1px solid #444;
-        padding-bottom: 5px;
-    }
+    .card-info {
+        padding: 15px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
-    .sinopse-box p, .personagens-box p {
-        line-height: 1.7;
-        color: #ccc;
-    }
+    .card h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-    /* PLAYER DE VÍDEO E BOTÃO DE DOWNLOAD */
-    .video-container {
-        width: 100%;
-        max-height: 350px;
-        border-radius: 10px;
-        overflow: hidden;
-        background: #000;
-        margin-top: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+    .detalhes-rapidos {
+        font-size: 13px;
+        color: var(--text-muted);
+        text-align: center;
+        line-height: 1.6;
+    }
 
-    .video-container video {
-        width: 100%;
-        max-height: 350px;
-        outline: none;
-    }
+    .detalhes-rapidos span {
+        color: var(--neon);
+        font-weight: bold;
+    }
 
-    .btn-baixar-video {
-        display: inline-block;
-        margin-top: 15px;
-        width: 100%;
-        padding: 12px;
-        background: rgba(138, 43, 226, 0.2);
-        border: 1px solid var(--neon);
-        color: white;
-        text-align: center;
-        border-radius: 8px;
-        font-weight: bold;
-        text-decoration: none;
-        transition: 0.3s;
-    }
+    /* PÁGINA DE DETALHES DO ANIME */
+    #animePage {
+        display: none;
+        padding: 40px 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+        animation: fadeIn 0.5s ease;
+    }
 
-    .btn-baixar-video:hover {
-        background: var(--primary);
-        box-shadow: 0 0 15px var(--neon);
-    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-    .lista-eps {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-        gap: 10px;
-        margin-top: 15px;
-        max-height: 250px;
-        overflow-y: auto;
-        padding-right: 5px;
-    }
+    .detalhes-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 20px;
+        border: 1px solid var(--primary);
+        box-shadow: 0 0 20px rgba(138, 43, 226, 0.1);
+    }
 
-    .lista-eps::-webkit-scrollbar {
-        width: 6px;
-    }
+    .detalhes-capa {
+        width: 300px;
+        height: 430px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
 
-    .lista-eps::-webkit-scrollbar-thumb {
-        background-color: var(--primary);
-        border-radius: 4px;
-    }
+    .detalhes-texto {
+        flex: 1;
+        min-width: 300px;
+    }
 
-    .ep-item {
-        background: var(--card-bg);
-        border: 1px solid #444;
-        padding: 12px 10px;
-        text-align: center;
-        border-radius: 8px;
-        font-size: 14px;
-        transition: 0.3s;
-        cursor: pointer;
-    }
+    .detalhes-texto h2 {
+        font-size: 32px;
+        color: var(--neon);
+        margin-bottom: 15px;
+    }
 
-    .ep-item:hover {
-        background: var(--primary);
-        border-color: var(--neon);
-        box-shadow: 0 0 10px var(--neon);
-        font-weight: bold;
-    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
 
-    .ep-item.ativo {
-        background: var(--primary);
-        border-color: var(--neon);
-        box-shadow: 0 0 12px var(--neon);
-        font-weight: bold;
-    }
+    .info-item {
+        background: #252533;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
 
-    button.btn-voltar {
-        width: 100%;
-        padding: 18px;
-        margin-top: 30px;
-        background: linear-gradient(90deg, var(--primary), var(--neon));
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+    .info-item strong {
+        color: var(--primary);
+        display: block;
+        margin-bottom: 3px;
+    }
 
-    button.btn-voltar:hover {
-        box-shadow: 0 0 20px var(--neon);
-        transform: scale(1.02);
-    }
+    .sinopse-box, .personagens-box, .episodios-box, .video-box {
+        margin-top: 25px;
+        background: #252533;
+        padding: 20px;
+        border-radius: 15px;
+    }
 
-    @media (max-width: 768px) {
-        .detalhes-header {
-            flex-direction: column;
-            align-items: center;
-        }
-        .detalhes-capa {
-            width: 100%;
-            max-width: 300px;
-        }
-        .info-grid {
-            grid-template-columns: 1fr;
-        }
-    }
+    .sinopse-box h3, .personagens-box h3, .episodios-box h3, .video-box h3 {
+        color: var(--neon);
+        margin-bottom: 10px;
+        border-bottom: 1px solid #444;
+        padding-bottom: 5px;
+    }
+
+    .sinopse-box p, .personagens-box p {
+        line-height: 1.7;
+        color: #ccc;
+    }
+
+    /* PLAYER DE VÍDEO E BOTÃO DE DOWNLOAD */
+    .video-container {
+        width: 100%;
+        max-height: 350px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #000;
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .video-container video {
+        width: 100%;
+        max-height: 350px;
+        outline: none;
+    }
+
+    .btn-baixar-video {
+        display: inline-block;
+        margin-top: 15px;
+        width: 100%;
+        padding: 12px;
+        background: rgba(138, 43, 226, 0.2);
+        border: 1px solid var(--neon);
+        color: white;
+        text-align: center;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .btn-baixar-video:hover {
+        background: var(--primary);
+        box-shadow: 0 0 15px var(--neon);
+    }
+
+    .lista-eps {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+        max-height: 250px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .lista-eps::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .lista-eps::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 4px;
+    }
+
+    .ep-item {
+        background: var(--card-bg);
+        border: 1px solid #444;
+        padding: 12px 10px;
+        text-align: center;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: 0.3s;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .ep-item:hover {
+        background: var(--primary);
+        border-color: var(--neon);
+        box-shadow: 0 0 10px var(--neon);
+        font-weight: bold;
+    }
+
+    .ep-item.ativo {
+        background: var(--primary);
+        border-color: var(--neon);
+        box-shadow: 0 0 12px var(--neon);
+        font-weight: bold;
+    }
+
+    .ep-item.visto::after {
+        content: ' ✔';
+        color: #4ade80;
+        font-size: 12px;
+    }
+
+    button.btn-voltar {
+        width: 100%;
+        padding: 18px;
+        margin-top: 30px;
+        background: linear-gradient(90deg, var(--primary), var(--neon));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    button.btn-voltar:hover {
+        box-shadow: 0 0 20px var(--neon);
+        transform: scale(1.02);
+    }
+
+    @media (max-width: 768px) {
+        .detalhes-header {
+            flex-direction: column;
+            align-items: center;
+        }
+        .detalhes-capa {
+            width: 100%;
+            max-width: 300px;
+        }
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 </head>
 
 <body>
 
 <header>
-    <h1>🎬 TOP CORTE ANIME</h1>
-    <p>Encontre o anime, assista aos episódios e baixe os melhores cortes!</p>
+    <h1>🎬 TOP CORTE ANIME</h1>
+    <p id="headerSub">Catálogo completo de animes e cortes</p>
 </header>
 
-<div class="search">
-    <input type="text" id="searchInput" placeholder="Pesquisar anime..." onkeyup="pesquisarAnime()">
+<!-- BARRA DE NAVEGAÇÃO -->
+<div class="nav-bar">
+    <button class="nav-btn ativo" onclick="filtrarSecao('todos')">🏠 Início</button>
+    <button class="nav-btn" onclick="filtrarSecao('favoritos')">❤️ Minha Lista</button>
+    <button class="nav-btn" onclick="surpreenderAnime()">🎲 Surpreenda-me</button>
 </div>
 
-<h2 class="titulo" id="tituloSecao">🔥 Catálogo de Romance</h2>
+<!-- HERO BANNER (DESTAQUE) -->
+<div class="hero-banner" id="heroBannerSection">
+    <div class="hero-content">
+        <h2>My Dress-Up Darling</h2>
+        <p>Wakana Gojo faz bonecas Hina e é isolado. Sua vida muda quando Marin Kitagawa descobre sua habilidade com a costura e pede ajuda com cosplays.</p>
+        <a href="#" class="hero-btn" onclick="abrirAnimePorNome('My Dress-Up Darling'); return false;">▶ Assistir Agora</a>
+    </div>
+</div>
+
+<!-- FILTROS POR GÊNERO / TAGS -->
+<div class="tags-container" id="tagsContainer">
+    <button class="tag-btn ativo" onclick="filtrarTag('Todos', this)">Todos</button>
+    <button class="tag-btn" onclick="filtrarTag('Romance', this)">Romance</button>
+    <button class="tag-btn" onclick="filtrarTag('Slice of Life', this)">Slice of Life</button>
+    <button class="tag-btn" onclick="filtrarTag('Comédia', this)">Comédia</button>
+    <button class="tag-btn" onclick="filtrarTag('Drama', this)">Drama</button>
+    <button class="tag-btn" onclick="filtrarTag('Escolar', this)">Escolar</button>
+</div>
+
+<div class="search">
+    <input type="text" id="searchInput" placeholder="Pesquisar anime..." onkeyup="pesquisarAnime()">
+</div>
+
+<h2 class="titulo" id="tituloSecao">🔥 Catálogo de Animes</h2>
 
 <!-- CONTEINER PRINCIPAL DOS CARDS GERADOS VIA JS -->
 <div class="grid" id="listaAnimes"></div>
 
 <!-- PÁGINA DE DETALHES COMPLETA -->
 <div id="animePage">
-    <div class="detalhes-header">
-        <img id="detalhesImg" class="detalhes-capa" src="" alt="Capa do Anime">
-        <div class="detalhes-texto">
-            <h2 id="detalhesNome"></h2>
-            
-            <div class="info-grid">
-                <div class="info-item"><strong>Ano de Lançamento</strong> <span id="detalhesAno"></span></div>
-                <div class="info-item"><strong>Episódios</strong> <span id="detalhesEps"></span></div>
-                <div class="info-item"><strong>Temporadas</strong> <span id="detalhesTemp"></span></div>
-                <div class="info-item"><strong>Nota ⭐</strong> <span id="detalhesNota"></span></div>
-                <div class="info-item"><strong>Gênero</strong> <span id="detalhesGeneros"></span></div>
-                <div class="info-item"><strong>Status</strong> <span id="detalhesStatus"></span></div>
-            </div>
+    <div class="detalhes-header">
+        <img id="detalhesImg" class="detalhes-capa" src="" alt="Capa do Anime">
+        <div class="detalhes-texto">
+            <h2 id="detalhesNome"></h2>
+            
+            <div class="info-grid">
+                <div class="info-item"><strong>Ano de Lançamento</strong> <span id="detalhesAno"></span></div>
+                <div class="info-item"><strong>Episódios</strong> <span id="detalhesEps"></span></div>
+                <div class="info-item"><strong>Temporadas</strong> <span id="detalhesTemp"></span></div>
+                <div class="info-item"><strong>Nota ⭐</strong> <span id="detalhesNota"></span></div>
+                <div class="info-item"><strong>Gênero</strong> <span id="detalhesGeneros"></span></div>
+                <div class="info-item"><strong>Status</strong> <span id="detalhesStatus"></span></div>
+            </div>
 
-            <div class="sinopse-box">
-                <h3>Sinopse</h3>
-                <p id="detalhesSinopse"></p>
-            </div>
+            <div class="sinopse-box">
+                <h3>Sinopse</h3>
+                <p id="detalhesSinopse"></p>
+            </div>
 
-            <div class="personagens-box">
-                <h3>Personagens Principais</h3>
-                <p id="detalhesPersonagens"></p>
-            </div>
-        </div>
-    </div>
+            <div class="personagens-box">
+                <h3>Personagens Principais</h3>
+                <p id="detalhesPersonagens"></p>
+            </div>
+        </div>
+    </div>
 
-    <!-- SEÇÃO DE VÍDEO / CORTE / TRAILER / EPISÓDIOS -->
-    <div class="video-box" id="secaoVideo">
-        <h3 id="tituloPlayer">🎬 Reproduzindo: Corte / Trailer Oficial</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 5px;" id="subtituloPlayer">Clique em qualquer episódio abaixo para assistir:</p>
-        <div class="video-container">
-            <video id="detalhesVideo" controls></video>
-        </div>
-        <a id="btnBaixarVideo" class="btn-baixar-video" href="#" download target="_blank">⬇️ Baixar Vídeo Atual</a>
-    </div>
+    <!-- SEÇÃO DE VÍDEO / CORTE / TRAILER / EPISÓDIOS -->
+    <div class="video-box" id="secaoVideo">
+        <h3 id="tituloPlayer">🎬 Reproduzindo: Corte / Trailer Oficial</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 5px;" id="subtituloPlayer">Clique em qualquer episódio abaixo para assistir:</p>
+        <div class="video-container">
+            <video id="detalhesVideo" controls></video>
+        </div>
+        <a id="btnBaixarVideo" class="btn-baixar-video" href="#" download target="_blank">⬇️ Baixar Vídeo Atual</a>
+    </div>
 
-    <div class="episodios-box">
-        <h3>Lista de Episódios (Clique para Assistir)</h3>
-        <div id="listaEpisodios" class="lista-eps"></div>
-    </div>
+    <div class="episodios-box">
+        <h3>Lista de Episódios (Clique para Assistir)</h3>
+        <div id="listaEpisodios" class="lista-eps"></div>
+    </div>
 
-    <button class="btn-voltar" onclick="voltarCatalogo()">Voltar ao Catálogo</button>
+    <button class="btn-voltar" onclick="voltarCatalogo()">Voltar ao Catálogo</button>
 </div>
 
 <script>
-    // 🔗 SUA LISTA CENTRALIZADA DE ANIMES E CAMINHOS LOCAIS POR ARRAY
-    const animesData = [
-        {
-            nome: "My Dress-Up Darling",
-            img: "img/bisque-doll.jpg",
-            trailer: "videos/bisque-trailer.mp4",
-            ano: "2022",
-            temp: "1",
-            genero: "Romance, Slice of Life",
-            nota: "8.1",
-            status: "Em Andamento",
-            sinopse: "Wakana Gojo faz bonecas Hina e é isolado. Sua vida muda quando Marin Kitagawa, a garota mais popular da escola, descobre sua habilidade com a costura e pede ajuda com cosplays.",
-            personagens: "Marin Kitagawa, Wakana Gojo",
-            episodios: [
-                "videos/bisque-ep1.mp4",
-                "videos/bisque-ep2.mp4"
-            ]
-        },
-        {
-            nome: "Kimi ni Todoke",
-            img: "img/kimi-ni-todoke.jpg",
-            trailer: "videos/kimi-ni-todoke.mp4",
-            ano: "2009",
-            temp: "3",
-            genero: "Romance, Escolar",
-            nota: "8.3",
-            status: "Finalizado",
-            sinopse: "Sawako Kuronuma, apelidada de Sadako por sua aparência, é incompreendida pelos colegas. Sua vida muda quando Kazehaya, o garoto mais popular, começa a conversar com ela.",
-            personagens: "Sawako Kuronuma, Shota Kazehaya",
-            episodios: [
-                "videos/kimi-ep1.mp4",
-                "videos/kimi-ep2.mp4"
-            ]
-        },
-        {
-            nome: "Horimiya",
-            img: "img/horimiya.jpg",
-            trailer: "videos/horimiya.mp4",
-            ano: "2021",
-            temp: "2",
-            genero: "Romance, Comédia",
-            nota: "8.2",
-            status: "Finalizado",
-            sinopse: "Hori é popular e inteligente, mas em casa cuida do irmão. Miyamura parece um nerd sombrio, mas tem piercings e tatuagens. Quando descobrem os segredos um do outro, um romance surge.",
-            personagens: "Kyoko Hori, Izumi Miyamura",
-            episodios: [
-                "videos/horimiya-ep1.mp4",
-                "videos/horimiya-ep2.mp4"
-            ]
-        },
-        {
-            nome: "Toradora!",
-            img: "img/toradora.jpg",
-            trailer: "videos/toradora.mp4",
-            ano: "2008",
-            temp: "1",
-            genero: "Romance, Drama",
-            nota: "8.1",
-            status: "Finalizado",
-            sinopse: "Ryuji tem cara de delinquente, mas é gentil. Taiga é pequena e fofa, mas agressiva. Eles descobrem que são apaixonados pelos melhores amigos um do outro e fazem um acordo para se ajudarem.",
-            personagens: "Taiga Aisaka, Ryuji Takasu",
-            episodios: [
-                "videos/toradora-ep1.mp4",
-                "videos/toradora-ep2.mp4"
-            ]
-        }
-    ];
+    // 🔗 SUA LISTA CENTRALIZADA DE ANIMES E CAMINHOS LOCAIS POR ARRAY
+    const animesData = [
+        {
+            nome: "My Dress-Up Darling",
+            img: "img/bisque-doll.jpg",
+            trailer: "videos/bisque-trailer.mp4",
+            ano: "2022",
+            temp: "1",
+            genero: "Romance, Slice of Life",
+            nota: "8.1",
+            status: "Em Andamento",
+            sinopse: "Wakana Gojo faz bonecas Hina e é isolado. Sua vida muda quando Marin Kitagawa, a garota mais popular da escola, descobre sua habilidade com a costura e pede ajuda com cosplays.",
+            personagens: "Marin Kitagawa, Wakana Gojo",
+            episodios: [
+                "videos/bisque-ep1.mp4",
+                "videos/bisque-ep2.mp4"
+            ]
+        },
+        {
+            nome: "Kimi ni Todoke",
+            img: "img/kimi-ni-todoke.jpg",
+            trailer: "videos/kimi-ni-todoke.mp4",
+            ano: "2009",
+            temp: "3",
+            genero: "Romance, Escolar",
+            nota: "8.3",
+            status: "Finalizado",
+            sinopse: "Sawako Kuronuma, apelidada de Sadako por sua aparência, é incompreendida pelos colegas. Sua vida muda quando Kazehaya, o garoto mais popular, começa a conversar com ela.",
+            personagens: "Sawako Kuronuma, Shota Kazehaya",
+            episodios: [
+                "videos/kimi-ep1.mp4",
+                "videos/kimi-ep2.mp4"
+            ]
+        },
+        {
+            nome: "Horimiya",
+            img: "img/horimiya.jpg",
+            trailer: "videos/horimiya.mp4",
+            ano: "2021",
+            temp: "2",
+            genero: "Romance, Comédia",
+            nota: "8.2",
+            status: "Finalizado",
+            sinopse: "Hori é popular e inteligente, mas em casa cuida do irmão. Miyamura parece um nerd sombrio, mas tem piercings e tatuagens. Quando descobrem os segredos um do outro, um romance surge.",
+            personagens: "Kyoko Hori, Izumi Miyamura",
+            episodios: [
+                "videos/horimiya-ep1.mp4",
+                "videos/horimiya-ep2.mp4"
+            ]
+        },
+        {
+            nome: "Toradora!",
+            img: "img/toradora.jpg",
+            trailer: "videos/toradora.mp4",
+            ano: "2008",
+            temp: "1",
+            genero: "Romance, Drama",
+            nota: "8.1",
+            status: "Finalizado",
+            sinopse: "Ryuji tem cara de delinquente, mas é gentil. Taiga é pequena e fofa, mas agressiva. Eles descobrem que são apaixonados pelos melhores amigos um do outro e fazem um acordo para se ajudarem.",
+            personagens: "Taiga Aisaka, Ryuji Takasu",
+            episodios: [
+                "videos/toradora-ep1.mp4",
+                "videos/toradora-ep2.mp4"
+            ]
+        }
+    ];
 
-    // Renderizar os cards automaticamente ao carregar a página
-    function carregarCatalogo() {
-        const grid = document.getElementById('listaAnimes');
-        grid.innerHTML = '';
+    let modoAtual = 'todos';
+    let tagAtiva = 'Todos';
 
-        animesData.forEach(anime => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.onclick = () => abrirAnime(anime);
-            card.setAttribute('data-nome', anime.nome);
+    // Gerenciamento de Favoritos no localStorage
+    function getFavoritos() {
+        return JSON.parse(localStorage.getItem('anime_favoritos')) || [];
+    }
 
-            card.innerHTML = `
-                <div class="img-wrapper">
-                    <span class="badge badge-status">${anime.status}</span>
-                    <span class="badge badge-score">⭐ ${anime.nota}</span>
-                    <img src="${anime.img}" alt="${anime.nome}">
-                </div>
-                <div class="card-info">
-                    <h3>${anime.nome}</h3>
-                    <div class="detalhes-rapidos">
-                        <p>Ano: <span>${anime.ano}</span> | Temp: <span>${anime.temp}</span></p>
-                        <p>Episódios: <span>${anime.episodios.length}</span></p>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
+    function toggleFavorito(nomeAnime, event) {
+        event.stopPropagation();
+        let favs = getFavoritos();
+        if (favs.includes(nomeAnime)) {
+            favs = favs.filter(f => f !== nomeAnime);
+        } else {
+            favs.push(nomeAnime);
+        }
+        localStorage.setItem('anime_favoritos', JSON.stringify(favs));
+        carregarCatalogo();
+    }
 
-    function abrirAnime(anime) {
-        document.getElementById('detalhesImg').src = anime.img;
-        document.getElementById('detalhesImg').alt = anime.nome;
-        document.getElementById('detalhesNome').textContent = anime.nome;
-        document.getElementById('detalhesAno').textContent = anime.ano;
-        document.getElementById('detalhesEps').textContent = anime.episodios.length;
-        document.getElementById('detalhesTemp').textContent = anime.temp;
-        document.getElementById('detalhesNota').textContent = anime.nota;
-        document.getElementById('detalhesGeneros').textContent = anime.genero;
-        document.getElementById('detalhesStatus').textContent = anime.status;
-        document.getElementById('detalhesSinopse').textContent = anime.sinopse;
-        document.getElementById('detalhesPersonagens').textContent = anime.personagens;
+    // Renderizar os cards automaticamente ao carregar a página
+    function carregarCatalogo(lista = animesData) {
+        const grid = document.getElementById('listaAnimes');
+        grid.innerHTML = '';
 
-        const videoElement = document.getElementById('detalhesVideo');
-        const btnBaixar = document.getElementById('btnBaixarVideo');
-        const tituloPlayer = document.getElementById('tituloPlayer');
-        const subtituloPlayer = document.getElementById('subtituloPlayer');
+        // Atualizar estatísticas do cabeçalho
+        let totalEps = animesData.reduce((acc, curr) => acc + curr.episodios.length, 0);
+        document.getElementById('headerSub').textContent = `Total de Animes: ${animesData.length} | Episódios Disponíveis: ${totalEps}`;
 
-        // Configuração inicial com o Trailer/Corte local
-        tituloPlayer.textContent = `🎬 Reproduzindo: Corte / Trailer de ${anime.nome}`;
-        subtituloPlayer.textContent = "Clique em qualquer episódio abaixo para assistir:";
-
-        if (anime.trailer) {
-            videoElement.src = anime.trailer;
-            btnBaixar.href = anime.trailer;
-            btnBaixar.style.display = 'block';
-        } else {
-            videoElement.src = '';
-            btnBaixar.style.display = 'none';
-        }
-
-        // Geração da lista de episódios usando o array 'episodios'
-        const listaEps = document.getElementById('listaEpisodios');
-        listaEps.innerHTML = '';
-        
-        anime.episodios.forEach((linkEp, index) => {
-            const epNum = index + 1;
-            const epDiv = document.createElement('div');
-            epDiv.className = 'ep-item';
-            epDiv.textContent = `EP ${epNum}`;
-            
-            epDiv.onclick = function() {
-                document.querySelectorAll('.ep-item').forEach(el => el.classList.remove('ativo'));
-                epDiv.classList.add('ativo');
-
-                videoElement.src = linkEp;
-                btnBaixar.href = linkEp;
-                btnBaixar.style.display = linkEp ? 'block' : 'none';
-
-                tituloPlayer.textContent = `📺 Assistindo: ${anime.nome} - Episódio ${epNum}`;
-                subtituloPlayer.textContent = `Você está assistindo ao EP ${epNum} de ${anime.episodios.length} episódios.`;
-
-                document.getElementById('secaoVideo').scrollIntoView({ behavior: 'smooth' });
-                videoElement.play();
-            };
-
-            listaEps.appendChild(epDiv);
-        });
-
-        // Alterna telas
-        document.querySelector('.search').style.display = 'none';
-        document.getElementById('tituloSecao').style.display = 'none';
-        document.getElementById('listaAnimes').style.display = 'none';
-        document.getElementById('animePage').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function voltarCatalogo() {
-        const videoElement = document.getElementById('detalhesVideo');
-        videoElement.pause();
-        videoElement.currentTime = 0;
-
-        document.getElementById('animePage').style.display = 'none';
-        document.querySelector('.search').style.display = 'block';
-        document.getElementById('tituloSecao').style.display = 'block';
-        document.getElementById('listaAnimes').style.display = 'grid';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function pesquisarAnime() {
-        const termo = document.getElementById('searchInput').value.toLowerCase();
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            const nome = card.getAttribute('data-nome').toLowerCase();
-            if (nome.includes(termo)) {
-                card.style.display = 'flex';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    // Inicializa o catálogo ao carregar a página
-    window.onload = carregarCatalogo;
-</script>
-
-</body>
-                                                                   </html>
+        if (lista.length === 0) {
+            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color
