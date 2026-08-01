@@ -54,6 +54,17 @@
         font-size: 15px;
     }
 
+    .contador-acessos {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .contador-acessos span {
+        color: var(--neon);
+        font-weight: bold;
+    }
+
     /* BARRA DE PESQUISA */
     .search {
         padding: 30px 20px 10px;
@@ -396,6 +407,9 @@
 <header>
     <h1>🎬 TOP CORTE ANIME</h1>
     <p>Encontre o anime, assista aos episódios e baixe os melhores cortes!</p>
+    <div class="contador-acessos">
+        👁️ Pessoas que acessaram: <span id="contadorAcessos">1420</span>
+    </div>
 </header>
 
 <div class="search">
@@ -524,6 +538,15 @@
 
     // Renderizar os cards automaticamente ao carregar a página
     function carregarCatalogo() {
+        let acessos = localStorage.getItem('site_acessos');
+        if (!acessos) {
+            acessos = 1420;
+        } else {
+            acessos = parseInt(acessos) + 1;
+        }
+        localStorage.setItem('site_acessos', acessos);
+        document.getElementById('contadorAcessos').textContent = acessos;
+
         const grid = document.getElementById('listaAnimes');
         grid.innerHTML = '';
 
@@ -637,15 +660,4 @@
             const nome = card.getAttribute('data-nome').toLowerCase();
             if (nome.includes(termo)) {
                 card.style.display = 'flex';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    // Inicializa o catálogo ao carregar a página
-    window.onload = carregarCatalogo;
-</script>
-
-</body>
-                             </html>
+            } e
