@@ -402,7 +402,7 @@
     <input type="text" id="searchInput" placeholder="Pesquisar anime..." onkeyup="pesquisarAnime()">
 </div>
 
-<h2 class="titulo" id="tituloSecao">🔥 Catálogo de Romance</h2>
+<h2 class="titulo" id="tituloSecao">🔥 Catálogo de Romance (2025/2026)</h2>
 
 <!-- CONTEINER PRINCIPAL DOS CARDS GERADOS VIA JS -->
 <div class="grid" id="listaAnimes"></div>
@@ -454,44 +454,202 @@
 </div>
 
 <script>
-    // 🔗 SUA LISTA CENTRALIZADA DE ANIMES E LINKS DO GITHUB
+    // 🔗 LISTA CENTRALIZADA DE ANIMES E CAMINHOS LOCAIS
     const animesData = [
         {
-            id: "kimi-ni-todoke",
-            nome: "Kimi ni Todoke",
-            img: "img/kimi-ni-todoke.jpg",
-            trailer: "videos/kimi-ni-todoke.mp4", // Link do GitHub do Trailer/Corte
-            ano: "2009",
-            eps: 38,
-            temp: "3",
-            genero: "Romance, Escolar",
-            nota: "8.3",
-            status: "Finalizado",
-            sinopse: "Sawako Kuronuma, apelidada de Sadako por sua aparência, é incompreendida pelos colegas. Sua vida muda quando Kazehaya, o garoto mais popular, começa a conversar com ela.",
-            personagens: "Sawako Kuronuma, Shota Kazehaya",
-            // Links específicos de cada episódio hospedados no GitHub (exemplo):
-            episodiosLinks: {
-                1: "https://seu-usuario.github.io/seu-repositorio/videos/kimi-ep1.mp4",
-                2: "https://seu-usuario.github.io/seu-repositorio/videos/kimi-ep2.mp4"
-                // Defina os episódios que quiser. Os que não tiverem link usarão o trailer por padrão.
-            }
+            id: "blue-box",
+            nome: "Blue Box",
+            img: "img/blue-box.jpg",
+            trailer: "videos/blue-box.mp4",
+            ano: "2025",
+            eps: 25,
+            temp: "1",
+            genero: "Romance, Esportes",
+            nota: "8.6",
+            status: "Em Andamento",
+            sinopse: "Taiki Inomata frequenta a Academia Eimei e faz parte do clube de badminton. Ele é apaixonado por Chinatsu Kano, jogadora do time de basquete.",
+            personagens: "Taiki Inomata, Chinatsu Kano",
+            episodiosLinks: {}
         },
         {
-            id: "horimiya",
-            nome: "Horimiya",
-            img: "img/horimiya.jpg",
-            trailer: "videos/horimiya.mp4",
-            ano: "2021",
-            eps: 26,
-            temp: "2",
+            id: "alya-san",
+            nome: "Alya Sometimes Hides Her Feelings",
+            img: "img/alya-san.jpg",
+            trailer: "videos/alya-san.mp4",
+            ano: "2025",
+            eps: 12,
+            temp: "1",
             genero: "Romance, Comédia",
+            nota: "8.1",
+            status: "Finalizado",
+            sinopse: "Alisa Mikhailovna Kujou é a beleza russa que age friamente, mas sussurra declarações apaixonadas em russo achando que Masachika não entende.",
+            personagens: "Alisa Mikhailovna Kujou, Masachika Kuze",
+            episodiosLinks: {}
+        },
+        {
+            id: "makeine",
+            nome: "Too Many Losing Heroines!",
+            img: "img/makeine.jpg",
+            trailer: "videos/makeine.mp4",
+            ano: "2025",
+            eps: 12,
+            temp: "1",
+            genero: "Romance, Comédia",
+            nota: "8.4",
+            status: "Finalizado",
+            sinopse: "Kazuhiko Nukumizu testemunha garotas populares sendo rejeitadas e acaba envolvido no cotidiano amoroso dessas heroínas.",
+            personagens: "Kazuhiko Nukumizu, Anna Yanami",
+            episodiosLinks: {}
+        },
+        {
+            id: "fragrant-flower",
+            nome: "The Fragrant Flower Blooms",
+            img: "img/fragrant-flower.jpg",
+            trailer: "videos/fragrant-flower.mp4",
+            ano: "2025",
+            eps: 12,
+            temp: "1",
+            genero: "Romance, Escolar",
+            nota: "8.9",
+            status: "Em Andamento",
+            sinopse: "Rintaro frequenta uma escola para delinquentes e Kaoruko estuda em um colégio de elite. Um doce romance nasce na confeitaria.",
+            personagens: "Rintaro Tsumugi, Kaoruko Waguri",
+            episodiosLinks: {}
+        },
+        {
+            id: "gimai-seikatsu",
+            nome: "Days with My Stepsister",
+            img: "img/gimai-seikatsu.jpg",
+            trailer: "videos/gimai-seikatsu.mp4",
+            ano: "2024",
+            eps: 12,
+            temp: "1",
+            genero: "Romance, Drama",
             nota: "8.2",
             status: "Finalizado",
-            sinopse: "Hori é popular e inteligente, mas em casa cuida do irmão. Miyamura parece um nerd sombrio, mas tem piercings e tatuagens. Quando descobrem os segredos um do outro, um romance surge.",
+            sinopse: "Após o remrimônio de seus pais, Yuta e Saki passam a morar sob o mesmo teto como meio-irmãos, aprendendo a conviver com cautela.",
+            personagens: "Yuta Asamura, Saki Ayase",
+            episodiosLinks: {}
+        },
+        {
+            id: "giji-harem",
+            nome: "Pseudo Harem",
+            img: "img/giji-harem.jpg",
+            trailer: "videos/giji-harem.mp4",
+            ano: "2024",
+            eps: 12,
+            temp: "1",
+            genero: "Romance, Comédia",
+            nota: "8.0",
+            status: "Finalizado",
+            sinopse: "Nanakura Nana usa suas habilidades de atuação para criar diferentes 'personalidades' de namorada para Eiji Natsuhime.",
+            personagens: "Nanakura Nana, Eiji Natsuhime",
+            episodiosLinks: {}
+        },
+        {
+            id: "100-girlfriends-2",
+            nome: "The 100 Girlfriends 2",
+            img: "img/100-girlfriends.jpg",
+            trailer: "videos/100-girlfriends.mp4",
+            ano: "2025",
+            eps: 12,
+            temp: "2",
+            genero: "Romance, Harem",
+            nota: "8.3",
+            status: "Em Andamento",
+            sinopse: "A continuação da comédia romântica onde Rentaro precisa fazer todas as suas almas gêmeas felizes ao mesmo tempo.",
+            personagens: "Rentaro Aijo, Hakari Hanazono",
+            episodiosLinks: {}
+        },
+        {
+            id: "amagami-sisters",
+            nome: "Tying the Knot with Amagami",
+            img: "img/amagami.jpg",
+            trailer: "videos/amagami.mp4",
+            ano: "2025",
+            eps: 24,
+            temp: "1",
+            genero: "Romance, Comédia",
+            nota: "7.9",
+            status: "Em Andamento",
+            sinopse: "Uryu Kamihate mora em um santuário xintoísta cuidando de três irmãs encantadoras.",
+            personagens: "Uryu Kamihate, Yuna Amagami",
+            episodiosLinks: {}
+        },
+        {
+            id: "dangers-in-my-heart-2",
+            nome: "The Dangers in My Heart 2",
+            img: "img/dangers.jpg",
+            trailer: "videos/dangers.mp4",
+            ano: "2025",
+            eps: 13,
+            temp: "2",
+            genero: "Romance, Escolar",
+            nota: "8.9",
+            status: "Finalizado",
+            sinopse: "Kyotaro e Anna continuam seu lindo romance escolar repleto de momentos doces e desajeitados.",
+            personagens: "Kyotaro Ichikawa, Anna Yamada",
+            episodiosLinks: {}
+        },
+        {
+            id: "honey-lemon-soda",
+            nome: "Honey Lemon Soda",
+            img: "img/honey-lemon.jpg",
+            trailer: "videos/honey-lemon.mp4",
+            ano: "2025",
+            eps: 12,
+            temp: "1",
+            genero: "Romance, Shoujo",
+            nota: "8.0",
+            status: "Em Andamento",
+            sinopse: "Uka Ishimori supera o bullying do passado com a ajuda de Kai Miura, um garoto de cabelo limão.",
+            personagens: "Uka Ishimori, Kai Miura",
+            episodiosLinks: {}
+        },
+        {
+            id: "2-5-seduction",
+            nome: "2.5 Dimensional Seduction",
+            img: "img/2-5-seduction.jpg",
+            trailer: "videos/2-5-seduction.mp4",
+            ano: "2025",
+            eps: 24,
+            temp: "1",
+            genero: "Romance, Ecchi",
+            nota: "7.8",
+            status: "Finalizado",
+            sinopse: "Masamune e Lilysa vivem o mundo dos cosplays e sentimentos genuínos.",
+            personagens: "Masamune Okumura, Lilysa Amano",
+            episodiosLinks: {}
+        },
+        {
+            id: "kimi-ni-todoke-3",
+            nome: "Kimi ni Todoke 3",
+            img: "img/kimi-ni-todoke.jpg",
+            trailer: "videos/kimi-ni-todoke.mp4",
+            ano: "2025",
+            eps: 12,
+            temp: "3",
+            genero: "Romance, Escolar",
+            nota: "8.5",
+            status: "Finalizado",
+            sinopse: "A tão esperada terceira temporada acompanhando o relacionamento maduro de Sawako e Kazehaya.",
+            personagens: "Sawako Kuronuma, Shota Kazehaya",
+            episodiosLinks: {}
+        },
+        {
+            id: "horimiya-piece",
+            nome: "Horimiya: The Missing Pieces",
+            img: "img/horimiya.jpg",
+            trailer: "videos/horimiya.mp4",
+            ano: "2023",
+            eps: 13,
+            temp: "2",
+            genero: "Romance, Comédia",
+            nota: "8.3",
+            status: "Finalizado",
+            sinopse: "Histórias adicionais e momentos inesquecíveis do grupo de amigos de Hori e Miyamura.",
             personagens: "Kyoko Hori, Izumi Miyamura",
-            episodiosLinks: {
-                // 1: "link-do-ep1-horimiya.mp4"
-            }
+            episodiosLinks: {}
         },
         {
             id: "toradora",
@@ -504,140 +662,26 @@
             genero: "Romance, Drama",
             nota: "8.1",
             status: "Finalizado",
-            sinopse: "Ryuji tem cara de delinquente, mas é gentil. Taiga é pequena e fofa, mas agressiva. Eles descobrem que são apaixonados pelos melhores amigos um do outro e fazem um acordo para se ajudarem.",
+            sinopse: "Ryuji e Taiga fazem um pacto para conquistar seus amigos, mas acabam descobrindo o amor.",
             personagens: "Taiga Aisaka, Ryuji Takasu",
-            episodiosLinks: {
-                // 1: "link-do-ep1-toradora.mp4"
-            }
-        }
-    ];
-
-    // Renderizar os cards automaticamente ao carregar a página
-    function carregarCatalogo() {
-        const grid = document.getElementById('listaAnimes');
-        grid.innerHTML = '';
-
-        animesData.forEach(anime => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.onclick = () => abrirAnime(anime);
-            card.setAttribute('data-nome', anime.nome);
-
-            card.innerHTML = `
-                <div class="img-wrapper">
-                    <span class="badge badge-status">${anime.status}</span>
-                    <span class="badge badge-score">⭐ ${anime.nota}</span>
-                    <img src="${anime.img}" alt="${anime.nome}">
-                </div>
-                <div class="card-info">
-                    <h3>${anime.nome}</h3>
-                    <div class="detalhes-rapidos">
-                        <p>Ano: <span>${anime.ano}</span> | Temp: <span>${anime.temp}</span></p>
-                        <p>Episódios: <span>${anime.eps}</span></p>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
-
-    function abrirAnime(anime) {
-        document.getElementById('detalhesImg').src = anime.img;
-        document.getElementById('detalhesImg').alt = anime.nome;
-        document.getElementById('detalhesNome').textContent = anime.nome;
-        document.getElementById('detalhesAno').textContent = anime.ano;
-        document.getElementById('detalhesEps').textContent = anime.eps;
-        document.getElementById('detalhesTemp').textContent = anime.temp;
-        document.getElementById('detalhesNota').textContent = anime.nota;
-        document.getElementById('detalhesGeneros').textContent = anime.genero;
-        document.getElementById('detalhesStatus').textContent = anime.status;
-        document.getElementById('detalhesSinopse').textContent = anime.sinopse;
-        document.getElementById('detalhesPersonagens').textContent = anime.personagens;
-
-        const videoElement = document.getElementById('detalhesVideo');
-        const btnBaixar = document.getElementById('btnBaixarVideo');
-        const tituloPlayer = document.getElementById('tituloPlayer');
-        const subtituloPlayer = document.getElementById('subtituloPlayer');
-
-        // Configuração inicial com o Trailer/Corte do GitHub
-        tituloPlayer.textContent = `🎬 Reproduzindo: Corte / Trailer de ${anime.nome}`;
-        subtituloPlayer.textContent = "Clique em qualquer episódio abaixo para assistir:";
-
-        if (anime.trailer) {
-            videoElement.src = anime.trailer;
-            btnBaixar.href = anime.trailer;
-            btnBaixar.style.display = 'block';
-        } else {
-            videoElement.src = '';
-            btnBaixar.style.display = 'none';
-        }
-
-        // Geração da lista de episódios
-        const listaEps = document.getElementById('listaEpisodios');
-        listaEps.innerHTML = '';
-        
-        for (let i = 1; i <= anime.eps; i++) {
-            const epDiv = document.createElement('div');
-            epDiv.className = 'ep-item';
-            epDiv.textContent = `EP ${i}`;
-            
-            epDiv.onclick = function() {
-                document.querySelectorAll('.ep-item').forEach(el => el.classList.remove('ativo'));
-                epDiv.classList.add('ativo');
-
-                // Pega o link específico do episódio no GitHub se existir, senão usa o trailer
-                const linkEp = (anime.episodiosLinks && anime.episodiosLinks[i]) ? anime.episodiosLinks[i] : anime.trailer;
-
-                videoElement.src = linkEp;
-                btnBaixar.href = linkEp;
-                btnBaixar.style.display = linkEp ? 'block' : 'none';
-
-                tituloPlayer.textContent = `📺 Assistindo: ${anime.nome} - Episódio ${i}`;
-                subtituloPlayer.textContent = `Você está assistindo ao EP ${i} de ${anime.eps} episódios.`;
-
-                document.getElementById('secaoVideo').scrollIntoView({ behavior: 'smooth' });
-                videoElement.play();
-            };
-
-            listaEps.appendChild(epDiv);
-        }
-
-        // Alterna telas
-        document.querySelector('.search').style.display = 'none';
-        document.getElementById('tituloSecao').style.display = 'none';
-        document.getElementById('listaAnimes').style.display = 'none';
-        document.getElementById('animePage').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function voltarCatalogo() {
-        const videoElement = document.getElementById('detalhesVideo');
-        videoElement.pause();
-        videoElement.currentTime = 0;
-
-        document.getElementById('animePage').style.display = 'none';
-        document.querySelector('.search').style.display = 'block';
-        document.getElementById('tituloSecao').style.display = 'block';
-        document.getElementById('listaAnimes').style.display = 'grid';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function pesquisarAnime() {
-        const termo = document.getElementById('searchInput').value.toLowerCase();
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            const nome = card.getAttribute('data-nome').toLowerCase();
-            if (nome.includes(termo)) {
-                card.style.display = 'flex';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    // Inicializa o catálogo ao carregar a página
-    window.onload = carregarCatalogo;
-</script>
-
-</body>
-    </html>
+            episodiosLinks: {}
+        },
+        {
+            id: "shikimori",
+            nome: "Shikimori's Not Just a Cutie",
+            img: "img/shikimori.jpg",
+            trailer: "videos/shikimori.mp4",
+            ano: "2022",
+            eps: 12,
+            temp: "1",
+            genero: "Romance, Comédia",
+            nota: "7.7",
+            status: "Finalizado",
+            sinopse: "Izumi é protegido pela sua incrível e deslumbrante namorada Shikimori.",
+            personagens: "Shikimori, Izumi",
+            episodiosLinks: {}
+        },
+        {
+            id: "komi-cant-communicate",
+            nome: "Komi Can't Communicate",
+            img: "i
