@@ -54,119 +54,9 @@
         font-size: 15px;
     }
 
-    /* BARRA DE NAVEGAÇÃO / MENU RÁPIDO */
-    .nav-bar {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        padding: 15px 20px;
-        background: #111118;
-        border-bottom: 1px solid #222;
-        flex-wrap: wrap;
-    }
-
-    .nav-btn {
-        background: var(--card-bg);
-        border: 1px solid #444;
-        color: white;
-        padding: 8px 18px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        transition: 0.3s;
-    }
-
-    .nav-btn:hover, .nav-btn.ativo {
-        background: var(--primary);
-        border-color: var(--neon);
-        box-shadow: 0 0 10px rgba(184, 41, 234, 0.4);
-    }
-
-    /* HERO BANNER (DESTAQUE) */
-    .hero-banner {
-        max-width: 1300px;
-        margin: 30px auto;
-        padding: 0 20px;
-    }
-
-    .hero-content {
-        background: linear-gradient(90deg, rgba(26,26,36,0.95) 0%, rgba(17,0,34,0.8) 100%), url('img/bisque-doll.jpg');
-        background-size: cover;
-        background-position: center;
-        border-radius: 20px;
-        border: 1px solid var(--primary);
-        padding: 40px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 15px;
-        box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
-        min-height: 350px;
-    }
-
-    .hero-content h2 {
-        font-size: 36px;
-        color: #fff;
-        text-shadow: 0 0 10px var(--neon);
-    }
-
-    .hero-content p {
-        max-width: 600px;
-        color: #ccc;
-        font-size: 15px;
-        line-height: 1.6;
-    }
-
-    .hero-btn {
-        display: inline-block;
-        width: fit-content;
-        background: linear-gradient(90deg, var(--primary), var(--neon));
-        color: white;
-        padding: 12px 25px;
-        border-radius: 10px;
-        text-decoration: none;
-        font-weight: bold;
-        transition: 0.3s;
-        box-shadow: 0 0 15px rgba(184, 41, 234, 0.4);
-    }
-
-    .hero-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 25px var(--neon);
-    }
-
-    /* FILTROS POR TAGS / GÊNERO */
-    .tags-container {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        padding: 10px 20px 20px;
-        flex-wrap: wrap;
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-
-    .tag-btn {
-        background: #1e1e2d;
-        border: 1px solid #333;
-        color: var(--text-muted);
-        padding: 6px 15px;
-        border-radius: 15px;
-        font-size: 13px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    .tag-btn:hover, .tag-btn.ativo {
-        background: var(--primary);
-        color: #fff;
-        border-color: var(--neon);
-    }
-
     /* BARRA DE PESQUISA */
     .search {
-        padding: 10px 20px 20px;
+        padding: 30px 20px 10px;
         max-width: 800px;
         margin: 0 auto;
     }
@@ -189,7 +79,7 @@
     }
 
     .titulo {
-        padding: 20px 20px 10px;
+        padding: 20px;
         font-size: 24px;
         text-align: center;
         text-transform: uppercase;
@@ -243,7 +133,7 @@
         opacity: 0.8;
     }
 
-    /* BOTÃO DE FAVORITO NO CARD */
+    /* BOTÃO DE FAVORITO */
     .btn-fav {
         position: absolute;
         bottom: 10px;
@@ -536,40 +426,14 @@
 
 <header>
     <h1>🎬 TOP CORTE ANIME</h1>
-    <p id="headerSub">Catálogo completo de animes e cortes</p>
+    <p>Encontre o anime, assista aos episódios e baixe os melhores cortes!</p>
 </header>
-
-<!-- BARRA DE NAVEGAÇÃO -->
-<div class="nav-bar">
-    <button class="nav-btn ativo" onclick="filtrarSecao('todos')">🏠 Início</button>
-    <button class="nav-btn" onclick="filtrarSecao('favoritos')">❤️ Minha Lista</button>
-    <button class="nav-btn" onclick="surpreenderAnime()">🎲 Surpreenda-me</button>
-</div>
-
-<!-- HERO BANNER (DESTAQUE) -->
-<div class="hero-banner" id="heroBannerSection">
-    <div class="hero-content">
-        <h2>My Dress-Up Darling</h2>
-        <p>Wakana Gojo faz bonecas Hina e é isolado. Sua vida muda quando Marin Kitagawa descobre sua habilidade com a costura e pede ajuda com cosplays.</p>
-        <a href="#" class="hero-btn" onclick="abrirAnimePorNome('My Dress-Up Darling'); return false;">▶ Assistir Agora</a>
-    </div>
-</div>
-
-<!-- FILTROS POR GÊNERO / TAGS -->
-<div class="tags-container" id="tagsContainer">
-    <button class="tag-btn ativo" onclick="filtrarTag('Todos', this)">Todos</button>
-    <button class="tag-btn" onclick="filtrarTag('Romance', this)">Romance</button>
-    <button class="tag-btn" onclick="filtrarTag('Slice of Life', this)">Slice of Life</button>
-    <button class="tag-btn" onclick="filtrarTag('Comédia', this)">Comédia</button>
-    <button class="tag-btn" onclick="filtrarTag('Drama', this)">Drama</button>
-    <button class="tag-btn" onclick="filtrarTag('Escolar', this)">Escolar</button>
-</div>
 
 <div class="search">
     <input type="text" id="searchInput" placeholder="Pesquisar anime..." onkeyup="pesquisarAnime()">
 </div>
 
-<h2 class="titulo" id="tituloSecao">🔥 Catálogo de Animes</h2>
+<h2 class="titulo" id="tituloSecao">🔥 Catálogo de Romance</h2>
 
 <!-- CONTEINER PRINCIPAL DOS CARDS GERADOS VIA JS -->
 <div class="grid" id="listaAnimes"></div>
@@ -689,9 +553,6 @@
         }
     ];
 
-    let modoAtual = 'todos';
-    let tagAtiva = 'Todos';
-
     // Gerenciamento de Favoritos no localStorage
     function getFavoritos() {
         return JSON.parse(localStorage.getItem('anime_favoritos')) || [];
@@ -710,13 +571,101 @@
     }
 
     // Renderizar os cards automaticamente ao carregar a página
-    function carregarCatalogo(lista = animesData) {
+    function carregarCatalogo() {
         const grid = document.getElementById('listaAnimes');
         grid.innerHTML = '';
 
-        // Atualizar estatísticas do cabeçalho
-        let totalEps = animesData.reduce((acc, curr) => acc + curr.episodios.length, 0);
-        document.getElementById('headerSub').textContent = `Total de Animes: ${animesData.length} | Episódios Disponíveis: ${totalEps}`;
+        const favs = getFavoritos();
 
-        if (lista.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color
+        animesData.forEach(anime => {
+            const isFav = favs.includes(anime.nome);
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.onclick = () => abrirAnime(anime);
+            card.setAttribute('data-nome', anime.nome);
+
+            card.innerHTML = `
+                <div class="img-wrapper">
+                    <span class="badge badge-status">${anime.status}</span>
+                    <span class="badge badge-score">⭐ ${anime.nota}</span>
+                    <img src="${anime.img}" alt="${anime.nome}">
+                    <button class="btn-fav" onclick="toggleFavorito('${anime.nome}', event)" title="Favoritar">${isFav ? '❤️' : '🤍'}</button>
+                </div>
+                <div class="card-info">
+                    <h3>${anime.nome}</h3>
+                    <div class="detalhes-rapidos">
+                        <p>Ano: <span>${anime.ano}</span> | Temp: <span>${anime.temp}</span></p>
+                        <p>Episódios: <span>${anime.episodios.length}</span></p>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function abrirAnime(anime) {
+        document.getElementById('detalhesImg').src = anime.img;
+        document.getElementById('detalhesImg').alt = anime.nome;
+        document.getElementById('detalhesNome').textContent = anime.nome;
+        document.getElementById('detalhesAno').textContent = anime.ano;
+        document.getElementById('detalhesEps').textContent = anime.episodios.length;
+        document.getElementById('detalhesTemp').textContent = anime.temp;
+        document.getElementById('detalhesNota').textContent = anime.nota;
+        document.getElementById('detalhesGeneros').textContent = anime.genero;
+        document.getElementById('detalhesStatus').textContent = anime.status;
+        document.getElementById('detalhesSinopse').textContent = anime.sinopse;
+        document.getElementById('detalhesPersonagens').textContent = anime.personagens;
+
+        const videoElement = document.getElementById('detalhesVideo');
+        const btnBaixar = document.getElementById('btnBaixarVideo');
+        const tituloPlayer = document.getElementById('tituloPlayer');
+        const subtituloPlayer = document.getElementById('subtituloPlayer');
+
+        // Configuração inicial com o Trailer/Corte local
+        tituloPlayer.textContent = `🎬 Reproduzindo: Corte / Trailer de ${anime.nome}`;
+        subtituloPlayer.textContent = "Clique em qualquer episódio abaixo para assistir:";
+
+        if (anime.trailer) {
+            videoElement.src = anime.trailer;
+            btnBaixar.href = anime.trailer;
+            btnBaixar.style.display = 'block';
+        } else {
+            videoElement.src = '';
+            btnBaixar.style.display = 'none';
+        }
+
+        // Histórico de episódios vistos salvos no navegador
+        const keyVistos = `vistos_${anime.nome}`;
+        let vistos = JSON.parse(localStorage.getItem(keyVistos)) || [];
+
+        // Geração da lista de episódios usando o array 'episodios'
+        const listaEps = document.getElementById('listaEpisodios');
+        listaEps.innerHTML = '';
+        
+        anime.episodios.forEach((linkEp, index) => {
+            const epNum = index + 1;
+            const epDiv = document.createElement('div');
+            epDiv.className = 'ep-item';
+            if (vistos.includes(epNum)) epDiv.classList.add('visto');
+            epDiv.textContent = `EP ${epNum}`;
+            
+            epDiv.onclick = function() {
+                document.querySelectorAll('.ep-item').forEach(el => el.classList.remove('ativo'));
+                epDiv.classList.add('ativo');
+
+                // Marcar episódio como visto
+                if (!vistos.includes(epNum)) {
+                    vistos.push(epNum);
+                    localStorage.setItem(keyVistos, JSON.stringify(vistos));
+                    epDiv.classList.add('visto');
+                }
+
+                videoElement.src = linkEp;
+                btnBaixar.href = linkEp;
+                btnBaixar.style.display = linkEp ? 'block' : 'none';
+
+                tituloPlayer.textContent = `📺 Assistindo: ${anime.nome} - Episódio ${epNum}`;
+                subtituloPlayer.textContent = `Você está assistindo ao EP ${epNum} de ${anime.episodios.length} episódios.`;
+
+                document.getElementById('secaoVideo').scrollIntoView({ behavior: 'smooth' });
+                videoEle
