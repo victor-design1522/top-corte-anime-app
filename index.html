@@ -38,6 +38,7 @@
         text-align: center;
         border-bottom: 2px solid var(--primary);
         box-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
+        position: relative;
     }
 
     header h1 {
@@ -63,6 +64,26 @@
     .contador-acessos span {
         color: var(--neon);
         font-weight: bold;
+    }
+
+    .btn-admin-header {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(138, 43, 226, 0.3);
+        border: 1px solid var(--neon);
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .btn-admin-header:hover {
+        background: var(--primary);
+        box-shadow: 0 0 10px var(--neon);
     }
 
     /* BARRA DE PESQUISA */
@@ -386,6 +407,111 @@
         transform: scale(1.02);
     }
 
+    /* PAINEL ADMIN */
+    #adminModal, #adminPanel {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .admin-box {
+        background: var(--card-bg);
+        border: 2px solid var(--primary);
+        border-radius: 20px;
+        padding: 30px;
+        width: 100%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+    }
+
+    .admin-box h2 {
+        color: var(--neon);
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .admin-box input, .admin-box textarea, .admin-box select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        background: #252533;
+        border: 1px solid #444;
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .admin-box input:focus, .admin-box textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+    }
+
+    .admin-box label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .admin-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(90deg, var(--primary), var(--neon));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 5px;
+    }
+
+    .admin-btn:hover {
+        box-shadow: 0 0 15px var(--neon);
+    }
+
+    .btn-fechar {
+        background: #333;
+        margin-top: 10px;
+    }
+
+    .admin-lista-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #252533;
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .admin-lista-item button {
+        background: #ff4444;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .admin-lista-item button:hover {
+        background: #cc0000;
+    }
+
     @media (max-width: 768px) {
         .detalhes-header {
             flex-direction: column;
@@ -397,6 +523,11 @@
         }
         .info-grid {
             grid-template-columns: 1fr;
+        }
+        .btn-admin-header {
+            position: static;
+            display: block;
+            margin: 10px auto 0 auto;
         }
     }
 </style>
@@ -410,6 +541,7 @@
     <div class="contador-acessos">
         👁️ Pessoas que acessaram: <span id="contadorAcessos">1420</span>
     </div>
+    <button class="btn-admin-header" onclick="abrirPainelAdmin()">🔐 Painel ADM</button>
 </header>
 
 <div class="search">
@@ -467,9 +599,63 @@
     <button class="btn-voltar" onclick="voltarCatalogo()">Voltar ao Catálogo</button>
 </div>
 
+<!-- MODAL DE LOGIN DO ADMIN -->
+<div id="adminModal">
+    <div class="admin-box">
+        <h2>🔐 Login Painel ADM</h2>
+        <label>Usuário:</label>
+        <input type="text" id="adminUser" placeholder="Digite o usuário">
+        <label>Senha:</label>
+        <input type="password" id="adminPass" placeholder="Digite a senha">
+        <button class="admin-btn" onclick="fazerLoginAdmin()">Entrar</button>
+        <button class="admin-btn btn-fechar" onclick="fecharLoginAdmin()">Cancelar</button>
+    </div>
+</div>
+
+<!-- PAINEL DE CONTROLE DO ADMIN -->
+<div id="adminPanel">
+    <div class="admin-box">
+        <h2>⚙️ Painel de Administração</h2>
+        
+        <h3 style="color: var(--neon); margin-bottom: 10px; font-size: 16px;">➕ Adicionar Novo Anime</h3>
+        <label>Nome do Anime:</label>
+        <input type="text" id="novoNome" placeholder="Ex: Your Name">
+        <label>URL da Imagem da Capa:</label>
+        <input type="text" id="novoImg" placeholder="Ex: img/your-name.jpg">
+        <label>URL do Trailer / Corte:</label>
+        <input type="text" id="novoTrailer" placeholder="Ex: videos/trailer.mp4">
+        <label>Ano:</label>
+        <input type="text" id="novoAno" placeholder="Ex: 2016">
+        <label>Temporadas:</label>
+        <input type="text" id="novoTemp" placeholder="Ex: 1">
+        <label>Gênero:</label>
+        <input type="text" id="novoGenero" placeholder="Ex: Romance, Sobrenatural">
+        <label>Nota ⭐:</label>
+        <input type="text" id="novoNota" placeholder="Ex: 8.5">
+        <label>Status:</label>
+        <select id="novoStatus">
+            <option value="Finalizado">Finalizado</option>
+            <option value="Em Andamento">Em Andamento</option>
+        </select>
+        <label>Sinopse:</label>
+        <textarea id="novoSinopse" rows="3" placeholder="Sinopse do anime..."></textarea>
+        <label>Personagens:</label>
+        <input type="text" id="novoPersonagens" placeholder="Ex: Taki, Mitsuha">
+        <label>Links dos Episódios (separados por vírgula):</label>
+        <input type="text" id="novoEpisodios" placeholder="Ex: videos/ep1.mp4, videos/ep2.mp4">
+        
+        <button class="admin-btn" onclick="adicionarAnime()">Cadastrar Anime</button>
+
+        <h3 style="color: var(--neon); margin: 20px 0 10px 0; font-size: 16px;">🗑️ Gerenciar / Excluir Animes</h3>
+        <div id="adminListaAnimes" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;"></div>
+
+        <button class="admin-btn btn-fechar" onclick="fecharPainelAdmin()">Sair do Painel</button>
+    </div>
+</div>
+
 <script>
-    // 🔗 SUA LISTA CENTRALIZADA DE ANIMES E CAMINHOS LOCAIS POR ARRAY
-    const animesData = [
+    // 🔗 LISTA PADRÃO DE ANIMES
+    const animesIniciais = [
         {
             nome: "My Dress-Up Darling",
             img: "img/bisque-doll.jpg",
@@ -531,133 +717,4 @@
             personagens: "Taiga Aisaka, Ryuji Takasu",
             episodios: [
                 "videos/toradora-ep1.mp4",
-                "videos/toradora-ep2.mp4"
-            ]
-        }
-    ];
-
-    // Renderizar os cards automaticamente ao carregar a página
-    function carregarCatalogo() {
-        let acessos = localStorage.getItem('site_acessos');
-        if (!acessos) {
-            acessos = 1420;
-        } else {
-            acessos = parseInt(acessos) + 1;
-        }
-        localStorage.setItem('site_acessos', acessos);
-        document.getElementById('contadorAcessos').textContent = acessos;
-
-        const grid = document.getElementById('listaAnimes');
-        grid.innerHTML = '';
-
-        animesData.forEach(anime => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.onclick = () => abrirAnime(anime);
-            card.setAttribute('data-nome', anime.nome);
-
-            card.innerHTML = `
-                <div class="img-wrapper">
-                    <span class="badge badge-status">${anime.status}</span>
-                    <span class="badge badge-score">⭐ ${anime.nota}</span>
-                    <img src="${anime.img}" alt="${anime.nome}">
-                </div>
-                <div class="card-info">
-                    <h3>${anime.nome}</h3>
-                    <div class="detalhes-rapidos">
-                        <p>Ano: <span>${anime.ano}</span> | Temp: <span>${anime.temp}</span></p>
-                        <p>Episódios: <span>${anime.episodios.length}</span></p>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
-
-    function abrirAnime(anime) {
-        document.getElementById('detalhesImg').src = anime.img;
-        document.getElementById('detalhesImg').alt = anime.nome;
-        document.getElementById('detalhesNome').textContent = anime.nome;
-        document.getElementById('detalhesAno').textContent = anime.ano;
-        document.getElementById('detalhesEps').textContent = anime.episodios.length;
-        document.getElementById('detalhesTemp').textContent = anime.temp;
-        document.getElementById('detalhesNota').textContent = anime.nota;
-        document.getElementById('detalhesGeneros').textContent = anime.genero;
-        document.getElementById('detalhesStatus').textContent = anime.status;
-        document.getElementById('detalhesSinopse').textContent = anime.sinopse;
-        document.getElementById('detalhesPersonagens').textContent = anime.personagens;
-
-        const videoElement = document.getElementById('detalhesVideo');
-        const btnBaixar = document.getElementById('btnBaixarVideo');
-        const tituloPlayer = document.getElementById('tituloPlayer');
-        const subtituloPlayer = document.getElementById('subtituloPlayer');
-
-        // Configuração inicial com o Trailer/Corte local
-        tituloPlayer.textContent = `🎬 Reproduzindo: Corte / Trailer de ${anime.nome}`;
-        subtituloPlayer.textContent = "Clique em qualquer episódio abaixo para assistir:";
-
-        if (anime.trailer) {
-            videoElement.src = anime.trailer;
-            btnBaixar.href = anime.trailer;
-            btnBaixar.style.display = 'block';
-        } else {
-            videoElement.src = '';
-            btnBaixar.style.display = 'none';
-        }
-
-        // Geração da lista de episódios usando o array 'episodios'
-        const listaEps = document.getElementById('listaEpisodios');
-        listaEps.innerHTML = '';
-        
-        anime.episodios.forEach((linkEp, index) => {
-            const epNum = index + 1;
-            const epDiv = document.createElement('div');
-            epDiv.className = 'ep-item';
-            epDiv.textContent = `EP ${epNum}`;
-            
-            epDiv.onclick = function() {
-                document.querySelectorAll('.ep-item').forEach(el => el.classList.remove('ativo'));
-                epDiv.classList.add('ativo');
-
-                videoElement.src = linkEp;
-                btnBaixar.href = linkEp;
-                btnBaixar.style.display = linkEp ? 'block' : 'none';
-
-                tituloPlayer.textContent = `📺 Assistindo: ${anime.nome} - Episódio ${epNum}`;
-                subtituloPlayer.textContent = `Você está assistindo ao EP ${epNum} de ${anime.episodios.length} episódios.`;
-
-                document.getElementById('secaoVideo').scrollIntoView({ behavior: 'smooth' });
-                videoElement.play();
-            };
-
-            listaEps.appendChild(epDiv);
-        });
-
-        // Alterna telas
-        document.querySelector('.search').style.display = 'none';
-        document.getElementById('tituloSecao').style.display = 'none';
-        document.getElementById('listaAnimes').style.display = 'none';
-        document.getElementById('animePage').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function voltarCatalogo() {
-        const videoElement = document.getElementById('detalhesVideo');
-        videoElement.pause();
-        videoElement.currentTime = 0;
-
-        document.getElementById('animePage').style.display = 'none';
-        document.querySelector('.search').style.display = 'block';
-        document.getElementById('tituloSecao').style.display = 'block';
-        document.getElementById('listaAnimes').style.display = 'grid';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function pesquisarAnime() {
-        const termo = document.getElementById('searchInput').value.toLowerCase();
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            const nome = card.getAttribute('data-nome').toLowerCase();
-            if (nome.includes(termo)) {
-                card.style.display = 'flex';
-            } e
+              
