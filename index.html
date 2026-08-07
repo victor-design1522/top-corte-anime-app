@@ -1,617 +1,387 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-BR" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catálogo de Romance | TOP CORTE ANIME</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOP CORTE ANIME - Completo</title>
+    <style>
+        :root {
+            --bg-main: #0b0b0f;
+            --bg-card: #15151f;
+            --primary: #7b2cbf;
+            --neon: #9d4edd;
+            --text: #f8f9fa;
+            --text-muted: #adb5bd;
+            --danger: #e63946;
+            --success: #2a9d8f;
+        }
 
-<style>
-    :root {
-        --bg-color: #0a0a0f;
-        --card-bg: #1a1a24;
-        --primary: #8a2be2;
-        --neon: #b829ea;
-        --text-light: #e0e0e0;
-        --text-muted: #a0a0b0;
-    }
+        .light {
+            --bg-main: #f4f4f9;
+            --bg-card: #ffffff;
+            --primary: #5a189a;
+            --neon: #7b2cbf;
+            --text: #212529;
+            --text-muted: #6c757d;
+        }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
+        body { background-color: var(--bg-main); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
 
-    body {
-    background: var(--bg-color);
-    color: var(--text-light);
-    overflow-x: hidden;
-    min-height: 100vh;
-}
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background: rgba(15, 15, 25, 0.95);
+            backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+        }
 
-    header {
-        background: linear-gradient(135deg, #110022 0%, #2a0055 100%);
-        padding: 25px 20px;
-        text-align: center;
-        border-bottom: 2px solid var(--primary);
-        box-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
-    }
+        .logo { font-size: 18px; font-weight: bold; color: var(--text); cursor: pointer; }
+        .logo span { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
 
-    header h1 {
-        font-size: 32px;
-        color: #fff;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        text-shadow: 0 0 10px var(--neon);
-    }
+        .nav-actions { display: flex; gap: 8px; align-items: center; }
+        input, select, textarea {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 12px; border-radius: 8px; color: var(--text); outline: none; font-size: 14px; width: 100%;
+        }
 
-    header p {
-        color: var(--text-muted);
-        margin-top: 5px;
-        font-size: 15px;
-    }
+        .search-box { width: 130px; border-radius: 20px; }
+        @media(min-width: 600px) { .search-box { width: 200px; } }
 
-    .contador-acessos {
-        margin-top: 10px;
-        font-size: 13px;
-        color: var(--text-muted);
-    }
+        button { cursor: pointer; border: none; border-radius: 8px; padding: 8px 14px; font-weight: bold; font-size: 14px; }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 0 10px rgba(123, 44, 191, 0.4); }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-icon { background: var(--bg-card); color: var(--text); padding: 8px; border-radius: 50%; }
 
-    .contador-acessos span {
-        color: var(--neon);
-        font-weight: bold;
-    }
+        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        h2 { margin-bottom: 15px; border-left: 4px solid var(--neon); padding-left: 10px; font-size: 18px; }
 
-    .search {
-        padding: 30px 20px 10px;
-        max-width: 800px;
-        margin: 0 auto;
-    }
+        /* Grades e Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
+        @media(min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
 
-    .search input {
-        width: 100%;
-        padding: 16px 20px;
-        border-radius: 50px;
-        border: 2px solid #333;
-        background: var(--card-bg);
-        color: white;
-        font-size: 16px;
-        outline: none;
-        transition: all 0.3s ease;
-    }
+        .card {
+            background: var(--bg-card); border-radius: 10px; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; position: relative;
+        }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        @media(min-width: 600px) { .card img { height: 250px; } }
+        .card-info { padding: 10px; }
+        .card-info h3 { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-info p { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 
-    .search input:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
-    }
+        /* Páginas / Telas */
+        .page { display: none; }
+        .page.active { display: block; }
 
-    .titulo {
-        padding: 20px;
-        font-size: 24px;
-        text-align: center;
-        text-transform: uppercase;
-        color: var(--neon);
-        text-shadow: 0 0 5px rgba(184, 41, 234, 0.3);
-    }
+        /* Página de Detalhes */
+        .anime-header { display: flex; flex-direction: column; gap: 20px; }
+        @media(min-width: 768px) { .anime-header { flex-direction: row; } }
+        .anime-poster { width: 100%; max-width: 250px; border-radius: 10px; object-fit: cover; margin: 0 auto; }
+        .episodes-list { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; }
+        .ep-item { background: var(--bg-card); padding: 10px 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .ep-item:hover { border: 1px solid var(--neon); }
 
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 25px;
-        padding: 20px 40px;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
+        /* Player */
+        .player-container { width: 100%; background: #000; border-radius: 10px; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 15px; }
+        .player-container iframe, .player-container video { width: 100%; height: 100%; border: none; }
 
-    .card {
-        background: var(--card-bg);
-        border: 1px solid #333;
-        border-radius: 16px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: all 0.4s ease;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .card:hover {
-        transform: translateY(-10px) scale(1.02);
-        border-color: var(--primary);
-        box-shadow: 0 15px 25px rgba(138, 43, 226, 0.2);
-    }
-
-    .img-wrapper {
-        position: relative;
-        width: 100%;
-        height: 300px;
-    }
-
-    .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: 0.4s;
-    }
-
-    .card:hover img {
-        opacity: 0.8;
-    }
-
-    .badge {
-        position: absolute;
-        padding: 5px 10px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: bold;
-        z-index: 2;
-    }
-
-    .badge-score {
-        top: 10px;
-        right: 10px;
-        background: rgba(0, 0, 0, 0.8);
-        color: #ffd700;
-        border: 1px solid #ffd700;
-    }
-
-    .badge-status {
-        top: 10px;
-        left: 10px;
-        background: var(--primary);
-        color: white;
-    }
-
-    .card-info {
-        padding: 15px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .card h3 {
-        font-size: 18px;
-        margin-bottom: 10px;
-        color: #fff;
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .detalhes-rapidos {
-        font-size: 13px;
-        color: var(--text-muted);
-        text-align: center;
-        line-height: 1.6;
-    }
-
-    .detalhes-rapidos span {
-        color: var(--neon);
-        font-weight: bold;
-    }
-
-    #animePage {
-        display: none;
-        padding: 40px 20px;
-        max-width: 1000px;
-        margin: 0 auto;
-        animation: fadeIn 0.5s ease;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .detalhes-header {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 30px;
-        background: var(--card-bg);
-        padding: 30px;
-        border-radius: 20px;
-        border: 1px solid var(--primary);
-        box-shadow: 0 0 20px rgba(138, 43, 226, 0.1);
-    }
-
-    .detalhes-capa {
-        width: 300px;
-        height: 430px;
-        object-fit: cover;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-    }
-
-    .detalhes-texto {
-        flex: 1;
-        min-width: 300px;
-    }
-
-    .detalhes-texto h2 {
-        font-size: 32px;
-        color: var(--neon);
-        margin-bottom: 15px;
-    }
-
-    .info-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-
-    .info-item {
-        background: #252533;
-        padding: 12px;
-        border-radius: 10px;
-        font-size: 14px;
-    }
-
-    .info-item strong {
-        color: var(--primary);
-        display: block;
-        margin-bottom: 3px;
-    }
-
-    .sinopse-box, .personagens-box, .episodios-box, .video-box {
-        margin-top: 25px;
-        background: #252533;
-        padding: 20px;
-        border-radius: 15px;
-    }
-
-    .sinopse-box h3, .personagens-box h3, .episodios-box h3, .video-box h3 {
-        color: var(--neon);
-        margin-bottom: 10px;
-        border-bottom: 1px solid #444;
-        padding-bottom: 5px;
-    }
-
-    .sinopse-box p, .personagens-box p {
-        line-height: 1.7;
-        color: #ccc;
-    }
-
-    .video-container {
-        width: 100%;
-        max-height: 350px;
-        border-radius: 10px;
-        overflow: hidden;
-        background: #000;
-        margin-top: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .video-container video {
-        width: 100%;
-        max-height: 350px;
-        outline: none;
-    }
-
-    .btn-baixar-video {
-        display: inline-block;
-        margin-top: 15px;
-        width: 100%;
-        padding: 12px;
-        background: rgba(138, 43, 226, 0.2);
-        border: 1px solid var(--neon);
-        color: white;
-        text-align: center;
-        border-radius: 8px;
-        font-weight: bold;
-        text-decoration: none;
-        transition: 0.3s;
-    }
-
-    .btn-baixar-video:hover {
-        background: var(--primary);
-        box-shadow: 0 0 15px var(--neon);
-    }
-
-    .lista-eps {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-        gap: 10px;
-        margin-top: 15px;
-        max-height: 250px;
-        overflow-y: auto;
-        padding-right: 5px;
-    }
-
-    .lista-eps::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .lista-eps::-webkit-scrollbar-thumb {
-        background-color: var(--primary);
-        border-radius: 4px;
-    }
-
-    .ep-item {
-        background: var(--card-bg);
-        border: 1px solid #444;
-        padding: 12px 10px;
-        text-align: center;
-        border-radius: 8px;
-        font-size: 14px;
-        transition: 0.3s;
-        cursor: pointer;
-    }
-
-    .ep-item:hover, .ep-item.ativo {
-        background: var(--primary);
-        border-color: var(--neon);
-        box-shadow: 0 0 10px var(--neon);
-        font-weight: bold;
-    }
-
-    button.btn-voltar {
-        width: 100%;
-        padding: 18px;
-        margin-top: 30px;
-        background: linear-gradient(90deg, var(--primary), var(--neon));
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    button.btn-voltar:hover {
-        box-shadow: 0 0 20px var(--neon);
-        transform: scale(1.02);
-    }
-
-    @media (max-width: 768px) {
-        .detalhes-header {
-            flex-direction: column;
-            align-items: center;
-        }
-        .detalhes-capa {
-            width: 100%;
-            max-width: 300px;
-        }
-        .info-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
+        /* Painel Admin */
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+        .admin-table th, .admin-table td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+    </style>
 </head>
-
 <body>
 
+    <header>
+        <div class="logo" onclick="mudarPagina('home')">TOP CORTE <span>ANIME</span></div>
+        <div class="nav-actions">
+            <input type="text" id="global-search" class="search-box" placeholder="Pesquisar..." oninput="filtrarAnimes(this.value)">
+            <button class="btn-icon" onclick="alternarTema()"></button>
+            <button class="btn-primary" onclick="mudarPagina('admin-login')">ADM</button>
+        </div>
+    </header>
 
+    <div class="container">
 
-<div class="search">
-    <input type="text" id="searchInput" placeholder="Pesquisar anime..." onkeyup="pesquisarAnime()">
-</div>
+        <!-- 1. PÁGINA INICIAL -->
+        <div id="page-home" class="page active">
+            <div style="margin-bottom: 25px; background: linear-gradient(135deg, var(--primary), #240046); padding: 25px; border-radius: 15px;">
+                <h1 id="destaque-titulo" style="font-size: 24px; margin-bottom: 8px;">Carregando Destaque...</h1>
+                <p id="destaque-sinopse" style="font-size: 13px; color: #ddd; margin-bottom: 15px; max-width: 600px;"></p>
+                <button class="btn-primary" id="btn-destaque-assistir"> Assistir Destaque</button>
+            </div>
 
-<h2 class="titulo" id="tituloSecao">🔥 Catálogo de Romance</h2>
+            <div id="secao-continue" style="margin-bottom: 30px; display: none;">
+                <h2> Continue Assistindo</h2>
+                <div class="grid" id="grid-continue"></div>
+            </div>
 
-<div class="grid" id="listaAnimes"></div>
+            <div style="margin-bottom: 30px;">
+                <h2> Seus Favoritos</h2>
+                <div class="grid" id="grid-favoritos"><p style="color: var(--text-muted); font-size: 13px;">Nenhum favorito salvo.</p></div>
+            </div>
 
-<div id="animePage">
-    <div class="detalhes-header">
-        <img id="detalhesImg" class="detalhes-capa" src="" alt="Capa do Anime">
-        <div class="detalhes-texto">
-            <h2 id="detalhesNome"></h2>
-            
-            <div class="info-grid">
-                <div class="info-item"><strong>Ano de Lançamento</strong> <span id="detalhesAno"></span></div>
-                <div class="info-item"><strong>Episódios</strong> <span id="detalhesEps"></span></div>
-                <div class="info-item"><strong>Temporadas</strong> <span id="detalhesTemp"></span></div>
-                <div class="info-item"><strong>Nota ⭐</strong> <span id="detalhesNota"></span></div>
-                <div class="info-item"><strong>Gênero</strong> <span id="detalhesGeneros"></span></div>
-                <div class="info-item"><strong>Status</strong> <span id="detalhesStatus"></span></div>
-            </div>
+            <h2> Catálogo Completo</h2>
+            <div class="grid" id="grid-catalogo"></div>
+        </div>
 
-            <div class="sinopse-box">
-                <h3>Sinopse</h3>
-                <p id="detalhesSinopse"></p>
-            </div>
+        <!-- 2. PÁGINA DE DETALHES DO ANIME -->
+        <div id="page-anime" class="page">
+            <button onclick="mudarPagina('home')" style="margin-bottom: 15px; background: transparent; color: var(--neon);"> Voltar</button>
+            <div class="anime-header">
+                <img id="detalhe-capa" class="anime-poster" src="" alt="">
+                <div>
+                    <h1 id="detalhe-titulo" style="font-size: 22px; margin-bottom: 5px;"></h1>
+                    <p id="detalhe-info" style="color: var(--text-muted); font-size: 13px; margin-bottom: 10px;"></p>
+                    <p id="detalhe-sinopse" style="font-size: 14px; line-height: 1.5; margin-bottom: 15px;"></p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-primary" id="btn-favoritar" onclick="toggleFavoritoAtual()"> Favoritar</button>
+                    </div>
+                </div>
+            </div>
 
-            <div class="personagens-box">
-                <h3>Personagens Principais</h3>
-                <p id="detalhesPersonagens"></p>
-            </div>
-        </div>
-    </div>
+            <div style="margin-top: 25px;">
+                <h2> Episódios</h2>
+                <div class="episodes-list" id="detalhe-episodios"></div>
+            </div>
+        </div>
 
-    <div class="video-box" id="secaoVideo">
-        <h3 id="tituloPlayer">🎬 Reproduzindo: Corte / Trailer Oficial</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 5px;" id="subtituloPlayer">Clique em qualquer episódio abaixo para assistir:</p>
-        <div class="video-container">
-            <video id="detalhesVideo" controls></video>
-        </div>
-        <a id="btnBaixarVideo" class="btn-baixar-video" href="#" download target="_blank">⬇️ Baixar Vídeo Atual</a>
-    </div>
+        <!-- 3. PÁGINA DO PLAYER -->
+        <div id="page-player" class="page">
+            <button id="btn-voltar-anime" style="margin-bottom: 10px; background: transparent; color: var(--neon);"> Voltar ao Anime</button>
+            <h2 id="player-titulo-ep" style="font-size: 16px; margin-bottom: 10px;"></h2>
+            <div class="player-container">
+                <iframe id="video-iframe" src="" allowfullscreen></iframe>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                <button class="btn-primary" onclick="episodioAnterior()"> Ep. Anterior</button>
+                <button class="btn-primary" onclick="proximoEpisodio()">Próximo Ep. </button>
+            </div>
+        </div>
 
-    <div class="episodios-box">
-        <h3>Lista de Episódios (Clique para Assistir)</h3>
-        <div id="listaEpisodios" class="lista-eps"></div>
-    </div>
+        <!-- 4. PAINEL ADMINISTRATIVO (LOGIN) -->
+        <div id="page-admin-login" class="page">
+            <div style="max-width: 350px; margin: 40px auto; background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--neon);">
+                <h2 style="margin-bottom: 15px; color: var(--neon);">Painel ADM</h2>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">só para o dono</p>
+                <div class="form-group"><label>Usuário</label><input type="text" id="adm-user"></div>
+                <div class="form-group"><label>Senha</label><input type="password" id="adm-pass"></div>
+                <button class="btn-primary" style="width: 100%; margin-top: 10px;" onclick="fazerLoginAdmin()">Entrar</button>
+                <button style="width: 100%; margin-top: 10px; background: transparent; color: var(--text-muted);" onclick="mudarPagina('home')">Cancelar</button>
+            </div>
+        </div>
 
-    <button class="btn-voltar" onclick="voltarCatalogo()">Voltar ao Catálogo</button>
-</div>
+        <!-- 5. PAINEL ADMINISTRATIVO (GERENCIAMENTO REAL) -->
+        <div id="page-admin-painel" class="page">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2> Gerenciamento de Animes</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-success" onclick="abrirModalAnime()">+ Adicionar Anime</button>
+                    <button class="btn-danger" onclick="mudarPagina('home')">Sair</button>
+                </div>
+            </div>
+            <div style="overflow-x: auto; background: var(--bg-card); border-radius: 10px; padding: 15px;">
+                <table class="admin-table">
+                    <thead><tr><th>Título</th><th>Ano</th><th>Ações</th></tr></thead>
+                    <tbody id="admin-tabela-corpo"></tbody>
+                </table>
+            </div>
+        </div>
 
-<script>
-    const animesData = [
-        {
-    nome: "Gekkan Shoujo Nozaki-kun",
-    img: "img/gekkan-shoujo-nozaki-kun.jpg",
-    trailer: "https://res.cloudinary.com/uypda52e/video/upload/v1785818202/Ep.1_cutxxn.mp4",
-    ano: "2014",
-    temp: "1",
-    genero: "Romance, Comédia, Escolar, Slice of Life",
-    nota: "8.2",
-    status: "Finalizado",
-    sinopse: "Chiyo Sakura finalmente cria coragem para declarar seu amor ao colega Umetarou Nozaki. Porém, ele entende tudo errado e pensa que ela é apenas uma fã. Chiyo descobre que Nozaki é um famoso autor de mangás shoujo e passa a ajudá-lo, vivendo muitas situações engraçadas e românticas com seus amigos.",
+        <!-- MODAL DE ADICIONAR / EDITAR ANIME -->
+        <div id="modal-anime" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; padding: 20px; overflow-y: auto;">
+            <div style="max-width: 450px; margin: 30px auto; background: var(--bg-card); padding: 25px; border-radius: 12px;">
+                <h2 id="modal-titulo" style="margin-bottom: 15px;">Novo Anime</h2>
+                <input type="hidden" id="edit-id">
+                <div class="form-group"><label>Título</label><input type="text" id="form-titulo"></div>
+                <div class="form-group"><label>Link da Capa (Imagem)</label><input type="text" id="form-capa"></div>
+                <div class="form-group"><label>Ano</label><input type="text" id="form-ano"></div>
+                <div class="form-group"><label>Nota (Ex: 9.5)</label><input type="text" id="form-nota"></div>
+                <div class="form-group"><label>Sinopse</label><textarea id="form-sinopse" rows="3"></textarea></div>
+                
+                <div class="form-group">
+                    <label>Episódios (Links dos Vídeos separados por vírgula ou um por linha)</label>
+                    <textarea id="form-eps" rows="3" placeholder="https://www.youtube.com/embed/exemplo1, https://www.youtube.com/embed/exemplo2"></textarea>
+                </div>
 
-    personagens: "Chiyo Sakura, Umetarou Nozaki, Mikoto Mikoshiba, Yuu Kashima, Masayuki Hori, Yuzuki Seo, Hirotaka Wakamatsu",
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-primary" style="flex: 1;" onclick="salvarAnimeBD()">Salvar</button>
+                    <button class="btn-danger" style="flex: 1;" onclick="fecharModalAnime()">Cancelar</button>
+                </div>
+            </div>
+        </div>
 
-    episodios: [
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785818202/Ep.1_cutxxn.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785818258/Ep.2_krlo9m.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785818360/Ep.3_sfhwhl.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785818486/Ep.4_ewvpb6.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785818549/Ep.5_cqshuk.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785818644/Ep.6_wyrbkd.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785818736/Ep.7_f8zmrg.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785818907/Ep.8_aifaj3.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785818974/Ep.9_ovjcsh.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785819036/Ep.10_on2hn3.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785819085/Ep.11_xdnhyr.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785819081/Ep.12_mnph2g.mp4"
-    ]
+    </div>
+
+    <script>
+        // BANCO DE DADOS LOCAL PERSISTENTE (LocalStorage)
+        const DB_KEY = "top_corte_animes_db";
+        const FAV_KEY = "top_corte_favs_db";
+        const HIST_KEY = "top_corte_hist_db";
+
+        let animesPadrao = [
+            {
+    id: "1",
+    titulo: "Gekkan Shoujo Nozaki-kun",
+    capa: "COLE_AQUI_O_LINK_DA_CAPA",
+    ano: "2014",
+    nota: "8.2",
+    sinopse: "Chiyo Sakura finalmente cria coragem para confessar seu amor por Nozaki, mas ele entende tudo errado e a convida para ser sua assistente na criação de mangás. Assim começa uma divertida comédia romântica cheia de mal-entendidos e personagens carismáticos.",
+    episodios: [
+        { titulo: "Episódio 1", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818202/Ep.1_cutxxn.mp4" },
+        { titulo: "Episódio 2", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818258/Ep.2_krlo9m.mp4" },
+        { titulo: "Episódio 3", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818360/Ep.3_sfhwhl.mp4" },
+        { titulo: "Episódio 4", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818486/Ep.4_ewvpb6.mp4" },
+        { titulo: "Episódio 5", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818549/Ep.5_cqshuk.mp4" },
+        { titulo: "Episódio 6", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818644/Ep.6_wyrbkd.mp4" },
+        { titulo: "Episódio 7", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818736/Ep.7_f8zmrg.mp4" },
+        { titulo: "Episódio 8", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818907/Ep.8_aifaj3.mp4" },
+        { titulo: "Episódio 9", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818974/Ep.9_ovjcsh.mp4" },
+        { titulo: "Episódio 10", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785819036/Ep.10_on2hn3.mp4" },
+        { titulo: "Episódio 11", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785819085/Ep.11_xdnhyr.mp4" },
+        { titulo: "Episódio 12", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785819081/Ep.12_mnph2g.mp4" }
+    ]
 },
-        {
-    nome: "Nijuuseiki Denki Mokuroku: Eureka Evrika",
-    img: "img/nijuuseiki-denki-mokuroku.jpg",
-    trailer: "https://res.cloudinary.com/uypda52e/video/upload/v1785820946/Ep_1_yksgyu.mp4",
-    ano: "2026",
-    temp: "1",
-    genero: "Romance, Aventura, Drama, Steampunk",
-    nota: "8.3",
-    status: "Em Andamento",
-    sinopse: "Em uma versão alternativa do início do século XX no Japão, Kihachi Sakamoto sonha em criar um futuro movido pela eletricidade. Ao lado de Inako Momokawa, ele embarca em uma jornada repleta de aventuras, descobertas e sentimentos enquanto tenta desvendar os mistérios do lendário Catálogo Elétrico do Século XX.",
+            {
+                id: "2",
+                titulo: "Jujutsu Kaisen",
+                capa: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300&auto=format&fit=crop&q=60",
+                ano: "2023",
+                nota: "9.2",
+                sinopse: "Sofrimento, regretos e maldições compõem a vida daqueles que absorvem energias amaldiçoadas.",
+                episodios: [
+                    { titulo: "Episódio 1: Ryomen Sukuna", link: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { titulo: "Episódio 2: Para si mesmo", link: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+                ]
+            }
+        ];
 
-    personagens: "Kihachi Sakamoto, Inako Momokawa, Yosuke Mizoe, Seiroku Sakamoto",
+        function getAnimes() {
+            let dados = localStorage.getItem(DB_KEY);
+            if (!dados) {
+                localStorage.setItem(DB_KEY, JSON.stringify(animesPadrao));
+                return animesPadrao;
+            }
+            return JSON.parse(dados);
+        }
 
-    episodios: [
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785820946/Ep_1_yksgyu.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785820981/Ep_2_ilgofg.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785820980/Ep_3_kgosaz.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785821011/Ep_4_sgrvpw.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785821034/Ep_5_syxwgo.mp4"
-    ]
-},
-        {
-    nome: "Tensei Kizoku no Isekai Boukenroku",
-    img: "img/tensei-kizoku-no-isekai-boukenroku.jpg",
-    trailer: "https://res.cloudinary.com/uypda52e/video/upload/v1785822592/EP1_xotsdf.mp4",
-    ano: "2023",
-    temp: "1",
-    genero: "Isekai, Fantasia, Ação, Romance, Magia",
-    nota: "7.1",
-    status: "Finalizado",
-    sinopse: "Após morrer ao salvar duas garotas, Kazuya Shiina renasce em outro mundo como Cain von Silford, um jovem nobre abençoado pelos sete deuses. Com habilidades extremamente poderosas, ele inicia uma jornada repleta de magia, aventuras, monstros e novos aliados.",
+        function salvarAnimes(lista) {
+            localStorage.setItem(DB_KEY, JSON.stringify(lista));
+        }
 
-    personagens: "Cain von Silford, Silk von Santana, Telestia Terra Esfort, Reine, Sarah, Galm",
+        let animeAtualId = null;
+        let epAtualIndex = 0;
 
-    episodios: [
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822592/EP1_xotsdf.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822628/EP2_oyjp9q.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822691/EP3_v5ekde.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822728/EP4_hbq1da.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822777/EP5_xcdhiq.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822817/EP6_vydgij.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822866/EP7_igalk8.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822901/EP8_wmyiuj.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822929/EP9_itjctf.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785822960/EP10_e4habz.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785823008/EP11_tji2eg.mp4",
-        "https://res.cloudinary.com/uypda52e/video/upload/v1785823014/EP12_btsmdu.mp4"
-    ]
-},
-        {
-            nome: "Toradora!",
-            img: "img/toradora.jpg",
-            trailer: "videos/toradora.mp4",
-            ano: "2008",
-            temp: "1",
-            genero: "Romance, Drama",
-            nota: "8.1",
-            status: "Finalizado",
-            sinopse: "Ryuji tem cara de delinquente, mas é gentil. Taiga é pequena e fofa, mas agressiva. Eles descobrem que são apaixonados pelos melhores amigos um do outro e fazem um acordo para se ajudarem.",
-            personagens: "Taiga Aisaka, Ryuji Takasu",
-            episodios: [
-                "videos/toradora-ep1.mp4",
-                "videos/toradora-ep2.mp4"
-            ]
-        }
-    ];
+        // CONTROLE DE TELAS
+        function mudarPagina(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            window.scrollTo(0,0);
+            if(pageId === 'home') carregarHome();
+            if(pageId === 'admin-painel') carregarTabelaAdmin();
+        }
 
-    function carregarCatalogo() {
-        // Lógica do contador de acessos
-        let acessos = localStorage.getItem('site_acessos');
-        if (!acessos) {
-            acessos = 1420; // Número base inicial
-        } else {
-            acessos = parseInt(acessos) + 1;
-        }
-        localStorage.setItem('site_acessos', acessos);
-        document.getElementById('contadorAcessos').textContent = acessos;
+        // TEMA
+        function alternarTema() {
+            document.documentElement.classList.toggle('dark');
+            document.documentElement.classList.toggle('light');
+        }
 
-        const grid = document.getElementById('listaAnimes');
-        grid.innerHTML = '';
+        // RENDERIZAR HOME
+        function carregarHome() {
+            let animes = getAnimes();
+            let grid = document.getElementById('grid-catalogo');
+            
+            if(animes.length > 0) {
+                let d = animes[0];
+                document.getElementById('destaque-titulo').innerText = d.titulo;
+                document.getElementById('destaque-sinopse').innerText = d.sinopse;
+                document.getElementById('btn-destaque-assistir').onclick = () => abrirDetalhes(d.id);
+            }
 
-        animesData.forEach(anime => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.onclick = () => abrirAnime(anime);
-            card.setAttribute('data-nome', anime.nome);
+            grid.innerHTML = animes.map(a => `
+                <div class="card" onclick="abrirDetalhes('${a.id}')">
+                    <img src="${a.capa}" alt="${a.titulo}">
+                    <div class="card-info">
+                        <h3>${a.titulo}</h3>
+                        <p> ${a.nota} • ${a.ano}</p>
+                    </div>
+                </div>
+            `).join('');
 
-            card.innerHTML = `
-                <div class="img-wrapper">
-                    <span class="badge badge-status">${anime.status}</span>
-                    <span class="badge badge-score">⭐ ${anime.nota}</span>
-                    <img src="${anime.img}" alt="${anime.nome}">
-                </div>
-                <div class="card-info">
-                    <h3>${anime.nome}</h3>
-                    <div class="detalhes-rapidos">
-                        <p>Ano: <span>${anime.ano}</span> | Temp: <span>${anime.temp}</span></p>
-                        <p>Episódios: <span>${anime.episodios.length}</span></p>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
+            carregarFavoritosNaHome();
+            carregarContinueAssistindo();
+        }
 
-    function abrirAnime(anime) {
-        document.getElementById('detalhesImg').src = anime.img;
-        document.getElementById('detalhesImg').alt = anime.nome;
-        document.getElementById('detalhesNome').textContent = anime.nome;
-        document.getElementById('detalhesAno').textContent = anime.ano;
-        document.getElementById('detalhesEps').textContent = anime.episodios.length;
-        document.getElementById('detalhesTemp').textContent = anime.temp;
-        document.getElementById('detalhesNota').textContent = anime.nota;
-        document.getElementById('detalhesGeneros').textContent = anime.genero;
-        document.getElementById('detalhesStatus').textContent = anime.status;
-        document.getElementById('detalhesSinopse').textContent = anime.sinopse;
-        document.getElementById('detalhesPersonagens').textContent = anime.personagens;
+        function filtrarAnimes(termo) {
+            let animes = getAnimes();
+            let filtrados = animes.filter(a => a.titulo.toLowerCase().includes(termo.toLowerCase()));
+            let grid = document.getElementById('grid-catalogo');
+            grid.innerHTML = filtrados.map(a => `
+                <div class="card" onclick="abrirDetalhes('${a.id}')">
+                    <img src="${a.capa}" alt="${a.titulo}">
+                    <div class="card-info">
+                        <h3>${a.titulo}</h3>
+                        <p> ${a.nota} • ${a.ano}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-        const videoElement = document.getElementById('detalhesVideo');
-        const btnBaixar = document.getElementById('btnBaixarVideo');
-        const tituloPlayer = document.getElementById('tituloPlayer');
-        const subtituloPlayer = document.getElementById('subtituloPlayer');
+        // DETALHES DO ANIME
+        function abrirDetalhes(id) {
+            let animes = getAnimes();
+            let anime = animes.find(a => a.id === id);
+            if(!anime) return;
 
-        tituloPlayer.textContent = `🎬 Reproduzindo: Corte / Trailer de ${anime.nome}`;
-        subtituloPlayer.textContent = "Clique em qualquer episódio abaixo para assistir:";
+            animeAtualId = id;
+            document.getElementById('detalhe-capa').src = anime.capa;
+            document.getElementById('detalhe-titulo').innerText = anime.titulo;
+            document.getElementById('detalhe-info').innerText = `Nota:  ${anime.nota} | Ano: ${anime.ano}`;
+            document.getElementById('detalhe-sinopse').innerText = anime.sinopse;
 
-        if (anime.trailer) {
-            videoElement.src = anime.trailer;
-            btnBaixar.href = anime.trailer;
-            btnBaixar.style.display = 'block';
-        } else {
-            videoElement.src = '';
-            btnBaixar.style.display = 'none';
-        }
+            atualizarBotaoFavoritoUI();
 
-        const listaEps = document.getElementById('listaEpisodios');
-        listaEps.innerHTML = '';
-        
-        anime.episodios.forEach((linkEp, index) => {
-            const epNum = index + 1;
-            const epDiv = document.createElement('div');
-            epDiv.className = 
+            let listaEps = document.getElementById('detalhe-episodios');
+            if(!anime.episodios || anime.episodios.length === 0) {
+                listaEps.innerHTML = `<p style="color:var(--text-muted);">Nenhum episódio cadastrado.</p>`;
+            } else {
+                listaEps.innerHTML = anime.episodios.map((ep, idx) => `
+                    <div class="ep-item" onclick="assistirEpisodio('${anime.id}', ${idx})">
+                        <span>${ep.titulo}</span>
+                        <span></span>
+                    </div>
+                `).join('');
+            }
+
+            mudarPagina('anime');
+        }
+
+        // PLAYER DE VÍDEO & HISTÓRICO
+        function assistirEpisodio(animeId, epIdx) {
+            let animes = getAnimes();
+            let anime = animes.find(a => a.id === animeId);
+            if(!anime || !anime.episodios[epIdx]) return;
+
+            animeAtualId = animeId;
+            epAtualIndex = epIdx;
+            let ep = anime.episodios[epIdx];
+
+            document.getElementById('player-titulo-ep').innerText = `${anime.titulo} - ${ep.titulo}`;
+            document.getElementById('video-iframe').src = ep.link;
+            document.getElementById('btn-voltar-anime').onclick = () => abrirDetalhes(animeId);
+
+            // Salvar Histórico / Continue Assistindo
+            let historico = JSON.parse(localStorage.getItem(HIST_KEY)) || [];
+            historico = historico.filter(h => h.animeId !== animeId);
+            historico.unshift({ animeId, animeTitulo: anime.titulo, capa: anime.capa, epIdx, epTitulo: ep.titulo });
+            localStorage.setItem(HIST_KEY, JSON.stringify(historico));
+
+            mudarPagina('player');
+        }
+
+        function proximoEpisodio() {
+            let animes =
