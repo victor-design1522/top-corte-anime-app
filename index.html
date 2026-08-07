@@ -1,431 +1,408 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOP CORTE ANIME</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOP CORTE ANIME - Completo</title>
     <style>
-        /* ================= ESTILOS (TEMA ESCURO) ================= */
         :root {
-            --bg: #141414;
-            --header: #000000;
-            --card: #1f1f1f;
-            --text: #ffffff;
-            --muted: #aaaaaa;
-            --roxo: #8a2be2;
-            --roxo-hover: #9b4dca;
-            --erro: #e50914;
+            --bg-main: #0b0b0f;
+            --bg-card: #15151f;
+            --primary: #7b2cbf;
+            --neon: #9d4edd;
+            --text: #f8f9fa;
+            --text-muted: #adb5bd;
+            --danger: #e63946;
+            --success: #2a9d8f;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding-top: 60px; -webkit-tap-highlight-color: transparent; }
-        
-        /* HEADER */
-        header { position: fixed; top: 0; left: 0; width: 100%; height: 60px; background: var(--header); z-index: 1000; display: flex; align-items: center; padding: 0 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.8); justify-content: space-between; }
-        .logo { font-size: 20px; font-weight: 900; color: var(--roxo); }
-        .logo span { color: var(--text); }
-        
-        /* INPUTS E BOTOES */
-        input, textarea { width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #333; background: #222; color: white; margin-bottom: 15px; font-size: 16px; }
-        input:focus, textarea:focus { border-color: var(--roxo); outline: none; }
-        button { cursor: pointer; padding: 12px 20px; background: var(--roxo); color: white; border: none; border-radius: 4px; font-weight: bold; font-size: 14px; width: 100%; margin-bottom: 10px; }
-        button:active { background: var(--roxo-hover); }
-        .btn-outline { background: transparent; border: 1px solid var(--muted); }
-        .btn-erro { background: var(--erro); }
-        
-        .btn-header { width: auto; padding: 6px 12px; margin: 0; font-size: 12px; }
+        .light {
+            --bg-main: #f4f4f9;
+            --bg-card: #ffffff;
+            --primary: #5a189a;
+            --neon: #7b2cbf;
+            --text: #212529;
+            --text-muted: #6c757d;
+        }
 
-        /* VIEWS */
-        .view { display: none; padding: 15px; padding-bottom: 60px; }
-        .view.active { display: block; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
+        body { background-color: var(--bg-main); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
 
-        /* HOME */
-        .banner { background: #222; padding: 30px 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; border-bottom: 3px solid var(--roxo); }
-        .titulo-secao { font-size: 18px; margin: 20px 0 10px 0; border-left: 4px solid var(--roxo); padding-left: 10px; }
-        
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        @media (min-width: 600px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (min-width: 900px) { .grid { grid-template-columns: repeat(5, 1fr); } }
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background: rgba(15, 15, 25, 0.95);
+            backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+        }
 
-        .card { background: var(--card); border-radius: 6px; overflow: hidden; position: relative; }
-        .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; background: #333; display: block; }
-        .card-info { padding: 8px; }
-        .card-nome { font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-meta { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; margin-top: 4px; }
+        .logo { font-size: 18px; font-weight: bold; color: var(--text); cursor: pointer; }
+        .logo span { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
 
-        /* DETALHES */
-        .detalhes-capa { width: 100%; max-width: 300px; border-radius: 8px; margin: 0 auto 20px auto; display: block; }
-        .detalhes-titulo { font-size: 24px; color: var(--roxo); margin-bottom: 10px; }
-        .detalhes-meta { color: #f5c518; margin-bottom: 15px; font-weight: bold; }
-        .eps-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .ep-btn { background: #333; padding: 15px 10px; text-align: center; border-radius: 4px; font-weight: bold; }
+        .nav-actions { display: flex; gap: 8px; align-items: center; }
+        input, select, textarea {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 12px; border-radius: 8px; color: var(--text); outline: none; font-size: 14px; width: 100%;
+        }
 
-        /* PLAYER */
-        .video-container { width: 100%; background: #000; aspect-ratio: 16/9; position: relative; margin-bottom: 15px; }
-        video { width: 100%; height: 100%; }
-        .erro-video { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; text-align: center; color: var(--erro); flex-direction: column; padding: 20px; }
-        .controles-player { display: flex; justify-content: space-between; gap: 10px; }
+        .search-box { width: 130px; border-radius: 20px; }
+        @media(min-width: 600px) { .search-box { width: 200px; } }
 
-        /* ADM */
-        .tabela-responsiva { overflow-x: auto; margin-top: 20px; }
-        table { width: 100%; min-width: 500px; border-collapse: collapse; background: var(--card); }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #333; }
-        
-        /* FOOTER */
-        footer { text-align: center; padding: 20px; font-size: 12px; color: var(--muted); background: var(--header); margin-top: 20px; }
+        button { cursor: pointer; border: none; border-radius: 8px; padding: 8px 14px; font-weight: bold; font-size: 14px; }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 0 10px rgba(123, 44, 191, 0.4); }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-icon { background: var(--bg-card); color: var(--text); padding: 8px; border-radius: 50%; }
+
+        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        h2 { margin-bottom: 15px; border-left: 4px solid var(--neon); padding-left: 10px; font-size: 18px; }
+
+        /* Grades e Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
+        @media(min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
+
+        .card {
+            background: var(--bg-card); border-radius: 10px; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; position: relative;
+        }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        @media(min-width: 600px) { .card img { height: 250px; } }
+        .card-info { padding: 10px; }
+        .card-info h3 { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-info p { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        /* Páginas / Telas */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Página de Detalhes */
+        .anime-header { display: flex; flex-direction: column; gap: 20px; }
+        @media(min-width: 768px) { .anime-header { flex-direction: row; } }
+        .anime-poster { width: 100%; max-width: 250px; border-radius: 10px; object-fit: cover; margin: 0 auto; }
+        .episodes-list { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; }
+        .ep-item { background: var(--bg-card); padding: 10px 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .ep-item:hover { border: 1px solid var(--neon); }
+
+        /* Player */
+        .player-container { width: 100%; background: #000; border-radius: 10px; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 15px; }
+        .player-container iframe, .player-container video { width: 100%; height: 100%; border: none; }
+
+        /* Painel Admin */
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+        .admin-table th, .admin-table td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-    <!-- CABEÇALHO -->
     <header>
-        <div class="logo" onclick="navegar('home')">TOPCORTE<span>ANIME</span></div>
-        <button class="btn-outline btn-header" onclick="navegar('login')">ADM</button>
+        <div class="logo" onclick="mudarPagina('home')">TOP CORTE <span>ANIME</span></div>
+        <div class="nav-actions">
+            <input type="text" id="global-search" class="search-box" placeholder="Pesquisar..." oninput="filtrarAnimes(this.value)">
+            <button class="btn-icon" onclick="alternarTema()"></button>
+            <button class="btn-primary" onclick="mudarPagina('admin-login')">ADM</button>
+        </div>
     </header>
 
-    <!-- TELA: HOME -->
-    <div id="view-home" class="view active">
-        <div class="banner">
-            <h2>Bem-vindo!</h2>
-            <p style="font-size: 14px; color: var(--muted); margin-top: 5px;">Os melhores animes na palma da sua mão.</p>
+    <div class="container">
+
+        <!-- 1. PÁGINA INICIAL -->
+        <div id="page-home" class="page active">
+            <div style="margin-bottom: 25px; background: linear-gradient(135deg, var(--primary), #240046); padding: 25px; border-radius: 15px;">
+                <h1 id="destaque-titulo" style="font-size: 24px; margin-bottom: 8px;">Carregando Destaque...</h1>
+                <p id="destaque-sinopse" style="font-size: 13px; color: #ddd; margin-bottom: 15px; max-width: 600px;"></p>
+                <button class="btn-primary" id="btn-destaque-assistir"> Assistir Destaque</button>
+            </div>
+
+            <div id="secao-continue" style="margin-bottom: 30px; display: none;">
+                <h2> Continue Assistindo</h2>
+                <div class="grid" id="grid-continue"></div>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <h2> Seus Favoritos</h2>
+                <div class="grid" id="grid-favoritos"><p style="color: var(--text-muted); font-size: 13px;">Nenhum favorito salvo.</p></div>
+            </div>
+
+            <h2> Catálogo Completo</h2>
+            <div class="grid" id="grid-catalogo"></div>
         </div>
 
-        <input type="text" id="inputPesquisa" placeholder="Buscar animes..." oninput="pesquisar()">
+        <!-- 2. PÁGINA DE DETALHES DO ANIME -->
+        <div id="page-anime" class="page">
+            <button onclick="mudarPagina('home')" style="margin-bottom: 15px; background: transparent; color: var(--neon);"> Voltar</button>
+            <div class="anime-header">
+                <img id="detalhe-capa" class="anime-poster" src="" alt="">
+                <div>
+                    <h1 id="detalhe-titulo" style="font-size: 22px; margin-bottom: 5px;"></h1>
+                    <p id="detalhe-info" style="color: var(--text-muted); font-size: 13px; margin-bottom: 10px;"></p>
+                    <p id="detalhe-sinopse" style="font-size: 14px; line-height: 1.5; margin-bottom: 15px;"></p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-primary" id="btn-favoritar" onclick="toggleFavoritoAtual()"> Favoritar</button>
+                    </div>
+                </div>
+            </div>
 
-        <div id="box-historico" style="display: none;">
-            <h3 class="titulo-secao">Continue Assistindo</h3>
-            <div class="grid" id="grid-historico"></div>
-        </div>
-
-        <div id="box-favoritos" style="display: none;">
-            <h3 class="titulo-secao">Meus Favoritos</h3>
-            <div class="grid" id="grid-favoritos"></div>
-        </div>
-
-        <h3 class="titulo-secao">Catálogo</h3>
-        <div class="grid" id="grid-catalogo"></div>
-        <p id="msg-vazio" style="text-align: center; margin-top: 20px; display: none; color: var(--muted);">Nenhum anime encontrado.</p>
-    </div>
-
-    <!-- TELA: DETALHES -->
-    <div id="view-detalhes" class="view">
-        <button class="btn-outline" onclick="navegar('home')">Voltar</button>
-        <div id="conteudo-detalhes"></div>
-    </div>
-
-    <!-- TELA: PLAYER -->
-    <div id="view-player" class="view">
-        <button class="btn-outline" onclick="navegar('detalhes')">Sair do Vídeo</button>
-        
-        <h3 id="player-titulo" style="color: var(--roxo); margin: 15px 0 5px 0; text-align: center;">Nome</h3>
-        <p id="player-ep" style="text-align: center; color: var(--muted); margin-bottom: 15px;">Episódio</p>
-
-        <div class="video-container">
-            <video id="videoPlayer" controls playsinline></video>
-            <div class="erro-video" id="videoErro">
-                <h3>Erro ao carregar</h3>
-                <p style="font-size: 12px; margin-top: 10px;">O link do vídeo pode estar quebrado.</p>
+            <div style="margin-top: 25px;">
+                <h2> Episódios</h2>
+                <div class="episodes-list" id="detalhe-episodios"></div>
             </div>
         </div>
 
-        <div class="controles-player">
-            <button class="btn-outline" id="btnAnt" onclick="mudarEp(-1)">Anterior</button>
-            <button class="btn-outline" id="btnProx" onclick="mudarEp(1)">Próximo</button>
-        </div>
-    </div>
-
-    <!-- TELA: LOGIN ADM -->
-    <div id="view-login" class="view">
-        <h2 style="text-align: center; color: var(--roxo); margin-bottom: 20px;">Painel ADM</h2>
-        <input type="text" id="loginUser" placeholder="Usuário">
-        <input type="password" id="loginPass" placeholder="Senha">
-        <button onclick="fazerLogin()">Entrar</button>
-        <button class="btn-outline" onclick="navegar('home')">Voltar</button>
-        <p id="loginErro" style="color: var(--erro); text-align: center; display: none; margin-top: 10px;">Dados incorretos!</p>
-    </div>
-
-    <!-- TELA: PAINEL ADM -->
-    <div id="view-adm" class="view">
-        <h2 style="color: var(--roxo); margin-bottom: 15px;">Administração</h2>
-        <button onclick="abrirForm()">+ Adicionar Anime</button>
-        <button class="btn-erro" onclick="sairAdm()">Sair do ADM</button>
-
-        <div id="formAdm" style="display: none; background: #222; padding: 15px; border-radius: 8px; margin-top: 20px;">
-            <h3 style="margin-bottom: 15px; color: var(--roxo);" id="formTitulo">Novo Anime</h3>
-            <input type="hidden" id="formId">
-            <label>Nome:</label>
-            <input type="text" id="formNome">
-            <label>URL da Capa:</label>
-            <input type="text" id="formCapa" placeholder="https://...">
-            <label>Ano:</label>
-            <input type="number" id="formAno">
-            <label>Nota:</label>
-            <input type="text" id="formNota" placeholder="Ex: 9.5">
-            <label>Sinopse:</label>
-            <textarea id="formSinopse" rows="3"></textarea>
-            <label>Links dos Episódios (.mp4):<br><small style="color: var(--muted)">Coloque um link por linha</small></label>
-            <textarea id="formEps" rows="5"></textarea>
-            
-            <button onclick="salvarAnime()">Salvar</button>
-            <button class="btn-outline" onclick="fecharForm()">Cancelar</button>
+        <!-- 3. PÁGINA DO PLAYER -->
+        <div id="page-player" class="page">
+            <button id="btn-voltar-anime" style="margin-bottom: 10px; background: transparent; color: var(--neon);"> Voltar ao Anime</button>
+            <h2 id="player-titulo-ep" style="font-size: 16px; margin-bottom: 10px;"></h2>
+            <div class="player-container">
+                <iframe id="video-iframe" src="" allowfullscreen></iframe>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                <button class="btn-primary" onclick="episodioAnterior()"> Ep. Anterior</button>
+                <button class="btn-primary" onclick="proximoEpisodio()">Próximo Ep. </button>
+            </div>
         </div>
 
-        <div class="tabela-responsiva">
-            <table>
-                <tbody id="tabela-animes"></tbody>
-            </table>
+        <!-- 4. PAINEL ADMINISTRATIVO (LOGIN) -->
+        <div id="page-admin-login" class="page">
+            <div style="max-width: 350px; margin: 40px auto; background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--neon);">
+                <h2 style="margin-bottom: 15px; color: var(--neon);">Painel ADM</h2>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">só para o dono</p>
+                <div class="form-group"><label>Usuário</label><input type="text" id="adm-user"></div>
+                <div class="form-group"><label>Senha</label><input type="password" id="adm-pass"></div>
+                <button class="btn-primary" style="width: 100%; margin-top: 10px;" onclick="fazerLoginAdmin()">Entrar</button>
+                <button style="width: 100%; margin-top: 10px; background: transparent; color: var(--text-muted);" onclick="mudarPagina('home')">Cancelar</button>
+            </div>
         </div>
+
+        <!-- 5. PAINEL ADMINISTRATIVO (GERENCIAMENTO REAL) -->
+        <div id="page-admin-painel" class="page">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2> Gerenciamento de Animes</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-success" onclick="abrirModalAnime()">+ Adicionar Anime</button>
+                    <button class="btn-danger" onclick="mudarPagina('home')">Sair</button>
+                </div>
+            </div>
+            <div style="overflow-x: auto; background: var(--bg-card); border-radius: 10px; padding: 15px;">
+                <table class="admin-table">
+                    <thead><tr><th>Título</th><th>Ano</th><th>Ações</th></tr></thead>
+                    <tbody id="admin-tabela-corpo"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MODAL DE ADICIONAR / EDITAR ANIME -->
+        <div id="modal-anime" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; padding: 20px; overflow-y: auto;">
+            <div style="max-width: 450px; margin: 30px auto; background: var(--bg-card); padding: 25px; border-radius: 12px;">
+                <h2 id="modal-titulo" style="margin-bottom: 15px;">Novo Anime</h2>
+                <input type="hidden" id="edit-id">
+                <div class="form-group"><label>Título</label><input type="text" id="form-titulo"></div>
+                <div class="form-group"><label>Link da Capa (Imagem)</label><input type="text" id="form-capa"></div>
+                <div class="form-group"><label>Ano</label><input type="text" id="form-ano"></div>
+                <div class="form-group"><label>Nota (Ex: 9.5)</label><input type="text" id="form-nota"></div>
+                <div class="form-group"><label>Sinopse</label><textarea id="form-sinopse" rows="3"></textarea></div>
+                
+                <div class="form-group">
+                    <label>Episódios (Links dos Vídeos separados por vírgula ou um por linha)</label>
+                    <textarea id="form-eps" rows="3" placeholder="https://www.youtube.com/embed/exemplo1, https://www.youtube.com/embed/exemplo2"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-primary" style="flex: 1;" onclick="salvarAnimeBD()">Salvar</button>
+                    <button class="btn-danger" style="flex: 1;" onclick="fecharModalAnime()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <footer>
-        TOP CORTE ANIME © 2026<br>
-        Seu lugar para assistir animes.
-    </footer>
-
-    <!-- ================= JAVASCRIPT ================= -->
     <script>
-        /* CONFIGURAÇÃO DO LOGIN */
-        const ADM_USER = "victor";
-        const ADM_PASS = "152215";
+        // BANCO DE DADOS LOCAL PERSISTENTE (LocalStorage)
+        const DB_KEY = "top_corte_animes_db";
+        const FAV_KEY = "top_corte_favs_db";
+        const HIST_KEY = "top_corte_hist_db";
 
-        /* VARIÁVEIS DE ESTADO */
-        let animeAtual = null;
+        let animesPadrao = [
+            {
+                id: "1",
+                titulo: "Solo Leveling",
+                capa: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=300&auto=format&fit=crop&q=60",
+                ano: "2024",
+                nota: "9.5",
+                sinopse: "Em um mundo onde portais conectam monstros, o caçador mais fraco ganha uma segunda chance misteriosa.",
+                episodios: [
+                    { titulo: "Episódio 1: O Despertar", link: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { titulo: "Episódio 2: Se eu tivesse mais uma chance", link: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+                ]
+            },
+            {
+                id: "2",
+                titulo: "Jujutsu Kaisen",
+                capa: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300&auto=format&fit=crop&q=60",
+                ano: "2023",
+                nota: "9.2",
+                sinopse: "Sofrimento, regretos e maldições compõem a vida daqueles que absorvem energias amaldiçoadas.",
+                episodios: [
+                    { titulo: "Episódio 1: Ryomen Sukuna", link: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { titulo: "Episódio 2: Para si mesmo", link: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+                ]
+            }
+        ];
+
+        function getAnimes() {
+            let dados = localStorage.getItem(DB_KEY);
+            if (!dados) {
+                localStorage.setItem(DB_KEY, JSON.stringify(animesPadrao));
+                return animesPadrao;
+            }
+            return JSON.parse(dados);
+        }
+
+        function salvarAnimes(lista) {
+            localStorage.setItem(DB_KEY, JSON.stringify(lista));
+        }
+
+        let animeAtualId = null;
         let epAtualIndex = 0;
-        let isLogado = false;
 
-        /* SISTEMA SEGURO DE BANCO DE DADOS PARA CELULAR 
-           (Evita a tela em branco se o celular bloquear o localStorage) */
-        let memoria = { animes: [], favoritos: [], historico: {} };
-
-        function salvar(chave, valor) {
-            try {
-                localStorage.setItem("tca_" + chave, JSON.stringify(valor));
-            } catch (e) {
-                memoria[chave] = valor; // Salva na RAM se der erro
-            }
-        }
-
-        function ler(chave, padrao) {
-            try {
-                let dado = localStorage.getItem("tca_" + chave);
-                return dado ? JSON.parse(dado) : padrao;
-            } catch (e) {
-                return memoria[chave] || padrao; // Lê da RAM se der erro
-            }
-        }
-
-        /* FUNÇÕES DE DADOS */
-        const DB = {
-            getAnimes: () => ler("animes", []),
-            setAnimes: (lista) => salvar("animes", lista),
-            getFavs: () => ler("favoritos", []),
-            setFavs: (lista) => salvar("favoritos", lista),
-            getHist: () => ler("historico", {}),
-            setHist: (obj) => salvar("historico", obj)
-        };
-
-        const IMG_PADRAO = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="300"><rect width="200" height="300" fill="%23333"/><text x="50%" y="50%" fill="%23fff" font-size="16" text-anchor="middle">Sem Capa</text></svg>';
-
-        function corrigirImg(img) {
-            img.onerror = null;
-            img.src = IMG_PADRAO;
-        }
-
-        function gerarId() {
-            return Math.random().toString(36).substr(2, 9);
-        }
-
-        /* NAVEGAÇÃO */
-        function navegar(tela) {
-            // Pausar vídeo ao sair
-            document.getElementById('videoPlayer').pause();
-
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById('view-' + tela).classList.add('active');
+        // CONTROLE DE TELAS
+        function mudarPagina(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
             window.scrollTo(0,0);
-
-            if(tela === 'home') renderHome();
-            if(tela === 'adm') renderTabela();
+            if(pageId === 'home') carregarHome();
+            if(pageId === 'admin-painel') carregarTabelaAdmin();
         }
 
-        /* HOME */
-        function criarCard(a, acao) {
-            let capa = a.capa ? a.capa : IMG_PADRAO;
-            return `
-                <div class="card" onclick="${acao}">
-                    <img src="${capa}" onerror="corrigirImg(this)">
+        // TEMA
+        function alternarTema() {
+            document.documentElement.classList.toggle('dark');
+            document.documentElement.classList.toggle('light');
+        }
+
+        // RENDERIZAR HOME
+        function carregarHome() {
+            let animes = getAnimes();
+            let grid = document.getElementById('grid-catalogo');
+            
+            if(animes.length > 0) {
+                let d = animes[0];
+                document.getElementById('destaque-titulo').innerText = d.titulo;
+                document.getElementById('destaque-sinopse').innerText = d.sinopse;
+                document.getElementById('btn-destaque-assistir').onclick = () => abrirDetalhes(d.id);
+            }
+
+            grid.innerHTML = animes.map(a => `
+                <div class="card" onclick="abrirDetalhes('${a.id}')">
+                    <img src="${a.capa}" alt="${a.titulo}">
                     <div class="card-info">
-                        <div class="card-nome">${a.nome}</div>
-                        <div class="card-meta"><span>${a.ano}</span><span style="color:#f5c518">⭐ ${a.nota}</span></div>
+                        <h3>${a.titulo}</h3>
+                        <p> ${a.nota} • ${a.ano}</p>
                     </div>
                 </div>
-            `;
+            `).join('');
+
+            carregarFavoritosNaHome();
+            carregarContinueAssistindo();
         }
 
-        function renderHome() {
-            let animes = DB.getAnimes();
-            let favs = DB.getFavs();
-            let hist = DB.getHist();
-
-            document.getElementById('inputPesquisa').value = '';
-
-            // Catálogo
-            let cat = document.getElementById('grid-catalogo');
-            cat.innerHTML = animes.map(a => criarCard(a, `abrirDetalhes('${a.id}')`)).join('');
-            document.getElementById('msg-vazio').style.display = animes.length ? 'none' : 'block';
-
-            // Favoritos
-            let animesFav = animes.filter(a => favs.includes(a.id));
-            document.getElementById('grid-favoritos').innerHTML = animesFav.map(a => criarCard(a, `abrirDetalhes('${a.id}')`)).join('');
-            document.getElementById('box-favoritos').style.display = animesFav.length ? 'block' : 'none';
-
-            // Histórico
-            let animesHist = animes.filter(a => hist[a.id] !== undefined);
-            document.getElementById('grid-historico').innerHTML = animesHist.map(a => {
-                let capa = a.capa ? a.capa : IMG_PADRAO;
-                let epSalvo = hist[a.id];
-                return `
-                    <div class="card" onclick="assistir('${a.id}', ${epSalvo})">
-                        <img src="${capa}" onerror="corrigirImg(this)">
-                        <div class="card-info">
-                            <div class="card-nome">${a.nome}</div>
-                            <div class="card-meta" style="color:var(--roxo)">Continuar Ep ${epSalvo + 1}</div>
-                        </div>
+        function filtrarAnimes(termo) {
+            let animes = getAnimes();
+            let filtrados = animes.filter(a => a.titulo.toLowerCase().includes(termo.toLowerCase()));
+            let grid = document.getElementById('grid-catalogo');
+            grid.innerHTML = filtrados.map(a => `
+                <div class="card" onclick="abrirDetalhes('${a.id}')">
+                    <img src="${a.capa}" alt="${a.titulo}">
+                    <div class="card-info">
+                        <h3>${a.titulo}</h3>
+                        <p> ${a.nota} • ${a.ano}</p>
                     </div>
-                `;
-            }).join('');
-            document.getElementById('box-historico').style.display = animesHist.length ? 'block' : 'none';
+                </div>
+            `).join('');
         }
 
-        function pesquisar() {
-            let termo = document.getElementById('inputPesquisa').value.toLowerCase();
-            let animes = DB.getAnimes();
-            let filtrados = animes.filter(a => a.nome.toLowerCase().includes(termo));
-            
-            document.getElementById('grid-catalogo').innerHTML = filtrados.map(a => criarCard(a, `abrirDetalhes('${a.id}')`)).join('');
-            document.getElementById('msg-vazio').style.display = filtrados.length ? 'none' : 'block';
-
-            // Esconde outras sessoes na pesquisa
-            document.getElementById('box-favoritos').style.display = termo ? 'none' : (DB.getFavs().length ? 'block' : 'none');
-            document.getElementById('box-historico').style.display = termo ? 'none' : (Object.keys(DB.getHist()).length ? 'block' : 'none');
-        }
-
-        /* DETALHES */
+        // DETALHES DO ANIME
         function abrirDetalhes(id) {
-            let anime = DB.getAnimes().find(a => a.id === id);
+            let animes = getAnimes();
+            let anime = animes.find(a => a.id === id);
             if(!anime) return;
-            animeAtual = id;
 
-            let capa = anime.capa ? anime.capa : IMG_PADRAO;
-            let isFav = DB.getFavs().includes(id);
+            animeAtualId = id;
+            document.getElementById('detalhe-capa').src = anime.capa;
+            document.getElementById('detalhe-titulo').innerText = anime.titulo;
+            document.getElementById('detalhe-info').innerText = `Nota:  ${anime.nota} | Ano: ${anime.ano}`;
+            document.getElementById('detalhe-sinopse').innerText = anime.sinopse;
 
-            let epsHtml = (anime.eps && anime.eps.length > 0) 
-                ? anime.eps.map((lnk, i) => `<div class="ep-btn" onclick="assistir('${id}', ${i})">Episódio ${i+1}</div>`).join('')
-                : `<p style="color:var(--muted); font-size:14px; grid-column:1/-1;">Sem episódios.</p>`;
+            atualizarBotaoFavoritoUI();
 
-            document.getElementById('conteudo-detalhes').innerHTML = `
-                <img src="${capa}" class="detalhes-capa" onerror="corrigirImg(this)">
-                <h2 class="detalhes-titulo">${anime.nome}</h2>
-                <div class="detalhes-meta">⭐ ${anime.nota || '-'} &nbsp;|&nbsp; 📅 ${anime.ano || '-'}</div>
-                <button id="btnFav" onclick="favoritar('${id}')" style="background:${isFav ? '#444' : 'var(--roxo)'}">
-                    ${isFav ? 'Remover Favorito' : 'Adicionar Favorito'}
-                </button>
-                <p style="margin-top:15px; font-size:14px; line-height:1.5;">${anime.sinopse}</p>
-                <h3 style="margin-top:20px; color:var(--roxo); border-bottom:1px solid #333; padding-bottom:5px;">Episódios</h3>
-                <div class="eps-grid">${epsHtml}</div>
-            `;
-            navegar('detalhes');
-        }
-
-        function favoritar(id) {
-            let favs = DB.getFavs();
-            let isFav = favs.includes(id);
-            if(isFav) favs = favs.filter(x => x !== id);
-            else favs.push(id);
-            DB.setFavs(favs);
-            
-            let btn = document.getElementById('btnFav');
-            btn.innerText = !isFav ? 'Remover Favorito' : 'Adicionar Favorito';
-            btn.style.background = !isFav ? '#444' : 'var(--roxo)';
-        }
-
-        /* PLAYER */
-        function assistir(id, index) {
-            let anime = DB.getAnimes().find(a => a.id === id);
-            if(!anime || !anime.eps[index]) return alert("Episódio não encontrado!");
-
-            animeAtual = id;
-            epAtualIndex = index;
-
-            document.getElementById('player-titulo').innerText = anime.nome;
-            document.getElementById('player-ep').innerText = "Episódio " + (index + 1);
-
-            let player = document.getElementById('videoPlayer');
-            let erroBox = document.getElementById('videoErro');
-            
-            erroBox.style.display = 'none';
-            player.src = anime.eps[index];
-            player.load();
-            player.play().catch(e => console.log("Auto-play bloqueado pelo celular"));
-
-            player.onerror = () => { erroBox.style.display = 'flex'; };
-
-            // Salva historico
-            let hist = DB.getHist();
-            hist[id] = index;
-            DB.setHist(hist);
-
-            // Botoes prev/next
-            document.getElementById('btnAnt').style.opacity = (index === 0) ? '0.3' : '1';
-            document.getElementById('btnProx').style.opacity = (index === anime.eps.length - 1) ? '0.3' : '1';
-
-            navegar('player');
-        }
-
-        function mudarEp(dir) {
-            let anime = DB.getAnimes().find(a => a.id === animeAtual);
-            let novo = epAtualIndex + dir;
-            if(novo >= 0 && novo < anime.eps.length) assistir(animeAtual, novo);
-        }
-
-        /* ADMINISTRAÇÃO */
-        function fazerLogin() {
-            let u = document.getElementById('loginUser').value;
-            let p = document.getElementById('loginPass').value;
-            if(u === ADM_USER && p === ADM_PASS) {
-                isLogado = true;
-                document.getElementById('loginUser').value = '';
-                document.getElementById('loginPass').value = '';
-                document.getElementById('loginErro').style.display = 'none';
-                navegar('adm');
+            let listaEps = document.getElementById('detalhe-episodios');
+            if(!anime.episodios || anime.episodios.length === 0) {
+                listaEps.innerHTML = `<p style="color:var(--text-muted);">Nenhum episódio cadastrado.</p>`;
             } else {
-                document.getElementById('loginErro').style.display = 'block';
+                listaEps.innerHTML = anime.episodios.map((ep, idx) => `
+                    <div class="ep-item" onclick="assistirEpisodio('${anime.id}', ${idx})">
+                        <span>${ep.titulo}</span>
+                        <span></span>
+                    </div>
+                `).join('');
+            }
+
+            mudarPagina('anime');
+        }
+
+        // PLAYER DE VÍDEO & HISTÓRICO
+        function assistirEpisodio(animeId, epIdx) {
+            let animes = getAnimes();
+            let anime = animes.find(a => a.id === animeId);
+            if(!anime || !anime.episodios[epIdx]) return;
+
+            animeAtualId = animeId;
+            epAtualIndex = epIdx;
+            let ep = anime.episodios[epIdx];
+
+            document.getElementById('player-titulo-ep').innerText = `${anime.titulo} - ${ep.titulo}`;
+            document.getElementById('video-iframe').src = ep.link;
+            document.getElementById('btn-voltar-anime').onclick = () => abrirDetalhes(animeId);
+
+            // Salvar Histórico / Continue Assistindo
+            let historico = JSON.parse(localStorage.getItem(HIST_KEY)) || [];
+            historico = historico.filter(h => h.animeId !== animeId);
+            historico.unshift({ animeId, animeTitulo: anime.titulo, capa: anime.capa, epIdx, epTitulo: ep.titulo });
+            localStorage.setItem(HIST_KEY, JSON.stringify(historico));
+
+            mudarPagina('player');
+        }
+
+        function proximoEpisodio() {
+            let animes = getAnimes();
+            let anime = animes.find(a => a.id === animeAtualId);
+            if(anime && anime.episodios[epAtualIndex + 1]) {
+                assistirEpisodio(animeAtualId, epAtualIndex + 1);
+            } else {
+                alert("Este é o último episódio!");
             }
         }
 
-        function sairAdm() {
-            isLogado = false;
-            navegar('home');
+        function episodioAnterior() {
+            if(epAtualIndex > 0) {
+                assistirEpisodio(animeAtualId, epAtualIndex - 1);
+            } else {
+                alert("Você já está no primeiro episódio!");
+            }
         }
 
-        function renderTabela() {
-            let animes = DB.getAnimes();
-            let tb = document.getElementById('tabela-animes');
-            tb.innerHTML = '';
-            animes.forEach(a => {
-                tb.innerHTML += `
-                    <tr>
-                        <td><b>${a.nome}</b><br><small style="color:var(--muted)">${a.eps.length} Eps</small></td>
-                        <td style="text-align: right;">
-                            <button style="width:auto; padding:5px 10px; font-size:12px;" onclick="editar('${a.id}')">Editar</button>
-                            <button class="btn-erro" style="width:auto; padding:5px 10px; font-size:12px;" onclick="excluir('${a.id}')">Excluir</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
+        function carregarContinueAssistindo() {
+            let historico = JSON.parse(localStorage.getItem(HIST_KEY)) || [];
+            let secao = document.getElementById('secao-continue');
+            let grid = document.getElementById('grid-continue');
 
-        function abrirForm() {
-            document.getElementById('formAdm').style.display = 'block';
-            document.getElementById('formTitulo').innerText = 'Novo Anime';
-            document.getElementById('formId').
+            if(historico.length === 0) {
+                secao.style.display = 'none';
+                return;
+            }
+
+            secao.style.display = 'block';
+            grid.innerHTML = historico.map(h => `
+                <div class="card" onclick="assistirEpisodio('${h.animeId}', ${h.epIdx})">
+                    <img src="${h.capa}" alt="${h.animeTitulo}">
+              
