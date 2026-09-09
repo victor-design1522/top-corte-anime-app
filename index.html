@@ -3,381 +3,381 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#05070f">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#07070c">
 <meta name="mobile-web-app-capable" content="yes">
-<title>PULSO — Criado por VICTOR OFICIAL</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PULSO">
+<title>PULSO — arena neon</title>
 <style>
-/* ══════════════════════════════════════════════════════════════
-   PULSO — núcleo visual (CSS)
-   Cores, fontes, HUD, telas, animações.
-   Para re-tematizar o jogo inteiro, altere apenas as variáveis.
-   ══════════════════════════════════════════════════════════════ */
-:root{
-  --c1:#00e5ff;      /* ciano neon  */
-  --c2:#ff2d6f;      /* magenta     */
-  --c3:#7cff4f;      /* verde neon  */
-  --c4:#ffc247;      /* âmbar       */
-  --c5:#a25bff;      /* violeta     */
-  --bg:#05070f;      /* fundo       */
-  --panel:rgba(10,16,30,.88);
-  --line:rgba(0,229,255,.22);
-  --txt:#dff6ff;
-  --font:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
-}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:var(--bg);font-family:var(--font);color:var(--txt);
-  touch-action:none;user-select:none;-webkit-user-select:none;overscroll-behavior:none}
-#app{position:fixed;inset:0;overflow:hidden}
-canvas#game{position:absolute;inset:0;display:block;image-rendering:auto}
-
-/* ---------- textos / títulos ---------- */
-.logo{font-weight:900;letter-spacing:.22em;font-size:clamp(46px,13vw,104px);line-height:.95;
-  background:linear-gradient(180deg,#fff,var(--c1) 55%,var(--c5));-webkit-background-clip:text;
-  background-clip:text;color:transparent;text-shadow:0 0 42px rgba(0,229,255,.35);animation:pulseT 2.6s ease-in-out infinite}
-@keyframes pulseT{0%,100%{transform:scale(1);filter:drop-shadow(0 0 10px rgba(0,229,255,.4))}
-  50%{transform:scale(1.035);filter:drop-shadow(0 0 26px rgba(255,45,111,.5))}}
-.sub{font-size:11px;letter-spacing:.42em;color:#6fd8ff;opacity:.85;margin-top:6px}
-.sign{font-size:11px;letter-spacing:.3em;color:#8fb6d6;text-transform:uppercase}
-.sign b{color:var(--c4)}
-
-/* ---------- telas ---------- */
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:14px;padding:18px;z-index:40;text-align:center;animation:fade .28s ease both;
-  background:radial-gradient(120% 90% at 50% 0%,rgba(10,20,40,.55),rgba(3,5,12,.92) 70%)}
-.screen.hidden,#hud.hidden,.hidden{display:none!important}
-@keyframes fade{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
-.card{width:min(560px,94vw);max-height:88vh;overflow:auto;background:var(--panel);border:1px solid var(--line);
-  border-radius:20px;padding:22px 20px;box-shadow:0 22px 70px rgba(0,0,0,.65),inset 0 0 0 1px rgba(255,255,255,.03);
-  scrollbar-width:thin;scrollbar-color:#1d5f7a transparent}
-.card::-webkit-scrollbar{width:6px}.card::-webkit-scrollbar-thumb{background:#1d5f7a;border-radius:9px}
-.rows{display:flex;flex-direction:column;gap:10px}
-.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-
-/* ---------- botões ---------- */
-.btn{position:relative;font:inherit;font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:13px;
-  color:#eafcff;padding:13px 20px;min-width:130px;cursor:pointer;border:1px solid var(--line);border-radius:12px;
-  background:linear-gradient(180deg,rgba(0,229,255,.14),rgba(0,229,255,.03));
-  box-shadow:0 6px 0 rgba(0,0,0,.35),inset 0 0 22px rgba(0,229,255,.08);
-  transition:transform .09s ease,box-shadow .16s,background .2s;overflow:hidden}
-.btn:active{transform:translateY(3px) scale(.99);box-shadow:0 2px 0 rgba(0,0,0,.35)}
-.btn::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:sweep 3.4s linear infinite}
-@keyframes sweep{0%{left:-60%}55%{left:130%}100%{left:130%}}
-.btn.p{background:linear-gradient(180deg,var(--c1),#0aa2c4);color:#02121a;border-color:#9df6ff;box-shadow:0 6px 0 #06626f,0 0 34px rgba(0,229,255,.4)}
-.btn.g{background:linear-gradient(180deg,var(--c3),#3fbf21);color:#05210a;border-color:#c7ffb0;box-shadow:0 6px 0 #23750f}
-.btn.m{background:linear-gradient(180deg,var(--c2),#a80f42);color:#fff0f5;border-color:#ffa7c3;box-shadow:0 6px 0 #6d0729}
-.btn.y{background:linear-gradient(180deg,var(--c4),#c78a12);color:#241400;border-color:#ffe6ac;box-shadow:0 6px 0 #7d5405}
-.btn.sm{min-width:0;padding:8px 12px;font-size:11px;letter-spacing:.1em}
-.btn.ic{min-width:44px;width:44px;padding:0;height:44px;border-radius:12px;display:grid;place-items:center;font-size:18px}
-.btn[disabled]{opacity:.45;filter:grayscale(.6)}
-h2.t{font-size:clamp(20px,6vw,32px);letter-spacing:.2em;font-weight:900;text-transform:uppercase;
-  color:#fff;text-shadow:0 0 26px rgba(0,229,255,.55)}
-h3.s{font-size:12px;letter-spacing:.3em;color:var(--c1);text-transform:uppercase;margin:14px 0 8px}
-p.d{font-size:13px;line-height:1.6;color:#a9c6da}
-
-/* ---------- barra de progresso (loading / missões) ---------- */
-.bar{position:relative;height:10px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid rgba(255,255,255,.07)}
-.bar>i{position:absolute;inset:0 auto 0 0;width:0%;border-radius:9px;background:linear-gradient(90deg,var(--c1),var(--c5));
-  box-shadow:0 0 16px rgba(0,229,255,.6);transition:width .25s linear}
-.bar.g>i{background:linear-gradient(90deg,#38ef7d,#7cff4f)}
-.bar.r>i{background:linear-gradient(90deg,#ff4b6e,#ff2d6f)}
-.bar.y>i{background:linear-gradient(90deg,#ffd86b,#ffab2d)}
-.bar.v>i{background:linear-gradient(90deg,#8a5bff,#d36bff)}
-.bar.t{height:6px}
-
-/* ---------- grade de itens (loja, skins, personagens,改进) ---------- */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:10px}
-.tile{position:relative;text-align:left;padding:12px;border-radius:14px;border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.28));transition:transform .12s}
-.tile:active{transform:scale(.98)}
-.tile .nm{font-weight:800;font-size:13px;letter-spacing:.06em;color:#fff}
-.tile .ds{font-size:10.5px;color:#93b2c6;line-height:1.45;margin:5px 0 8px;min-height:26px}
-.tile .pr{font-size:11px;font-weight:800;color:var(--c4)}
-.tile.on{border-color:var(--c3);box-shadow:0 0 22px rgba(124,255,79,.2)}
-.tile.own{border-color:rgba(0,229,255,.5)}
-.pips{display:flex;gap:3px;margin-top:6px}
-.pips b{width:14px;height:5px;border-radius:3px;background:rgba(255,255,255,.14)}
-.pips b.f{background:var(--c4);box-shadow:0 0 8px rgba(255,194,71,.7)}
-.chip{display:inline-block;font-size:10px;letter-spacing:.14em;padding:3px 8px;border-radius:20px;
-  border:1px solid var(--line);color:#9fe6ff;background:rgba(0,229,255,.07);text-transform:uppercase}
-
+/* ═══════════ PULSO · base visual (mesmo estilo do original) ═══════════ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{height:100%;overflow:hidden;background:#07070c;color:#e9e9f2;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none;
+  position:fixed;inset:0;width:100%}
+canvas{position:fixed;inset:0;z-index:0;display:block;touch-action:none}
 /* ---------- HUD ---------- */
-#hud{position:absolute;inset:0;z-index:20;pointer-events:none;
-  padding:calc(8px + env(safe-area-inset-top)) 10px calc(8px + env(safe-area-inset-bottom))}
-#hud>*{position:absolute}
-.hud-l{top:calc(10px + env(safe-area-inset-top));left:12px;width:min(238px,44vw)}
-.hud-c{top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);text-align:center;width:min(300px,60vw)}
-.hud-r{top:calc(10px + env(safe-area-inset-top));right:12px;display:flex;gap:7px;align-items:flex-start;pointer-events:auto}
-.statline{display:flex;align-items:center;gap:6px;margin-bottom:5px}
-.statline span{font-size:9px;letter-spacing:.16em;width:34px;color:#8fc7e0;text-transform:uppercase}
-.lvbadge{display:flex;align-items:center;gap:7px;margin-bottom:6px}
-.lvbadge b{min-width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:15px;font-weight:900;
-  color:#02131c;background:linear-gradient(180deg,#8ff5ff,#00b3d1);box-shadow:0 0 18px rgba(0,229,255,.5)}
-.combo{font-size:22px;font-weight:900;color:var(--c4);text-shadow:0 0 20px rgba(255,194,71,.75);line-height:1}
-.hud-c .lbl{font-size:9px;letter-spacing:.28em;color:#78a9c4}
-.hud-c .big{font-size:26px;font-weight:900;letter-spacing:.06em;color:#fff;text-shadow:0 0 22px rgba(0,229,255,.5)}
-.hstats{display:flex;justify-content:center;gap:10px;margin-top:6px;flex-wrap:wrap}
-.hstats i{font-style:normal;font-size:10px;letter-spacing:.14em;color:#9fd6ec;background:rgba(0,20,35,.55);
-  border:1px solid var(--line);border-radius:8px;padding:3px 7px}
-.hstats i b{color:#fff;font-size:12px;margin-left:4px}
-#minimap{border:1px solid var(--line);border-radius:10px;background:rgba(2,8,16,.6)}
-.hbtns{display:flex;flex-direction:column;gap:7px}
-#bossWrap{top:calc(84px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(430px,88vw);text-align:center}
-#bossWrap .nm{font-size:12px;letter-spacing:.28em;color:#ffd0dd;text-shadow:0 0 18px rgba(255,45,111,.8);margin-bottom:4px}
-#bossWrap .bar{height:12px}
-#bossWrap .bar>i{background:linear-gradient(90deg,#ff2d6f,#ff9a3c);box-shadow:0 0 18px rgba(255,45,111,.75)}
-#bossWrap .ph{font-size:9px;letter-spacing:.24em;color:#ffb3c7;margin-top:3px}
-.hud-bl{left:14px;bottom:calc(16px + env(safe-area-inset-bottom));width:150px;height:150px;pointer-events:auto}
-#joyBase{position:absolute;inset:0;margin:auto;width:126px;height:126px;border-radius:50%;
-  border:2px solid rgba(0,229,255,.28);background:radial-gradient(circle,rgba(0,229,255,.1),rgba(0,10,20,.35));
-  transition:opacity .2s;opacity:.55}
-#joyKnob{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#c9f7ff,#00b3d1 70%,#046b81);box-shadow:0 0 26px rgba(0,229,255,.65)}
-.hud-br{right:14px;bottom:calc(16px + env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:9px;pointer-events:auto}
-.abtn{width:74px;height:74px;border-radius:50%;border:2px solid rgba(255,255,255,.22);display:grid;place-items:center;
-  font-size:10px;font-weight:900;letter-spacing:.1em;color:#fff;position:relative;
-  background:radial-gradient(circle at 40% 32%,rgba(255,255,255,.22),rgba(0,0,0,.45));text-align:center;line-height:1.1}
-.abtn.dash{background:radial-gradient(circle at 40% 32%,#9df6ff,#0090b4);color:#03222b;box-shadow:0 0 26px rgba(0,229,255,.45)}
-.abtn.bomb{background:radial-gradient(circle at 40% 32%,#ffd27a,#c1740a);color:#231200;width:60px;height:60px}
-.abtn.sw{background:radial-gradient(circle at 40% 32%,#c6a2ff,#6b2fc0);color:#1a0630;width:60px;height:60px}
-.abtn .cd{position:absolute;inset:-2px;border-radius:50%;border:3px solid rgba(255,255,255,.75);
-  -webkit-mask:radial-gradient(closest-side,transparent 68%,#000 69%);mask:radial-gradient(closest-side,transparent 68%,#000 69%)}
-.abtn .cnt{position:absolute;top:-6px;right:-4px;background:var(--c2);color:#fff;font-size:10px;border-radius:10px;padding:1px 5px}
-#weaponTag{right:14px;bottom:calc(104px + env(safe-area-inset-bottom));font-size:10px;letter-spacing:.16em;
-  color:#bfeeff;background:rgba(3,12,22,.6);border:1px solid var(--line);border-radius:9px;padding:4px 9px}
-#toasts{top:calc(112px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px;align-items:center;width:90vw}
-.toast{font-size:11.5px;letter-spacing:.12em;padding:7px 14px;border-radius:20px;background:rgba(6,16,28,.9);
-  border:1px solid var(--line);color:#dff6ff;animation:tst 2.4s ease forwards;white-space:nowrap;text-transform:uppercase}
-@keyframes tst{0%{opacity:0;transform:translateY(-8px) scale(.94)}12%{opacity:1;transform:none}
-  75%{opacity:1}100%{opacity:0;transform:translateY(-12px)}}
-#flash{position:absolute;inset:0;z-index:22;pointer-events:none;background:radial-gradient(circle,rgba(255,45,111,0) 45%,rgba(255,45,111,.55));opacity:0}
-#vig{position:absolute;inset:0;z-index:19;pointer-events:none;box-shadow:inset 0 0 160px rgba(0,0,0,.75)}
-
-/* ---------- aviso de entrada do chefe ---------- */
-#bossIn{position:absolute;inset:0;z-index:35;display:grid;place-content:center;pointer-events:none;text-align:center;gap:6px}
-#bossIn .k{font-size:11px;letter-spacing:.5em;color:#ff8fae}
-#bossIn .n{font-size:clamp(30px,9vw,66px);font-weight:900;letter-spacing:.16em;color:#fff;
-  text-shadow:0 0 40px rgba(255,45,111,.9),0 0 90px rgba(255,45,111,.5)}
-#bossIn .w{font-size:11px;letter-spacing:.36em;color:var(--c4)}
-#bossIn .ln{height:2px;background:linear-gradient(90deg,transparent,var(--c2),transparent);animation:lnIn .5s ease both}
-@keyframes lnIn{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-
-/* ---------- seleção de melhoria ---------- */
-#scr-levelup .card{width:min(680px,96vw)}
-#ups{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}
-.up{text-align:left;padding:14px;border-radius:14px;cursor:pointer;border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(0,229,255,.1),rgba(0,0,0,.3));transition:transform .12s}
-.up:active{transform:scale(.97)}
-.up .ic{font-size:24px}
-.up .nm{font-weight:900;font-size:14px;margin:6px 0 4px;color:#fff}
-.up .lv{font-size:9.5px;letter-spacing:.2em;color:var(--c4)}
-.up .ds{font-size:11.5px;color:#a5c4d8;line-height:1.5}
-
-/* ---------- utilitários ---------- */
-.statbox{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:#a9c6da;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.07)}
-.statbox b{color:#fff}
-.cur{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:12px;font-weight:800;color:#fff}
-.cur i{font-style:normal;background:rgba(0,20,35,.7);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
-.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
-.lbl{font-size:10px;letter-spacing:.22em;color:#78a9c4;text-transform:uppercase}
-input[type=range]{width:120px;accent-color:#00e5ff}
-.tabrow{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
-@media (max-height:520px){.logo{font-size:clamp(34px,9vw,60px)}.btn{padding:10px 16px;min-width:112px;font-size:12px}}
+#hud{position:fixed;inset:0;z-index:15;pointer-events:none;
+  padding:calc(10px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right))
+          calc(12px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left));
+  display:flex;flex-direction:column;justify-content:space-between}
+.top{display:flex;flex-direction:column;gap:6px}
+.line{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.bar{position:relative;height:24px;flex:1;max-width:62vw;background:#0c0c16;border:1px solid #22223a;border-radius:8px;overflow:hidden}
+.bar i{position:absolute;inset:0;transform-origin:left;transform:scaleX(1);display:block;transition:transform .1s linear}
+#hpFill{background:linear-gradient(90deg,#ff3b5c,#ff8095)}
+#shFill{background:linear-gradient(90deg,#2f7bd6,#7fd8ff)}
+#xpFill{background:linear-gradient(90deg,#5b4bff,#9d8bff)}
+#bossFill{background:linear-gradient(90deg,#ff5470,#ffb454)}
+.bar span{position:absolute;inset:0;display:flex;align-items:center;padding:0 9px;
+  font-size:10px;font-weight:800;letter-spacing:1px;text-shadow:0 1px 3px #000}
+.stat{font-size:9px;letter-spacing:2px;color:#6d6d8a;text-align:right;line-height:1.25;white-space:nowrap}
+.stat b{display:block;font-size:19px;color:#fff;letter-spacing:0}
+.stat2{font-size:9px;letter-spacing:2px;color:#6d6d8a;text-align:left;line-height:1.25;white-space:nowrap}
+.stat2 b{display:block;font-size:15px;color:#fff;letter-spacing:0}
+#combo{position:absolute;left:50%;top:calc(96px + env(safe-area-inset-top));transform:translateX(-50%);
+  font-size:17px;font-weight:900;color:#ffd166;opacity:0;letter-spacing:1px;transition:opacity .2s}
+#announce{position:absolute;left:50%;top:32%;transform:translate(-50%,-50%);font-size:clamp(22px,8vw,40px);
+  font-weight:900;letter-spacing:4px;color:#fff;opacity:0;text-align:center;width:100%}
+#boss{position:absolute;left:50%;top:calc(92px + env(safe-area-inset-top));transform:translateX(-50%);width:min(420px,86vw);text-align:center}
+#bossName{font-size:11px;letter-spacing:4px;font-weight:900;color:#ffb454;text-shadow:0 0 12px rgba(255,84,112,.7)}
+#boss .bar{height:14px;max-width:none;margin:4px 0}
+#bossPh{font-size:9px;letter-spacing:3px;color:#8b8ba7}
+#radar{position:fixed;right:calc(12px + env(safe-area-inset-right));top:calc(104px + env(safe-area-inset-top));
+  z-index:15;border:1px solid #22223a;border-radius:10px;background:rgba(9,9,16,.72);pointer-events:none;opacity:.92}
+#clock{position:fixed;right:calc(12px + env(safe-area-inset-right));top:calc(206px + env(safe-area-inset-top));z-index:15;
+  font-size:10px;letter-spacing:2px;color:#6d6d8a;text-align:center;width:96px;pointer-events:none}
+#wTag{position:fixed;left:calc(12px + env(safe-area-inset-left));bottom:calc(150px + env(safe-area-inset-bottom));z-index:15;
+  font-size:10px;letter-spacing:2px;font-weight:900;color:#9d8bff;border:1px solid #22223a;background:rgba(9,9,16,.7);
+  padding:6px 10px;border-radius:8px;pointer-events:none}
+#fps{position:fixed;left:calc(12px + env(safe-area-inset-left));top:calc(112px + env(safe-area-inset-top));z-index:15;
+  font-size:10px;letter-spacing:1px;color:#4b4b66;pointer-events:none}
+#toasts{position:fixed;left:50%;top:calc(150px + env(safe-area-inset-top));transform:translateX(-50%);z-index:22;
+  display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none}
+.toast{font-size:10px;letter-spacing:2px;font-weight:800;padding:7px 13px;border-radius:999px;background:rgba(9,9,16,.9);
+  border:1px solid #2a2a44;color:#fff;animation:ts 2.3s ease forwards;white-space:nowrap}
+@keyframes ts{0%{opacity:0;transform:translateY(-8px)}14%{opacity:1;transform:none}70%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+/* ---------- controles ---------- */
+#pad{position:fixed;left:0;bottom:0;width:52%;height:52%;z-index:12;pointer-events:auto}
+#joy{position:fixed;z-index:13;pointer-events:none;opacity:0;transition:opacity .12s}
+#joy i{position:absolute;border-radius:50%;display:block}
+#joy .b{inset:0;border:2px solid rgba(123,107,255,.5);background:radial-gradient(circle,rgba(123,107,255,.1),transparent 70%)}
+#joy .k{width:54px;height:54px;margin:-27px 0 0 -27px;left:50%;top:50%;
+  background:radial-gradient(circle at 35% 30%,#b9aeff,#5b4bff);box-shadow:0 0 20px rgba(123,107,255,.6)}
+#dashBtn{position:fixed;right:calc(18px + env(safe-area-inset-right));bottom:calc(24px + env(safe-area-inset-bottom));
+  width:86px;height:86px;border-radius:50%;z-index:16;pointer-events:auto;
+  background:radial-gradient(circle at 35% 30%,#2b2b48,#12121f);border:2px solid #33334f;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;
+  font-size:10px;font-weight:900;letter-spacing:2px;color:#8f8fb0;transition:.1s}
+#dashBtn.rdy{border-color:#7bed9f;color:#7bed9f;box-shadow:0 0 18px rgba(123,237,159,.35)}
+#dashBtn.hit{transform:scale(.9)}
+#dashBtn i{position:absolute;inset:-2px;border-radius:50%;border:2px solid transparent;border-top-color:#c39bff;opacity:.9}
+.abtn{position:fixed;z-index:16;pointer-events:auto;border-radius:50%;background:radial-gradient(circle at 35% 30%,#262640,#101019);
+  border:2px solid #33334f;color:#9d8bff;font-size:9px;font-weight:900;letter-spacing:1px;display:flex;align-items:center;justify-content:center}
+.abtn:active{transform:scale(.9)}
+#bombBtn{right:calc(114px + env(safe-area-inset-right));bottom:calc(28px + env(safe-area-inset-bottom));width:62px;height:62px;color:#ffd166;border-color:#4a3c1c}
+#swapBtn{right:calc(18px + env(safe-area-inset-right));bottom:calc(120px + env(safe-area-inset-bottom));width:62px;height:62px}
+.abtn b{position:absolute;top:-4px;right:-2px;background:#ff5470;color:#fff;font-size:9px;border-radius:8px;padding:1px 5px}
+#pauseBtn{position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+  z-index:17;pointer-events:auto;background:rgba(12,12,22,.8);border:1px solid #22223a;border-radius:999px;
+  color:#8f8fb0;font-size:10px;font-weight:900;letter-spacing:2px;padding:9px 15px}
+/* ---------- overlays ---------- */
+#ui{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;pointer-events:none;
+  padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom)) 14px}
+.ov{position:absolute;display:none;flex-direction:column;align-items:center;text-align:center;padding:24px 18px;
+  background:rgba(7,7,12,.95);border:1px solid #22223a;border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.75);
+  max-width:520px;width:100%;max-height:92vh;overflow-y:auto;pointer-events:auto;-webkit-overflow-scrolling:touch}
+.ov.show{display:flex;animation:pop .22s ease both}
+@keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+h1{font-size:clamp(40px,15vw,58px);letter-spacing:8px;font-weight:900;line-height:1;
+  background:linear-gradient(180deg,#fff,#7b6bff 68%,#ff5470);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:bre 3s ease-in-out infinite}
+@keyframes bre{0%,100%{filter:drop-shadow(0 0 6px rgba(123,107,255,.4))}50%{filter:drop-shadow(0 0 22px rgba(255,84,112,.55))}}
+h2{font-size:clamp(22px,7vw,30px);letter-spacing:3px;font-weight:800}
+.dead{color:#ff5470}.win{color:#7bed9f}
+.sub{color:#8b8ba7;font-size:12px;margin-top:8px;letter-spacing:1px;line-height:1.6}
+.sub b{color:#fff}
+.cred{margin-top:14px;font-size:10px;letter-spacing:3px;color:#6d6d8a}
+.cred b{color:#ffd166}
+.howto{margin:16px 0 4px;font-size:12px;line-height:1.9;color:#a9a9c4;border:1px solid #1c1c2e;border-radius:14px;
+  padding:13px 15px;background:#0b0b14;text-align:left;width:100%}
+.howto b{color:#fff}.howto em{font-style:normal;color:#7b6bff}
+.cta{margin-top:16px;background:#fff;color:#0b0b14;border:0;border-radius:999px;padding:17px 0;width:100%;max-width:320px;
+  font-size:16px;font-weight:900;letter-spacing:4px;cursor:pointer}
+.cta:active{background:#ffd166;transform:scale(.97)}
+.ghost{margin-top:10px;background:transparent;border:1px solid #2a2a44;color:#8f8fb0;border-radius:999px;
+  padding:12px 22px;font-size:11px;font-weight:800;letter-spacing:2px;cursor:pointer}
+.ghost:active{border-color:#7b6bff;color:#fff}
+.gold{background:#ffd166;color:#14100a;border:0;border-radius:999px;padding:14px 26px;font-size:12px;font-weight:900;letter-spacing:2px;cursor:pointer;margin-top:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin-top:12px}
+.mini{background:#0d0d18;border:1px solid #262640;border-radius:12px;color:#a9a9c4;font-size:10px;font-weight:900;
+  letter-spacing:1px;padding:13px 4px;cursor:pointer}
+.mini:active{border-color:#7b6bff;color:#fff;background:#17172e}
+.mini em{font-style:normal;display:block;font-size:15px;margin-bottom:3px}
+.cur{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;font-size:12px;font-weight:800}
+.cur span{background:#0b0b14;border:1px solid #1c1c2e;border-radius:999px;padding:6px 12px;color:#fff}
+.cards{display:flex;flex-direction:column;gap:11px;margin-top:16px;width:100%}
+.card{display:flex;align-items:center;gap:13px;text-align:left;width:100%;min-height:74px;
+  background:#0d0d18;border:1px solid #262640;border-radius:16px;padding:14px;cursor:pointer;transition:.1s}
+.card:active{border-color:#7b6bff;background:#17172e;transform:scale(.98)}
+.card.own{border-color:#2f6b4a}.card.sel{border-color:#ffd166}
+.card .ic{width:40px;height:40px;flex:0 0 40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:900;color:#07070c}
+.card .tx{flex:1;min-width:0}
+.card .tx b{display:block;font-size:13px;margin-bottom:4px}
+.card .tx i{display:block;font-style:normal;font-size:11px;color:#7d7d9c;line-height:1.45}
+.card .pr{font-size:11px;font-weight:900;color:#ffd166;white-space:nowrap;text-align:right;line-height:1.5}
+.card .pr u{display:block;text-decoration:none;font-size:9px;letter-spacing:1px;color:#7bed9f}
+.prg{height:5px;background:#181828;border-radius:4px;overflow:hidden;margin-top:6px}
+.prg i{display:block;height:100%;background:linear-gradient(90deg,#5b4bff,#9d8bff)}
+.evo{display:flex;gap:3px;margin-top:6px}
+.evo s{width:16px;height:5px;border-radius:3px;background:#22223a;text-decoration:none}
+.evo s.f{background:#ffd166}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#0b0b14;border:1px solid #1c1c2e;
+  border-radius:12px;padding:11px 13px;margin-top:8px;font-size:11px;letter-spacing:1px;color:#a9a9c4;text-align:left}
+.row input[type=range]{width:110px;accent-color:#7b6bff}
+.sel{background:#0d0d18;border:1px solid #2a2a44;color:#fff;border-radius:8px;padding:6px 8px;font-size:11px;font-weight:800}
+.days{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;width:100%;margin-top:14px}
+.day{border:1px solid #262640;background:#0b0b14;border-radius:12px;padding:10px 4px;font-size:10px;color:#8f8fb0;font-weight:800}
+.day b{display:block;font-size:14px;color:#ffd166;margin-top:3px}
+.day.got{border-color:#2f6b4a;color:#7bed9f}.day.got b{color:#7bed9f}
+.big{font-size:clamp(40px,15vw,52px);font-weight:900;color:#ffd166;margin-top:4px}
+.sect{width:100%;font-size:10px;letter-spacing:3px;color:#6d6d8a;text-align:left;margin:16px 0 2px;font-weight:800}
+.lock{opacity:.55}
 </style>
 </head>
 <body>
-<div id="app">
-  <canvas id="game"></canvas>
-  <div id="vig"></div>
-  <div id="flash"></div>
+<canvas id="c"></canvas>
 
-  <!-- ══════════ HUD (interface do combate) ══════════ -->
-  <div id="hud" class="hidden">
-    <div class="hud-l">
-      <div class="lvbadge"><b id="hLv">1</b><span class="chip" id="hChar">BLAZE</span></div>
-      <div class="statline"><span>Vida</span><div class="bar r" style="flex:1"><i id="bHp"></i></div></div>
-      <div class="statline"><span>Escudo</span><div class="bar v" style="flex:1"><i id="bSh"></i></div></div>
-      <div class="statline"><span>XP</span><div class="bar t" style="flex:1"><i id="bXp"></i></div></div>
-    </div>
-    <div class="hud-c">
-      <div class="lbl">Pontuação</div><div class="big" id="hScore">0</div>
-      <div class="combo" id="hCombo"></div>
-      <div class="hstats">
-        <i>Onda<b id="hWave">1</b></i><i>Abates<b id="hKills">0</b></i><i>Tempo<b id="hTime">00:00</b></i>
-      </div>
-    </div>
-    <div class="hud-r">
-      <canvas id="minimap" width="112" height="112"></canvas>
-      <div class="hbtns">
-        <button class="btn ic" id="bPause">❚❚</button>
-        <button class="btn ic" id="bCfgH">⚙</button>
-      </div>
-    </div>
-    <div id="bossWrap" class="hidden">
-      <div class="nm" id="bossName">CHEFE</div>
-      <div class="bar"><i id="bossHp" style="width:100%"></i></div>
-      <div class="ph" id="bossPh">FASE 1 / 3</div>
-    </div>
-    <div class="hud-bl" id="joyZone"><div id="joyBase"><div id="joyKnob"></div></div></div>
-    <div class="hud-br">
-      <button class="abtn sw" id="bSwap">TROCAR<br>ARMA</button>
-      <button class="abtn bomb" id="bBomb">💥<span class="cnt" id="nBomb">3</span></button>
-      <button class="abtn dash" id="bDash">DASH<span class="cd" id="dashCd"></span></button>
-    </div>
-    <div id="weaponTag">PISTOLA N1</div>
-    <div id="toasts"></div>
+<div id="pad"></div>
+<div id="joy"><i class="b"></i><i class="k"></i></div>
+<button id="pauseBtn">PAUSA</button>
+<button class="abtn" id="swapBtn">ARMA</button>
+<button class="abtn" id="bombBtn">BOMBA<b id="bombN">3</b></button>
+<div id="dashBtn"><i id="dashRing"></i>DASH</div>
+
+<div id="hud">
+  <div class="top">
+    <div class="line"><div class="bar"><i id="hpFill"></i><span id="hpTxt">100</span></div><div class="stat">ONDA<b id="waveTxt">1</b></div></div>
+    <div class="line"><div class="bar"><i id="shFill"></i><span style="transform:none"></span><i id="shFill2"></i><span id="shTxt">ESCUDO</span></div><div class="stat">PONTOS<b id="scoreTxt">0</b></div></div>
+    <div class="line"><div class="bar"><i id="xpFill"></i><span id="lvlTxt">NV 1</span></div><div class="stat">ABATES<b id="killTxt">0</b></div></div>
+  </div>
+  <div id="boss" class="hide"><div id="bossName">CHEFE</div><div class="bar"><i id="bossFill"></i></div><div id="bossPh">FASE 1 / 3</div></div>
+  <div id="combo"></div>
+  <div id="announce"></div>
+  <div id="clock">00:00 · SETOR</div>
+  <div id="wTag">PISTOLA</div>
+  <div id="fps"></div>
+</div>
+<canvas id="radar" width="96" height="96"></canvas>
+<div id="toasts"></div>
+
+<div id="ui">
+
+  <!-- ═══════ CARREGAMENTO ═══════ -->
+  <div id="loading" class="ov show">
+    <h1>PULSO</h1>
+    <p class="sub">INICIANDO NÚCLEO DA ARENA</p>
+    <div class="bar" style="margin-top:18px;max-width:320px"><i id="loadFill" style="transform:scaleX(0);background:linear-gradient(90deg,#5b4bff,#ff5470)"></i></div>
+    <p class="sub" id="loadTip" style="min-height:18px">Calibrando mira automática…</p>
+    <p class="cred">Criado por <b>VICTOR OFICIAL</b></p>
   </div>
 
-  <!-- ══════════ Aviso de entrada do chefe ══════════ -->
-  <div id="bossIn" class="hidden"><div class="k">ALERTA DE AMEAÇA</div><div class="ln"></div><div class="n" id="biN">SENTINELA PRIME</div><div class="w" id="biW">PROTOCOLO DE EXTERMÍNIO</div></div>
-
-  <!-- ══════════ Carregamento ══════════ -->
-  <div id="scr-loading" class="screen">
-    <div class="logo">PULSO</div>
-    <div class="sub">CARREGANDO NÚCLEO NEURAL</div>
-    <div class="card" style="width:min(420px,90vw);padding:16px">
-      <div class="bar"><i id="loadBar"></i></div>
-      <p class="d" id="loadTip" style="margin-top:10px">Calibrando mira automática…</p>
+  <!-- ═══════ MENU ═══════ -->
+  <div id="menu" class="ov">
+    <h1>PULSO</h1>
+    <p class="sub">ARENA DE SOBREVIVÊNCIA · RECORDE <b id="bestMenu">0</b></p>
+    <p class="cur"><span>🪙 <b id="cCoins">0</b></span><span>💎 <b id="cGems">0</b></span><span>🗝 <b id="cKeys">0</b></span><span>⭐ NV <b id="cRank">1</b></span></p>
+    <div class="howto">
+      <em>1.</em> Segure e arraste na <b>metade esquerda</b> — o joystick nasce sob o polegar.<br>
+      <em>2.</em> <b>Tiro e mira automáticos</b> no inimigo mais próximo.<br>
+      <em>3.</em> <b>DASH</b> esquiva com invencibilidade · <b>BOMBA</b> limpa a tela.<br>
+      <em>4.</em> A cada nível, escolha <b>1 melhoria</b> entre três.<br>
+      <em>5.</em> <b>Chefe</b> a cada 5 ondas, em <b>8 setores</b> diferentes.
     </div>
-    <div class="sign">Criado por <b>VICTOR OFICIAL</b></div>
+    <button class="cta" id="btnStart">JOGAR</button>
+    <div class="grid3">
+      <button class="mini" data-go="shop"><em>🛒</em>LOJA</button>
+      <button class="mini" data-go="heroes"><em>🥷</em>HERÓIS</button>
+      <button class="mini" data-go="missions"><em>🎯</em>MISSÕES</button>
+      <button class="mini" data-go="ach"><em>🏆</em>CONQUISTAS</button>
+      <button class="mini" data-go="pass"><em>🎫</em>PASSE</button>
+      <button class="mini" data-go="tree"><em>🌳</em>ÁRVORE</button>
+      <button class="mini" data-go="daily"><em>📅</em>DIÁRIO</button>
+      <button class="mini" data-go="settings"><em>⚙</em>CONFIG</button>
+      <button class="mini" data-go="credits"><em>ℹ</em>CRÉDITOS</button>
+    </div>
+    <button class="ghost" id="btnFull">TELA CHEIA</button>
+    <p class="cred">Criado por <b>VICTOR OFICIAL</b></p>
   </div>
 
-  <!-- ══════════ Menu principal ══════════ -->
-  <div id="scr-menu" class="screen hidden">
-    <div class="logo">PULSO</div>
-    <div class="sub">ARENA NEON SOBREVIVAL</div>
-    <div class="cur">
-      <i>🪙 <span id="mCoins">0</span></i><i>💎 <span id="mGems">0</span></i><i>🗝 <span id="mKeys">0</span></i><i>⭐ REC <span id="mHi">0</span></i>
+  <!-- ═══════ PAINÉIS ═══════ -->
+  <div id="shop" class="ov"><h2>LOJA</h2><p class="sub">ARMAS · EVOLUÇÕES · CONSUMÍVEIS</p><p class="cur" id="cur1"></p><div class="cards" id="shopBody"></div><button class="ghost back">VOLTAR</button></div>
+  <div id="heroes" class="ov"><h2>HERÓIS & SKINS</h2><p class="sub">CADA HERÓI MUDA SEU ESTILO DE JOGO</p><p class="cur" id="cur2"></p><div class="cards" id="heroBody"></div><div class="sect">SKINS</div><div class="cards" id="skinBody"></div><button class="ghost back">VOLTAR</button></div>
+  <div id="missions" class="ov"><h2>MISSÕES</h2><p class="sub">TOQUE PARA RESGATAR A RECOMPENSA</p><div class="cards" id="misBody"></div></div>
+  <div id="ach" class="ov"><h2>CONQUISTAS</h2><p class="sub" id="achCount"></p><div class="cards" id="achBody"></div></div>
+  <div id="pass" class="ov"><h2>PASSE DE BATALHA</h2><p class="sub" id="passSub"></p><div class="bar" style="max-width:320px"><i id="passFill" style="background:linear-gradient(90deg,#ffd166,#ff5470)"></i></div><div class="cards" id="passBody"></div></div>
+  <div id="tree" class="ov"><h2>ÁRVORE DE HABILIDADES</h2><p class="sub">PONTOS DISPONÍVEIS: <b id="spN">0</b> · ganhe nível de carreira para obter</p><div class="cards" id="treeBody"></div></div>
+  <div id="daily" class="ov"><h2>RESGATE DIÁRIO</h2><p class="sub" id="dailySub"></p><div class="days" id="dailyBody"></div><button class="cta" id="btnDaily" style="max-width:260px">RESGATAR</button></div>
+  <div id="settings" class="ov"><h2>CONFIGURAÇÕES</h2><p class="sub">TUDO É SALVO AUTOMATICAMENTE</p><div id="setBody" style="width:100%"></div></div>
+  <div id="credits" class="ov">
+    <h1 style="font-size:clamp(34px,12vw,48px)">PULSO</h1>
+    <p class="sub" style="font-size:14px;color:#fff;letter-spacing:3px">CRIADO POR <b style="color:#ffd166">VICTOR OFICIAL</b></p>
+    <div class="howto" style="text-align:center">
+      ARTE, CÓDIGO, DESIGN E ÁUDIO<br>VICTOR OFICIAL<br><br>
+      ENGINE · HTML5 CANVAS 2D<br>ÁUDIO · WEB AUDIO API (SINTETIZADO)<br>ARMAZENAMENTO · LOCALSTORAGE<br><br>
+      <b>Todos os direitos reservados.</b><br>© 2026 VICTOR OFICIAL
     </div>
-    <div class="rows" style="width:min(320px,86vw)">
-      <button class="btn p" id="mPlay">▶ Jogar</button>
-      <div class="row">
-        <button class="btn sm" id="mShop">🛒 Loja</button>
-        <button class="btn sm" id="mChars">🥷 Lend.</button>
-        <button class="btn sm" id="mSkins">🎨 Skins</button>
-      </div>
-      <div class="row">
-        <button class="btn sm" id="mMissions">🎯 Missões</button>
-        <button class="btn sm" id="mAch">🏆 Conquistas</button>
-        <button class="btn sm" id="mPass">🎫 Passe</button>
-      </div>
-      <div class="row">
-        <button class="btn sm" id="mTree">🌳 Habilidades</button>
-        <button class="btn sm" id="mDaily">📅 Diário</button>
-        <button class="btn sm" id="mCfg">⚙ Config.</button>
-      </div>
-      <div class="row"><button class="btn sm" id="mCred">ℹ Créditos</button></div>
-    </div>
-    <div class="sign">Criado por <b>VICTOR OFICIAL</b> • v1.0</div>
+    <p class="sub">8 setores · 12 tipos de inimigos · 5 chefes · 15 armas · 17 melhorias</p>
+    <button class="ghost back">VOLTAR</button>
   </div>
 
-  <!-- ══════════ Painel genérico (loja, skins, missões, configurações…) ══════════ -->
-  <div id="scr-panel" class="screen hidden">
-    <div class="card">
-      <h2 class="t" id="pTitle">PAINEL</h2>
-      <div class="cur" id="pCur"></div>
-      <div id="pBody" style="margin-top:14px"></div>
-      <div class="row" style="margin-top:16px"><button class="btn" id="pBack">◀ Voltar</button></div>
+  <!-- ═══════ NÍVEL ═══════ -->
+  <div id="lvl" class="ov"><h2>NÍVEL <span id="lvlNum">2</span></h2><p class="sub">TOQUE PARA ESCOLHER</p><div class="cards" id="cards"></div></div>
+
+  <!-- ═══════ GAME OVER ═══════ -->
+  <div id="over" class="ov">
+    <h2 class="dead">VOCÊ CAIU</h2>
+    <p class="big"><span id="finalScore">0</span></p>
+    <p class="sub">ONDA <span id="finalWave">1</span> · <span id="finalKills">0</span> ABATES · RECORDE <span id="bestOver">0</span><br>
+      +<span id="finalCoins">0</span> 🪙 &nbsp; +<span id="finalXp">0</span> XP</p>
+    <button class="cta" id="btnAgain">DE NOVO</button>
+    <button class="gold" id="btnRevive">REVIVER · 150 🪙</button>
+    <div class="grid3" style="margin-top:12px">
+      <button class="mini" data-go="shop"><em>🛒</em>LOJA</button>
+      <button class="mini" data-go="settings"><em>⚙</em>CONFIG</button>
+      <button class="mini" data-quit="1"><em>🏠</em>MENU</button>
     </div>
+    <p class="cred">Criado por <b>VICTOR OFICIAL</b></p>
   </div>
 
-  <!-- ══════════ Subir de nível (escolha de melhoria) ══════════ -->
-  <div id="scr-levelup" class="screen hidden" style="background:radial-gradient(120% 90% at 50% 0%,rgba(20,60,30,.5),rgba(3,5,12,.9))">
-    <h2 class="t" style="color:#c9ffb2;text-shadow:0 0 30px rgba(124,255,79,.7)">NÍVEL <span id="luN">2</span></h2>
-    <p class="d">Escolha uma evolução para o seu pulso</p>
-    <div class="card"><div id="ups"></div></div>
+  <!-- ═══════ VITÓRIA ═══════ -->
+  <div id="win" class="ov">
+    <h2 class="win">VITÓRIA TOTAL</h2>
+    <p class="sub">PULSO ZERO FOI SILENCIADO. A ARENA É SUA.</p>
+    <p class="big"><span id="winScore">0</span></p>
+    <p class="sub">ONDA <span id="winWave">25</span> · <span id="winKills">0</span> ABATES · +<span id="winCoins">0</span> 🪙</p>
+    <button class="cta" id="btnEndless">MODO INFINITO</button>
+    <div class="grid3" style="margin-top:12px">
+      <button class="mini" data-go="credits"><em>ℹ</em>CRÉDITOS</button>
+      <button class="mini" data-go="pass"><em>🎫</em>PASSE</button>
+      <button class="mini" data-quit="1"><em>🏠</em>MENU</button>
+    </div>
+    <p class="cred">Criado por <b>VICTOR OFICIAL</b></p>
   </div>
 
-  <!-- ══════════ Pausa ══════════ -->
-  <div id="scr-pause" class="screen hidden">
-    <h2 class="t">PAUSA</h2>
-    <div class="card" style="width:min(360px,90vw)">
-      <div id="pauseStats"></div>
-      <div class="rows" style="margin-top:16px">
-        <button class="btn p" id="pzResume">▶ Continuar</button>
-        <div class="row"><button class="btn sm" id="pzCfg">⚙ Config.</button><button class="btn sm" id="pzCred">ℹ Créditos</button></div>
-        <button class="btn m" id="pzQuit">⏻ Sair para o menu</button>
-      </div>
+  <!-- ═══════ PAUSA ═══════ -->
+  <div id="pause" class="ov">
+    <h2>PAUSA</h2><p class="sub" id="pauseStats">O TEMPO ESTÁ PARADO</p>
+    <button class="cta" id="btnResume">CONTINUAR</button>
+    <div class="grid3" style="margin-top:12px">
+      <button class="mini" data-go="settings"><em>⚙</em>CONFIG</button>
+      <button class="mini" data-go="credits"><em>ℹ</em>CRÉDITOS</button>
+      <button class="mini" data-quit="1"><em>⏻</em>SAIR</button>
     </div>
-    <div class="sign">Criado por <b>VICTOR OFICIAL</b></div>
-  </div>
-
-  <!-- ══════════ Game Over ══════════ -->
-  <div id="scr-over" class="screen hidden" style="background:radial-gradient(120% 90% at 50% 0%,rgba(70,10,25,.55),rgba(3,5,12,.94))">
-    <h2 class="t" style="color:#ffd0dc;text-shadow:0 0 34px rgba(255,45,111,.8)">FIM DE JOGO</h2>
-    <div class="card" style="width:min(400px,92vw)">
-      <div id="overStats"></div>
-      <div class="rows" style="margin-top:16px">
-        <button class="btn p" id="ovRevive">✚ Reviver (150 🪙)</button>
-        <button class="btn g" id="ovRetry">↻ Tentar de novo</button>
-        <div class="row"><button class="btn sm" id="ovShop">🛒 Loja</button><button class="btn sm" id="ovCred">ℹ Créditos</button></div>
-        <button class="btn" id="ovMenu">◀ Menu</button>
-      </div>
-    </div>
-    <div class="sign">Criado por <b>VICTOR OFICIAL</b></div>
-  </div>
-
-  <!-- ══════════ Vitória ══════════ -->
-  <div id="scr-win" class="screen hidden" style="background:radial-gradient(120% 90% at 50% 0%,rgba(20,70,60,.55),rgba(3,5,12,.94))">
-    <h2 class="t" style="color:#c6fff0;text-shadow:0 0 34px rgba(0,229,255,.9)">VITÓRIA TOTAL</h2>
-    <p class="d">Você venceu PULSO ZERO e silenciou a arena.</p>
-    <div class="card" style="width:min(400px,92vw)">
-      <div id="winStats"></div>
-      <div class="rows" style="margin-top:16px">
-        <button class="btn y" id="wEndless">∞ Modo infinito</button>
-        <button class="btn p" id="wCred">ℹ Créditos</button>
-        <button class="btn" id="wMenu">◀ Menu</button>
-      </div>
-    </div>
-    <div class="sign">Criado por <b>VICTOR OFICIAL</b></div>
+    <p class="cred">Criado por <b>VICTOR OFICIAL</b></p>
   </div>
 </div>
 
 <script>
-"use strict";
-/* ══════════════════════════════════════════════════════════════════════════
-   PULSO  —  jogo completo em arquivo único
-   Criado por VICTOR OFICIAL
-   ----------------------------------------------------------------------
-   ÍNDICE
-     01 UTIL            ferramentas matemáticas e de DOM
-     02 SAVE            salvamento automático (localStorage)
-     03 AUDIO           música e sons sintetizados (WebAudio)
-     04 DADOS           armas, melhorias, inimigos, chefes, mapas, loja…
-     05 UI              telas, menus, loja, missões, conquistas, passe
-     06 INPUT           joystick virtual, teclado, botões
-     07 FX              partículas, explosões, textos, tremor de câmera
-     08 MUNDO           mapas, cenário, clima, luz dinâmica, dia/noite
-     09 JOGADOR         movimento, dash, esquiva, dano, XP e nível
-     10 ARMAS           disparo automático, mira automática, evolução
-     11 INIMIGOS        12 tipos com IA própria
-     12 CHEFES          multi-fase, ataques, entrada cinematográfica
-     13 PROJÉTEIS       colisões, perfuração, ricochete, status
-     14 ITENS          baús, cura, escudo, bombas, moedas, gemas
-     15 ONDAS          geração de ondas e progressão de setores
-     16 HUD/DMINIMAPA  atualização da interface
-     17 LOOP            laço principal, pausa, game over, vitória
-   Para ajustar o jogo, procure os blocos de dados (04) — quase tudo
-   (dano, vida, velocidade, cores, custos) é editável ali.
-   ═════════════════════════════════════════════════════════════════════════ */
+'use strict';
+/* ═══════════════════════════════════════════════════════════════════════
+   PULSO — jogo completo · Criado por VICTOR OFICIAL
+   01 base · 02 áudio · 03 salvamento · 04 dados · 05 telas · 06 entrada
+   07 jogador/armas · 08 inimigos · 09 chefes · 10 projéteis/itens
+   11 ondas · 12 efeitos/clima/luz · 13 desenho · 14 interface/loja
+   15 progressão · 16 laço principal
+   ═════════════════════════════════════════════════════════════════════ */
 
-/* ═══ 01 UTIL ═══════════════════════════════════════════════════════════ */
+/* ── 01 BASE ───────────────────────────────────────────────────────── */
 const $=id=>document.getElementById(id);
-const clamp=(v,a,b)=>v<a?a:v>b?b:v;
-const rnd=(a=1,b=0)=>b+Math.random()*(a-b);
-const ri=(a,b)=>Math.floor(rnd(b+1,a));
-const pick=a=>a[(Math.random()*a.length)|0];
-const lerp=(a,b,t)=>a+(b-a)*t;
+const cvs=$('c'),ctx=cvs.getContext('2d'),rcv=$('radar'),rx=rcv.getContext('2d');
+const LOW=(navigator.deviceMemory&&navigator.deviceMemory<=4)||innerWidth<430;
 const TAU=Math.PI*2;
-const ang=(ax,ay,bx,by)=>Math.atan2(by-ay,bx-ax);
+const R=(a,b)=>a+Math.random()*(b-a);
+const RI=(a,b)=>Math.floor(R(a,b+1));
+const pick=a=>a[(Math.random()*a.length)|0];
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const dist=(ax,ay,bx,by)=>Math.hypot(bx-ax,by-ay);
-const dist2=(ax,ay,bx,by)=>{const x=bx-ax,y=by-ay;return x*x+y*y;};
-function angLerp(a,b,t){let d=((b-a+Math.PI)%TAU+TAU)%TAU-Math.PI;return a+d*t;}
-const fmt=n=>Math.floor(n).toLocaleString('pt-BR');
+const ang=(ax,ay,bx,by)=>Math.atan2(by-ay,bx-ax);
 const mmss=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');
+const nf=n=>Math.floor(n).toLocaleString('pt-BR');
 const today=()=>new Date().toISOString().slice(0,10);
-function shakeArr(){return (navigator.vibrate)?true:false;}
+let W=0,H=0,DPR=1;
+function resize(){
+  W=Math.max(240,innerWidth);H=Math.max(320,innerHeight);
+  DPR=Math.min(devicePixelRatio||1,LOW?1.5:2);
+  cvs.width=Math.floor(W*DPR);cvs.height=Math.floor(H*DPR);
+  cvs.style.width=W+'px';cvs.style.height=H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+resize();addEventListener('resize',resize);
+addEventListener('orientationchange',()=>setTimeout(resize,220));
+if(window.visualViewport)visualViewport.addEventListener('resize',()=>setTimeout(resize,120));
+addEventListener('contextmenu',e=>{if(e.target.tagName!=='BUTTON')e.preventDefault();});
+let wake=null;
+function keepAwake(){try{if(navigator.wakeLock)navigator.wakeLock.request('screen').then(k=>wake=k).catch(()=>{});}catch(e){}}
+const vib=p=>{try{if(SV.set.vib)navigator.vibrate&&navigator.vibrate(p);}catch(e){}};
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v;}catch(e){return d;}},
+             set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
 
-/* ═══ 02 SAVE ═══════════════════════════════════════════════════════════ */
-const SAVE_KEY='puls
+/* ── 02 ÁUDIO (música + sons sintetizados) ─────────────────────────── */
+let AC=null,mGain=null,sGain=null;
+function ac(){
+  if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();
+      mGain=AC.createGain();sGain=AC.createGain();
+      mGain.connect(AC.destination);sGain.connect(AC.destination);
+    }catch(e){}}
+  if(AC&&AC.state==='suspended')AC.resume();
+  vol();return AC;
+}
+function vol(){if(!AC)return;mGain.gain.value=SV.set.mus*.22;sGain.gain.value=SV.set.sfx*.9;}
+function sfx(f1,f2,dur,type,v){
+  const a=AC;if(!a||SV.set.sfx<=0)return;
+  if(LOW&&Math.random()<.3)return;
+  try{const o=a.createOscillator(),g=a.createGain();o.type=type||'square';
+    o.frequency.setValueAtTime(f1,a.currentTime);
+    if(f2&&f2!==f1)o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),a.currentTime+dur);
+    g.gain.setValueAtTime(0,a.currentTime);g.gain.linearRampToValueAtTime(v||.05,a.currentTime+.008);
+    g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+dur);
+    o.connect(g).connect(sGain);o.start();o.stop(a.currentTime+dur+.03);}catch(e){}
+}
+function noise(dur,v,f){ /* chiado: tiro, fogo, explosão */
+  const a=AC;if(!a||SV.set.sfx<=0)return;
+  try{const n=a.sampleRate*dur|0,b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n);
+    const s=a.createBufferSource();s.buffer=b;const g=a.createGain(),hp=a.createBiquadFilter();
+    hp.type='bandpass';hp.frequency.value=f||900;g.gain.value=v||.05;
+    s.connect(hp).connect(g).connect(sGain);s.start();}catch(e){}
+}
+const MUS={next:0,step:0,bpm:112,
+  scale:[0,3,5,7,10,12,15],
+  tick(){
+    if(!AC||SV.set.mus<=0||state!=='play')return;
+    const t=AC.currentTime,spb=60/(this.bpm*(1+mapI*.03))/2;
+    if(this.next<t-.5)this.next=t;
+    while(this.next<t+.25){
+      const s=this.step,b=this.next;
+      try{
+        if(s%4===0)tone(70,40,.22,'sine',.5,b);                       // bumbo
+        if(s%8===4)tone(120,60,.12,'square',.22,b);                    // caixa
+        if(s%2===1)tone(7000,7000,.03,'square',.05,b);                 // hi-hat
+        const root=MAPS[mapI].root||55;
+        if(s%4===0||s%4===3)tone(root*(1+((s/4)%3===2?2:0)),0,.3,'triangle',.3,b); // baixo
+        const n=this.scale[(s*3+((s/8)|0))%this.scale.length];
+        if(s%2===0)tone(root*4*Math.pow(2,n/12),0,.12,'square',.12,b);             // arpejo
+      }catch(e){}
+      this.next+=spb;this.step++;
+    }
+  }};
+function tone(f,f2,dur,type,v,at){
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type;
+  o.frequency.setValueAtTime(f,at);if(f2)o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),at+dur);
+  g.gain.setValueAtTime(0,at);g.gain.linearRampToValueAtTime(v,at+.01);
+  g.gain.exponentialRampToValueAtTime(.0001,at+dur);
+  o.connect(g).connect(mGain);o.start(at);o.stop(at+dur+.02);
+}
+
+/* ── 03 SALVAMENTO ─────────────────────────────────────────────────── */
+const KEY='pulso.sav
