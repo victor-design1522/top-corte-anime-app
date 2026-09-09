@@ -1,387 +1,608 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOP CORTE ANIME - Completo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PULSO - Mobile Edition</title>
     <style>
-        :root {
-            --bg-main: #0b0b0f;
-            --bg-card: #15151f;
-            --primary: #7b2cbf;
-            --neon: #9d4edd;
-            --text: #f8f9fa;
-            --text-muted: #adb5bd;
-            --danger: #e63946;
-            --success: #2a9d8f;
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #080911;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+        }
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #0d0f1b;
+        }
+        
+        /* Mobile Touch Overlay Controls */
+        .touch-zone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .joystick-base {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(0, 240, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: auto;
+            display: none;
+            transform: translate(-50%, -50%);
+        }
+        .joystick-stick {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 240, 255, 0.6);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px #00f0ff;
+        }
+        .action-buttons {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            display: flex;
+            gap: 15px;
+            pointer-events: auto;
+        }
+        .btn-touch {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: rgba(18, 22, 40, 0.8);
+            border: 2px solid #00f0ff;
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+            active: scale(0.95);
         }
 
-        .light {
-            --bg-main: #f4f4f9;
-            --bg-card: #ffffff;
-            --primary: #5a189a;
-            --neon: #7b2cbf;
-            --text: #212529;
-            --text-muted: #6c757d;
+        /* UI Overlays & Menus */
+        .menu-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 9, 17, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            backdrop-filter: blur(8px);
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
-        body { background-color: var(--bg-main); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
-
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background: rgba(15, 15, 25, 0.95);
-            backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000;
-            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+        .title {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: #00f0ff;
+            text-shadow: 0 0 20px #00f0ff, 0 0 40px #7000ff;
+            margin-bottom: 5px;
         }
-
-        .logo { font-size: 18px; font-weight: bold; color: var(--text); cursor: pointer; }
-        .logo span { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
-
-        .nav-actions { display: flex; gap: 8px; align-items: center; }
-        input, select, textarea {
-            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 12px; border-radius: 8px; color: var(--text); outline: none; font-size: 14px; width: 100%;
+        .author-tag {
+            font-size: 14px;
+            color: #ff0055;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff0055;
         }
-
-        .search-box { width: 130px; border-radius: 20px; }
-        @media(min-width: 600px) { .search-box { width: 200px; } }
-
-        button { cursor: pointer; border: none; border-radius: 8px; padding: 8px 14px; font-weight: bold; font-size: 14px; }
-        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 0 10px rgba(123, 44, 191, 0.4); }
-        .btn-danger { background: var(--danger); color: #fff; }
-        .btn-success { background: var(--success); color: #fff; }
-        .btn-icon { background: var(--bg-card); color: var(--text); padding: 8px; border-radius: 50%; }
-
-        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
-        h2 { margin-bottom: 15px; border-left: 4px solid var(--neon); padding-left: 10px; font-size: 18px; }
-
-        /* Grades e Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
-        @media(min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
-
-        .card {
-            background: var(--bg-card); border-radius: 10px; overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; position: relative;
+        .menu-btn {
+            width: 240px;
+            padding: 14px;
+            margin: 8px;
+            background: linear-gradient(90deg, #7000ff, #00f0ff);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+            transition: all 0.2s;
         }
-        .card img { width: 100%; height: 180px; object-fit: cover; }
-        @media(min-width: 600px) { .card img { height: 250px; } }
-        .card-info { padding: 10px; }
-        .card-info h3 { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-info p { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-
-        /* Páginas / Telas */
-        .page { display: none; }
-        .page.active { display: block; }
-
-        /* Página de Detalhes */
-        .anime-header { display: flex; flex-direction: column; gap: 20px; }
-        @media(min-width: 768px) { .anime-header { flex-direction: row; } }
-        .anime-poster { width: 100%; max-width: 250px; border-radius: 10px; object-fit: cover; margin: 0 auto; }
-        .episodes-list { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; }
-        .ep-item { background: var(--bg-card); padding: 10px 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .ep-item:hover { border: 1px solid var(--neon); }
-
-        /* Player */
-        .player-container { width: 100%; background: #000; border-radius: 10px; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 15px; }
-        .player-container iframe, .player-container video { width: 100%; height: 100%; border: none; }
-
-        /* Painel Admin */
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-        .admin-table th, .admin-table td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+        .menu-btn:active {
+            transform: scale(0.96);
+        }
+        .credits-panel {
+            text-align: center;
+            line-height: 1.8;
+            font-size: 16px;
+            max-width: 80%;
+            color: #d1d5db;
+        }
+        .credits-highlight {
+            color: #00f0ff;
+            font-weight: bold;
+        }
+        .hud {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            pointer-events: none;
+            z-index: 12;
+        }
+        .stats-box {
+            background: rgba(13, 15, 27, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            font-size: 12px;
+        }
+        .boss-bar-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            max-width: 400px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 12;
+        }
+        .boss-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff0055;
+            text-shadow: 0 0 8px #ff0055;
+            margin-bottom: 4px;
+        }
+        .boss-bar-bg {
+            width: 100%;
+            height: 12px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #ff0055;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .boss-bar-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff0055, #ff5500);
+            transition: width 0.1s ease;
+        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo" onclick="mudarPagina('home')">TOP CORTE <span>ANIME</span></div>
-        <div class="nav-actions">
-            <input type="text" id="global-search" class="search-box" placeholder="Pesquisar..." oninput="filtrarAnimes(this.value)">
-            <button class="btn-icon" onclick="alternarTema()"></button>
-            <button class="btn-primary" onclick="mudarPagina('admin-login')">ADM</button>
+<div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- UI Head-Up Display -->
+    <div id="hud" class="hud hidden">
+        <div class="stats-box">
+            <div id="hud-hp">VIDA: 100/100</div>
+            <div id="hud-coins">MOEDAS: 0</div>
+            <div id="hud-score">PONTOS: 0</div>
+            <div id="hud-fps">FPS: 60</div>
         </div>
-    </header>
-
-    <div class="container">
-
-        <!-- 1. PÁGINA INICIAL -->
-        <div id="page-home" class="page active">
-            <div style="margin-bottom: 25px; background: linear-gradient(135deg, var(--primary), #240046); padding: 25px; border-radius: 15px;">
-                <h1 id="destaque-titulo" style="font-size: 24px; margin-bottom: 8px;">Carregando Destaque...</h1>
-                <p id="destaque-sinopse" style="font-size: 13px; color: #ddd; margin-bottom: 15px; max-width: 600px;"></p>
-                <button class="btn-primary" id="btn-destaque-assistir"> Assistir Destaque</button>
-            </div>
-
-            <div id="secao-continue" style="margin-bottom: 30px; display: none;">
-                <h2> Continue Assistindo</h2>
-                <div class="grid" id="grid-continue"></div>
-            </div>
-
-            <div style="margin-bottom: 30px;">
-                <h2> Seus Favoritos</h2>
-                <div class="grid" id="grid-favoritos"><p style="color: var(--text-muted); font-size: 13px;">Nenhum favorito salvo.</p></div>
-            </div>
-
-            <h2> Catálogo Completo</h2>
-            <div class="grid" id="grid-catalogo"></div>
-        </div>
-
-        <!-- 2. PÁGINA DE DETALHES DO ANIME -->
-        <div id="page-anime" class="page">
-            <button onclick="mudarPagina('home')" style="margin-bottom: 15px; background: transparent; color: var(--neon);"> Voltar</button>
-            <div class="anime-header">
-                <img id="detalhe-capa" class="anime-poster" src="" alt="">
-                <div>
-                    <h1 id="detalhe-titulo" style="font-size: 22px; margin-bottom: 5px;"></h1>
-                    <p id="detalhe-info" style="color: var(--text-muted); font-size: 13px; margin-bottom: 10px;"></p>
-                    <p id="detalhe-sinopse" style="font-size: 14px; line-height: 1.5; margin-bottom: 15px;"></p>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button class="btn-primary" id="btn-favoritar" onclick="toggleFavoritoAtual()"> Favoritar</button>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 25px;">
-                <h2> Episódios</h2>
-                <div class="episodes-list" id="detalhe-episodios"></div>
-            </div>
-        </div>
-
-        <!-- 3. PÁGINA DO PLAYER -->
-        <div id="page-player" class="page">
-            <button id="btn-voltar-anime" style="margin-bottom: 10px; background: transparent; color: var(--neon);"> Voltar ao Anime</button>
-            <h2 id="player-titulo-ep" style="font-size: 16px; margin-bottom: 10px;"></h2>
-            <div class="player-container">
-                <iframe id="video-iframe" src="" allowfullscreen></iframe>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                <button class="btn-primary" onclick="episodioAnterior()"> Ep. Anterior</button>
-                <button class="btn-primary" onclick="proximoEpisodio()">Próximo Ep. </button>
-            </div>
-        </div>
-
-        <!-- 4. PAINEL ADMINISTRATIVO (LOGIN) -->
-        <div id="page-admin-login" class="page">
-            <div style="max-width: 350px; margin: 40px auto; background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--neon);">
-                <h2 style="margin-bottom: 15px; color: var(--neon);">Painel ADM</h2>
-                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">só para o dono</p>
-                <div class="form-group"><label>Usuário</label><input type="text" id="adm-user"></div>
-                <div class="form-group"><label>Senha</label><input type="password" id="adm-pass"></div>
-                <button class="btn-primary" style="width: 100%; margin-top: 10px;" onclick="fazerLoginAdmin()">Entrar</button>
-                <button style="width: 100%; margin-top: 10px; background: transparent; color: var(--text-muted);" onclick="mudarPagina('home')">Cancelar</button>
-            </div>
-        </div>
-
-        <!-- 5. PAINEL ADMINISTRATIVO (GERENCIAMENTO REAL) -->
-        <div id="page-admin-painel" class="page">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2> Gerenciamento de Animes</h2>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-success" onclick="abrirModalAnime()">+ Adicionar Anime</button>
-                    <button class="btn-danger" onclick="mudarPagina('home')">Sair</button>
-                </div>
-            </div>
-            <div style="overflow-x: auto; background: var(--bg-card); border-radius: 10px; padding: 15px;">
-                <table class="admin-table">
-                    <thead><tr><th>Título</th><th>Ano</th><th>Ações</th></tr></thead>
-                    <tbody id="admin-tabela-corpo"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- MODAL DE ADICIONAR / EDITAR ANIME -->
-        <div id="modal-anime" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; padding: 20px; overflow-y: auto;">
-            <div style="max-width: 450px; margin: 30px auto; background: var(--bg-card); padding: 25px; border-radius: 12px;">
-                <h2 id="modal-titulo" style="margin-bottom: 15px;">Novo Anime</h2>
-                <input type="hidden" id="edit-id">
-                <div class="form-group"><label>Título</label><input type="text" id="form-titulo"></div>
-                <div class="form-group"><label>Link da Capa (Imagem)</label><input type="text" id="form-capa"></div>
-                <div class="form-group"><label>Ano</label><input type="text" id="form-ano"></div>
-                <div class="form-group"><label>Nota (Ex: 9.5)</label><input type="text" id="form-nota"></div>
-                <div class="form-group"><label>Sinopse</label><textarea id="form-sinopse" rows="3"></textarea></div>
-                
-                <div class="form-group">
-                    <label>Episódios (Links dos Vídeos separados por vírgula ou um por linha)</label>
-                    <textarea id="form-eps" rows="3" placeholder="https://www.youtube.com/embed/exemplo1, https://www.youtube.com/embed/exemplo2"></textarea>
-                </div>
-
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn-primary" style="flex: 1;" onclick="salvarAnimeBD()">Salvar</button>
-                    <button class="btn-danger" style="flex: 1;" onclick="fecharModalAnime()">Cancelar</button>
-                </div>
-            </div>
-        </div>
-
+        <button id="btn-pause" class="btn-touch" style="width: 45px; height: 45px; pointer-events: auto;">⏸</button>
     </div>
 
-    <script>
-        // BANCO DE DADOS LOCAL PERSISTENTE (LocalStorage)
-        const DB_KEY = "top_corte_animes_db";
-        const FAV_KEY = "top_corte_favs_db";
-        const HIST_KEY = "top_corte_hist_db";
+    <!-- Barra de Vida do Chefe -->
+    <div id="boss-hud" class="boss-bar-container">
+        <div id="boss-name" class="boss-name">CHEFE: DRAGÃO DE PLASMA</div>
+        <div class="boss-bar-bg">
+            <div id="boss-bar-fill" class="boss-bar-fill"></div>
+        </div>
+    </div>
 
-        let animesPadrao = [
-            {
-    id: "1",
-    titulo: "Gekkan Shoujo Nozaki-kun",
-    capa: "COLE_AQUI_O_LINK_DA_CAPA",
-    ano: "2014",
-    nota: "8.2",
-    sinopse: "Chiyo Sakura finalmente cria coragem para confessar seu amor por Nozaki, mas ele entende tudo errado e a convida para ser sua assistente na criação de mangás. Assim começa uma divertida comédia romântica cheia de mal-entendidos e personagens carismáticos.",
-    episodios: [
-        { titulo: "Episódio 1", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818202/Ep.1_cutxxn.mp4" },
-        { titulo: "Episódio 2", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818258/Ep.2_krlo9m.mp4" },
-        { titulo: "Episódio 3", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818360/Ep.3_sfhwhl.mp4" },
-        { titulo: "Episódio 4", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818486/Ep.4_ewvpb6.mp4" },
-        { titulo: "Episódio 5", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818549/Ep.5_cqshuk.mp4" },
-        { titulo: "Episódio 6", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818644/Ep.6_wyrbkd.mp4" },
-        { titulo: "Episódio 7", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818736/Ep.7_f8zmrg.mp4" },
-        { titulo: "Episódio 8", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818907/Ep.8_aifaj3.mp4" },
-        { titulo: "Episódio 9", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785818974/Ep.9_ovjcsh.mp4" },
-        { titulo: "Episódio 10", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785819036/Ep.10_on2hn3.mp4" },
-        { titulo: "Episódio 11", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785819085/Ep.11_xdnhyr.mp4" },
-        { titulo: "Episódio 12", link: "https://res.cloudinary.com/uypda52e/video/upload/v1785819081/Ep.12_mnph2g.mp4" }
-    ]
-},
-            {
-                id: "2",
-                titulo: "Jujutsu Kaisen",
-                capa: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300&auto=format&fit=crop&q=60",
-                ano: "2023",
-                nota: "9.2",
-                sinopse: "Sofrimento, regretos e maldições compõem a vida daqueles que absorvem energias amaldiçoadas.",
-                episodios: [
-                    { titulo: "Episódio 1: Ryomen Sukuna", link: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-                    { titulo: "Episódio 2: Para si mesmo", link: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
-                ]
+    <!-- Controles Touch para Mobile -->
+    <div class="touch-zone">
+        <div id="joystick-base" class="joystick-base">
+            <div id="joystick-stick" class="joystick-stick"></div>
+        </div>
+        <div id="action-controls" class="action-buttons hidden">
+            <div id="btn-dash" class="btn-touch">DASH</div>
+            <div id="btn-skill" class="btn-touch" style="border-color: #ff0055;">ESPECIAL</div>
+        </div>
+    </div>
+
+    <!-- Tela Principal / Menu -->
+    <div id="main-menu" class="menu-screen">
+        <h1 class="title">PULSO</h1>
+        <div class="author-tag">Criado por VICTOR OFICIAL</div>
+        <button class="menu-btn" onclick="Game.startMode('campaign')">JOGAR FASES</button>
+        <button class="menu-btn" onclick="Game.startMode('endless')">MODO INFINITO</button>
+        <button class="menu-btn" onclick="Game.startMode('boss')">MODO CHEFE</button>
+        <button class="menu-btn" onclick="Game.showScreen('shop-screen')">LOJA & ARMAS</button>
+        <button class="menu-btn" onclick="Game.showScreen('credits-screen')">CRÉDITOS</button>
+    </div>
+
+    <!-- Tela de Loja -->
+    <div id="shop-screen" class="menu-screen hidden">
+        <h2 style="color:#00f0ff; margin-bottom: 15px;">LOJA DE MELHORIAS</h2>
+        <div class="stats-box" style="margin-bottom: 15px; font-size: 16px;">
+            MOEDAS DISPONÍVEIS: <span id="shop-coins" style="color: #ffcc00;">0</span>
+        </div>
+        <button class="menu-btn" onclick="Game.buyUpgrade('damage')">DANO (+10%) - 50 MOEDAS</button>
+        <button class="menu-btn" onclick="Game.buyUpgrade('health')">VIDA (+20) - 40 MOEDAS</button>
+        <button class="menu-btn" onclick="Game.buyUpgrade('speed')">VELOCIDADE (+5%) - 30 MOEDAS</button>
+        <button class="menu-btn" style="background: #333;" onclick="Game.showScreen('main-menu')">VOLTAR</button>
+    </div>
+
+    <!-- Tela de Pausa -->
+    <div id="pause-screen" class="menu-screen hidden">
+        <h2 style="color:#00f0ff;">JOGO PAUSADO</h2>
+        <div class="author-tag">Criado por VICTOR OFICIAL</div>
+        <button class="menu-btn" onclick="Game.resume()">CONTINUAR</button>
+        <button class="menu-btn" onclick="Game.restart()">REINICIAR</button>
+        <button class="menu-btn" style="background: #ff0055;" onclick="Game.quitToMenu()">MENU PRINCIPAL</button>
+    </div>
+
+    <!-- Tela de Créditos -->
+    <div id="credits-screen" class="menu-screen hidden">
+        <h1 class="title">PULSO</h1>
+        <div class="credits-panel">
+            <p style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">
+                Criado por <span class="credits-highlight">VICTOR OFICIAL</span>
+            </p>
+            <p>Jogo otimizado para dispositivos móveis com sistemas avançados de partículas, iluminação, IA de chefes e personalização.</p>
+            <br>
+            <p style="font-size: 12px; color: #777;">Todos os direitos reservados.</p>
+        </div>
+        <br>
+        <button class="menu-btn" onclick="Game.showScreen('main-menu')">VOLTAR</button>
+    </div>
+</div>
+
+<script>
+/**
+ * PULSO: Mobile Edition Engine Framework
+ * Desenvolvido e Expandido por VICTOR OFICIAL
+ */
+
+// --- SINTETIZADOR DE ÁUDIO WEB (Efeitos Sonoros Integrados sem Dependência Externa) ---
+const SoundFX = {
+    ctx: null,
+    init() {
+        if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.ctx = new AudioCtx();
+        }
+    },
+    playTone(freq, type, duration, vol = 0.1) {
+        if (!this.ctx) return;
+        try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+            gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + duration);
+        } catch(e){}
+    },
+    shoot() { this.playTone(600, 'square', 0.08, 0.05); },
+    explosion() { this.playTone(100, 'sawtooth', 0.3, 0.2); },
+    coin() { this.playTone(900, 'sine', 0.15, 0.08); },
+    hit() { this.playTone(150, 'triangle', 0.05, 0.1); }
+};
+
+// --- MÓDULO DE DADOS & SALVAMENTO (LocalStorage) ---
+const SaveSystem = {
+    STORAGE_KEY: 'PULSO_SAVE_DATA',
+    data: {
+        coins: 0,
+        gems: 0,
+        highScore: 0,
+        upgrades: { damage: 0, health: 0, speed: 0 },
+        unlockedWeapons: ['Pistola'],
+        equippedWeapon: 'Pistola',
+        selectedMap: 'Cidade'
+    },
+    load() {
+        const saved = localStorage.getItem(this.STORAGE_KEY);
+        if (saved) {
+            try { this.data = Object.assign(this.data, JSON.parse(saved)); } catch(e){}
+        }
+    },
+    save() {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data));
+    }
+};
+
+// --- MÓDULO MULTIPLAYER (Estrutura Preparada para Expansão Futura) ---
+const NetworkManager = {
+    connected: false,
+    socket: null,
+    init() {
+        // Stub pronto para WebSocket / WebRTC
+        console.log("[Multiplayer] Módulo de rede inicializado (Aguardando servidor)");
+    },
+    sendPlayerState(stateData) {
+        if (this.connected && this.socket) {
+            // this.socket.send(JSON.stringify(stateData));
+        }
+    }
+};
+
+// --- ARQUITETURA PRINCIPAL DO JOGO ---
+const Game = {
+    canvas: null,
+    ctx: null,
+    state: 'MENU', // MENU, PLAYING, PAUSED
+    currentMode: 'campaign',
+    map: { name: 'Cidade', bg: '#0d0f1b', gridColor: '#1a1f38', weather: 'rain' },
+    
+    // Configurações e Desempenho
+    fps: 60,
+    lastFrameTime: performance.now(),
+    frameCount: 0,
+    fpsTimer: 0,
+    screenShake: 0,
+
+    // Coleções da Cena
+    player: null,
+    enemies: [],
+    bullets: [],
+    particles: [],
+    items: [],
+    weatherParticles: [],
+
+    // Entrada Touch
+    touch: {
+        active: false,
+        startX: 0, startY: 0,
+        currentX: 0, currentY: 0,
+        vectorX: 0, vectorY: 0
+    },
+
+    init() {
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.resizeCanvas();
+        window.addEventListener('resize', () => this.resizeCanvas());
+
+        SaveSystem.load();
+        this.setupTouchControls();
+        this.initWeather();
+
+        // Loop de Renderização e Atualização
+        requestAnimationFrame((time) => this.loop(time));
+    },
+
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    },
+
+    showScreen(screenId) {
+        document.querySelectorAll('.menu-screen').forEach(s => s.classList.add('hidden'));
+        document.getElementById(screenId).classList.remove('hidden');
+        if (screenId === 'shop-screen') {
+            document.getElementById('shop-coins').innerText = SaveSystem.data.coins;
+        }
+    },
+
+    startMode(mode) {
+        SoundFX.init();
+        this.currentMode = mode;
+        this.state = 'PLAYING';
+        
+        // Esconder Menus e Mostrar HUD
+        document.querySelectorAll('.menu-screen').forEach(s => s.classList.add('hidden'));
+        document.getElementById('hud').classList.remove('hidden');
+        document.getElementById('action-controls').classList.remove('hidden');
+
+        // Inicializar Jogador
+        this.player = new Player(this.canvas.width / 2, this.canvas.height / 2);
+        this.enemies = [];
+        this.bullets = [];
+        this.particles = [];
+        this.items = [];
+
+        if (mode === 'boss') {
+            this.spawnBoss('Dragão de Plasma');
+        }
+    },
+
+    pause() {
+        if (this.state === 'PLAYING') {
+            this.state = 'PAUSED';
+            this.showScreen('pause-screen');
+        }
+    },
+
+    resume() {
+        this.state = 'PLAYING';
+        document.querySelectorAll('.menu-screen').forEach(s => s.classList.add('hidden'));
+    },
+
+    restart() {
+        this.startMode(this.currentMode);
+    },
+
+    quitToMenu() {
+        this.state = 'MENU';
+        document.getElementById('hud').classList.add('hidden');
+        document.getElementById('boss-hud').style.display = 'none';
+        document.getElementById('action-controls').classList.add('hidden');
+        this.showScreen('main-menu');
+    },
+
+    buyUpgrade(type) {
+        const costMap = { damage: 50, health: 40, speed: 30 };
+        if (SaveSystem.data.coins >= costMap[type]) {
+            SaveSystem.data.coins -= costMap[type];
+            SaveSystem.data.upgrades[type]++;
+            SaveSystem.save();
+            document.getElementById('shop-coins').innerText = SaveSystem.data.coins;
+            SoundFX.coin();
+        }
+    },
+
+    setupTouchControls() {
+        const zone = document.querySelector('.touch-zone');
+        const base = document.getElementById('joystick-base');
+        const stick = document.getElementById('joystick-stick');
+
+        zone.addEventListener('touchstart', (e) => {
+            if (this.state !== 'PLAYING') return;
+            const t = e.touches[0];
+            if (t.clientX < window.innerWidth * 0.6) { // Lado esquerdo da tela para movimento
+                this.touch.active = true;
+                this.touch.startX = t.clientX;
+                this.touch.startY = t.clientY;
+                base.style.left = `${t.clientX}px`;
+                base.style.top = `${t.clientY}px`;
+                base.style.display = 'block';
             }
-        ];
+        });
 
-        function getAnimes() {
-            let dados = localStorage.getItem(DB_KEY);
-            if (!dados) {
-                localStorage.setItem(DB_KEY, JSON.stringify(animesPadrao));
-                return animesPadrao;
+        zone.addEventListener('touchmove', (e) => {
+            if (!this.touch.active) return;
+            const t = e.touches[0];
+            const dx = t.clientX - this.touch.startX;
+            const dy = t.clientY - this.touch.startY;
+            const dist = Math.hypot(dx, dy);
+            const maxRadius = 45;
+
+            const angle = Math.atan2(dy, dx);
+            const moveDist = Math.min(dist, maxRadius);
+
+            this.touch.vectorX = Math.cos(angle) * (moveDist / maxRadius);
+            this.touch.vectorY = Math.sin(angle) * (moveDist / maxRadius);
+
+            stick.style.transform = `translate(-50%, -50%) translate(${Math.cos(angle)*moveDist}px, ${Math.sin(angle)*moveDist}px)`;
+        });
+
+        const resetJoystick = () => {
+            this.touch.active = false;
+            this.touch.vectorX = 0;
+            this.touch.vectorY = 0;
+            base.style.display = 'none';
+        };
+
+        zone.addEventListener('touchend', resetJoystick);
+        zone.addEventListener('touchcancel', resetJoystick);
+
+        document.getElementById('btn-dash').addEventListener('click', () => {
+            if (this.player) this.player.dash();
+        });
+        document.getElementById('btn-pause').addEventListener('click', () => this.pause());
+    },
+
+    triggerShake(intensity = 10) {
+        this.screenShake = intensity;
+    },
+
+    initWeather() {
+        this.weatherParticles = [];
+        for (let i = 0; i < 60; i++) {
+            this.weatherParticles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                speed: 2 + Math.random() * 4,
+                length: 10 + Math.random() * 15
+            });
+        }
+    },
+
+    updateWeather() {
+        this.weatherParticles.forEach(p => {
+            p.y += p.speed;
+            if (p.y > this.canvas.height) {
+                p.y = -10;
+                p.x = Math.random() * this.canvas.width;
             }
-            return JSON.parse(dados);
+        });
+    },
+
+    drawWeather() {
+        this.ctx.strokeStyle = 'rgba(0, 240, 255, 0.2)';
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.weatherParticles.forEach(p => {
+            this.ctx.moveTo(p.x, p.y);
+            this.ctx.lineTo(p.x - 1, p.y + p.length);
+        });
+        this.ctx.stroke();
+    },
+
+    spawnBoss(name) {
+        const bossHud = document.getElementById('boss-hud');
+        document.getElementById('boss-name').innerText = `CHEFE: ${name.toUpperCase()}`;
+        bossHud.style.display = 'flex';
+        this.enemies.push(new Boss(this.canvas.width / 2, 100, name));
+    },
+
+    loop(timestamp) {
+        const dt = (timestamp - this.lastFrameTime) / 1000;
+        this.lastFrameTime = timestamp;
+
+        // Cálculo de FPS
+        this.frameCount++;
+        this.fpsTimer += dt;
+        if (this.fpsTimer >= 1.0) {
+            this.fps = this.frameCount;
+            this.frameCount = 0;
+            this.fpsTimer = 0;
+            document.getElementById('hud-fps').innerText = `FPS: ${this.fps}`;
         }
 
-        function salvarAnimes(lista) {
-            localStorage.setItem(DB_KEY, JSON.stringify(lista));
-        }
+        this.update(dt);
+        this.render();
 
-        let animeAtualId = null;
-        let epAtualIndex = 0;
+        requestAnimationFrame((t) => this.loop(t));
+    },
 
-        // CONTROLE DE TELAS
-        function mudarPagina(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + pageId).classList.add('active');
-            window.scrollTo(0,0);
-            if(pageId === 'home') carregarHome();
-            if(pageId === 'admin-painel') carregarTabelaAdmin();
-        }
+    update(dt) {
+        this.updateWeather();
 
-        // TEMA
-        function alternarTema() {
-            document.documentElement.classList.toggle('dark');
-            document.documentElement.classList.toggle('light');
-        }
+        if (this.state !== 'PLAYING') return;
 
-        // RENDERIZAR HOME
-        function carregarHome() {
-            let animes = getAnimes();
-            let grid = document.getElementById('grid-catalogo');
-            
-            if(animes.length > 0) {
-                let d = animes[0];
-                document.getElementById('destaque-titulo').innerText = d.titulo;
-                document.getElementById('destaque-sinopse').innerText = d.sinopse;
-                document.getElementById('btn-destaque-assistir').onclick = () => abrirDetalhes(d.id);
-            }
+        // Atualizar Jogador
+        if (this.player) this.player.update(dt);
 
-            grid.innerHTML = animes.map(a => `
-                <div class="card" onclick="abrirDetalhes('${a.id}')">
-                    <img src="${a.capa}" alt="${a.titulo}">
-                    <div class="card-info">
-                        <h3>${a.titulo}</h3>
-                        <p> ${a.nota} • ${a.ano}</p>
-                    </div>
-                </div>
-            `).join('');
-
-            carregarFavoritosNaHome();
-            carregarContinueAssistindo();
-        }
-
-        function filtrarAnimes(termo) {
-            let animes = getAnimes();
-            let filtrados = animes.filter(a => a.titulo.toLowerCase().includes(termo.toLowerCase()));
-            let grid = document.getElementById('grid-catalogo');
-            grid.innerHTML = filtrados.map(a => `
-                <div class="card" onclick="abrirDetalhes('${a.id}')">
-                    <img src="${a.capa}" alt="${a.titulo}">
-                    <div class="card-info">
-                        <h3>${a.titulo}</h3>
-                        <p> ${a.nota} • ${a.ano}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // DETALHES DO ANIME
-        function abrirDetalhes(id) {
-            let animes = getAnimes();
-            let anime = animes.find(a => a.id === id);
-            if(!anime) return;
-
-            animeAtualId = id;
-            document.getElementById('detalhe-capa').src = anime.capa;
-            document.getElementById('detalhe-titulo').innerText = anime.titulo;
-            document.getElementById('detalhe-info').innerText = `Nota:  ${anime.nota} | Ano: ${anime.ano}`;
-            document.getElementById('detalhe-sinopse').innerText = anime.sinopse;
-
-            atualizarBotaoFavoritoUI();
-
-            let listaEps = document.getElementById('detalhe-episodios');
-            if(!anime.episodios || anime.episodios.length === 0) {
-                listaEps.innerHTML = `<p style="color:var(--text-muted);">Nenhum episódio cadastrado.</p>`;
-            } else {
-                listaEps.innerHTML = anime.episodios.map((ep, idx) => `
-                    <div class="ep-item" onclick="assistirEpisodio('${anime.id}', ${idx})">
-                        <span>${ep.titulo}</span>
-                        <span></span>
-                    </div>
-                `).join('');
-            }
-
-            mudarPagina('anime');
-        }
-
-        // PLAYER DE VÍDEO & HISTÓRICO
-        function assistirEpisodio(animeId, epIdx) {
-            let animes = getAnimes();
-            let anime = animes.find(a => a.id === animeId);
-            if(!anime || !anime.episodios[epIdx]) return;
-
-            animeAtualId = animeId;
-            epAtualIndex = epIdx;
-            let ep = anime.episodios[epIdx];
-
-            document.getElementById('player-titulo-ep').innerText = `${anime.titulo} - ${ep.titulo}`;
-            document.getElementById('video-iframe').src = ep.link;
-            document.getElementById('btn-voltar-anime').onclick = () => abrirDetalhes(animeId);
-
-            // Salvar Histórico / Continue Assistindo
-            let historico = JSON.parse(localStorage.getItem(HIST_KEY)) || [];
-            historico = historico.filter(h => h.animeId !== animeId);
-            historico.unshift({ animeId, animeTitulo: anime.titulo, capa: anime.capa, epIdx, epTitulo: ep.titulo });
-            localStorage.setItem(HIST_KEY, JSON.stringify(historico));
-
-            mudarPagina('player');
-        }
-
-        function proximoEpisodio() {
-            let animes =
+        // Gerar Inimigos no Modo Infinito
+        if (this.currentMode === 'endless' && Math.random() < 0.02) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.max(this.canvas.width, this.canvas.height) / 2 + 50;
+            const ex = this.player.x + Math.cos(angle) * dist;
+            const ey = this.player.y + Math.sin(angle
