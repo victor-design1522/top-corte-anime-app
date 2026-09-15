@@ -1,559 +1,544 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-
-// ==========================================
-// CONFIGURAÇÕES DO JOGO (SERVIDOR)
-// ==========================================
-const TICK_RATE = 60;
-const MAP_SIZE = 2500;
-const PLAYER_SPEED = 5;
-const PLAYER_RADIUS = 20;
-const BULLET_SPEED = 15;
-const MAX_PLAYERS = 20;
-const KILLS_TO_WIN = 10;
-
-const rooms = {};
-
-// Gera um mapa procedural
-function generateMap() {
-    const map = { walls: [], trees: [], rocks: [] };
-    // Bordas do mapa
-    map.walls.push({x: -50, y: -50, w: MAP_SIZE+100, h: 50}); // Topo
-    map.walls.push({x: -50, y: MAP_SIZE, w: MAP_SIZE+100, h: 50}); // Base
-    map.walls.push({x: -50, y: -50, w: 50, h: MAP_SIZE+100}); // Esq
-    map.walls.push({x: MAP_SIZE, y: -50, w: 50, h: MAP_SIZE+100}); // Dir
-
-    // Casas (Muros)
-    for(let i=0; i<15; i++) {
-        map.walls.push({
-            x: Math.random() * (MAP_SIZE - 200) + 100,
-            y: Math.random() * (MAP_SIZE - 200) + 100,
-            w: Math.random() * 150 + 50,
-            h: Math.random() * 150 + 50
-        });
-    }
-    // Árvores
-    for(let i=0; i<40; i++) {
-        map.trees.push({
-            x: Math.random() * MAP_SIZE,
-            y: Math.random() * MAP_SIZE,
-            r: Math.random() * 30 + 20
-        });
-    }
-    // Pedras
-    for(let i=0; i<30; i++) {
-        map.rocks.push({
-            x: Math.random() * MAP_SIZE,
-            y: Math.random() * MAP_SIZE,
-            r: Math.random() * 20 + 10
-        });
-    }
-    return map;
-}
-
-// Lógica de colisão Círculo vs Retângulo
-function checkCircleRect(circle, rect) {
-    let testX = circle.x; let testY = circle.y;
-    if (circle.x < rect.x) testX = rect.x; 
-    else if (circle.x > rect.x + rect.w) testX = rect.x + rect.w;
-    if (circle.y < rect.y) testY = rect.y; 
-    else if (circle.y > rect.y + rect.h) testY = rect.y + rect.h;
-    let distX = circle.x - testX; let distY = circle.y - testY;
-    return (distX*distX + distY*distY) <= (circle.r*circle.r);
-}
-
-// Lógica Círculo vs Círculo
-function checkCircleCircle(c1, c2) {
-    let dx = c1.x - c2.x; let dy = c1.y - c2.y;
-    return (dx*dx + dy*dy) <= ((c1.r + c2.r) * (c1.r + c2.r));
-}
-
-io.on('connection', (socket) => {
-    socket.on('joinRoom', ({ name, roomId }) => {
-        if (!rooms[roomId]) {
-            rooms[roomId] = { map: generateMap(), players: {}, bullets: [], over: false };
-        }
-        if (Object.keys(rooms[roomId].players).length >= MAX_PLAYERS) {
-            socket.emit('error', 'Sala cheia!');
-            return;
-        }
-
-        socket.join(roomId);
-        socket.roomId = roomId;
-        
-        rooms[roomId].players[socket.id] = {
-            id: socket.id, name: name.substring(0,10),
-            x: Math.random() * (MAP_SIZE-100) + 50, y: Math.random() * (MAP_SIZE-100) + 50,
-            r: PLAYER_RADIUS, angle: 0, hp: 100, kills: 0, dead: false
-        };
-
-        socket.emit('init', { map: rooms[roomId].map, id: socket.id, MAP_SIZE });
-        io.to(roomId).emit('chat', { sender: 'Sistema', msg: `${name} entrou na partida!` });
-    });
-
-    socket.on('input', (data) => {
-        const room = rooms[socket.roomId];
-        if(!room || !room.players[socket.id] || room.players[socket.id].dead || room.over) return;
-        
-        let p = room.players[socket.id];
-        let oldX = p.x; let oldY = p.y;
-        
-        p.angle = data.angle;
-        p.x += data.dx * PLAYER_SPEED;
-        p.y += data.dy * PLAYER_SPEED;
-
-        // Colisões com o mapa (Paredes)
-        room.map.walls.forEach(w => {
-            if (checkCircleRect(p, w)) { p.x = oldX; p.y = oldY; }
-        });
-        room.map.rocks.forEach(rock => {
-            if (checkCircleCircle(p, rock)) { p.x = oldX; p.y = oldY; }
-        });
-
-        // Tiro
-        if (data.fire && (!p.lastFire || Date.now() - p.lastFire > 200)) {
-            p.lastFire = Date.now();
-            room.bullets.push({
-                id: Math.random(), ownerId: p.id,
-                x: p.x + Math.cos(p.angle) * 30, y: p.y + Math.sin(p.angle) * 30,
-                vx: Math.cos(p.angle) * BULLET_SPEED, vy: Math.sin(p.angle) * BULLET_SPEED,
-                life: 60, r: 5
-            });
-            io.to(socket.roomId).emit('sound', 'shoot');
-        }
-    });
-
-    socket.on('chat', (msg) => {
-        const room = rooms[socket.roomId];
-        if(room && room.players[socket.id]) {
-            io.to(socket.roomId).emit('chat', { sender: room.players[socket.id].name, msg: msg.substring(0, 50) });
-        }
-    });
-
-    socket.on('disconnect', () => {
-        const room = rooms[socket.roomId];
-        if (room && room.players[socket.id]) {
-            io.to(socket.roomId).emit('chat', { sender: 'Sistema', msg: `${room.players[socket.id].name} saiu.` });
-            delete room.players[socket.id];
-            if (Object.keys(room.players).length === 0) delete rooms[socket.roomId];
-        }
-    });
-});
-
-// Loop de Física do Servidor
-setInterval(() => {
-    for (let roomId in rooms) {
-        let room = rooms[roomId];
-        if(room.over) continue;
-
-        // Move Bullets
-        for (let i = room.bullets.length - 1; i >= 0; i--) {
-            let b = room.bullets[i];
-            b.x += b.vx; b.y += b.vy; b.life--;
-
-            let hit = false;
-            // Colisão Tiro vs Parede
-            room.map.walls.forEach(w => { if(checkCircleRect(b, w)) hit = true; });
-            room.map.rocks.forEach(r => { if(checkCircleCircle(b, r)) hit = true; });
-
-            // Colisão Tiro vs Player
-            for (let pid in room.players) {
-                let p = room.players[pid];
-                if (!p.dead && pid !== b.ownerId && checkCircleCircle(b, p)) {
-                    hit = true;
-                    p.hp -= 20;
-                    io.to(roomId).emit('sound', 'hit');
-                    io.to(roomId).emit('particle', {x: p.x, y: p.y, color: '#f00'});
-
-                    if (p.hp <= 0) {
-                        p.dead = true;
-                        p.hp = 0;
-                        if(room.players[b.ownerId]) room.players[b.ownerId].kills++;
-                        io.to(roomId).emit('sound', 'die');
-                        io.to(roomId).emit('chat', { sender: 'Sistema', msg: `${p.name} foi eliminado por ${room.players[b.ownerId].name}` });
-                        
-                        // Checa Vitória
-                        if (room.players[b.ownerId].kills >= KILLS_TO_WIN) {
-                            room.over = true;
-                            io.to(roomId).emit('victory', room.players[b.ownerId].name);
-                            setTimeout(() => {
-                                delete rooms[roomId];
-                                io.to(roomId).disconnectSockets();
-                            }, 5000);
-                        } else {
-                            // Respawn
-                            setTimeout(() => {
-                                if(room.players[pid]) {
-                                    room.players[pid].x = Math.random() * (MAP_SIZE-100) + 50;
-                                    room.players[pid].y = Math.random() * (MAP_SIZE-100) + 50;
-                                    room.players[pid].hp = 100;
-                                    room.players[pid].dead = false;
-                                }
-                            }, 3000);
-                        }
-                    }
-                }
-            }
-            if (hit || b.life <= 0) {
-                if(hit) io.to(roomId).emit('particle', {x: b.x, y: b.y, color: '#ff0'});
-                room.bullets.splice(i, 1);
-            }
-        }
-        // Envia estado atual para os jogadores
-        io.to(roomId).emit('update', { players: room.players, bullets: room.bullets });
-    }
-}, 1000 / TICK_RATE);
-
-// ==========================================
-// FRONT-END HTML + CSS + JS EMBARCADO
-// ==========================================
-const HTML_CONTENT = `
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Canvas Shooter MMO</title>
+    <title>FF Sensi Pro AI</title>
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; background: #222; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
-        canvas { display: block; }
-        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        /* Variáveis de Cor e Tema */
+        :root {
+            --primary: #ff0000;
+            --primary-glow: rgba(255, 0, 0, 0.6);
+            --bg-grad-1: #0a0a0a;
+            --bg-grad-2: #1a0000;
+            --card-bg: #111111;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Reset Básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Animações */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 5px var(--primary); } 50% { box-shadow: 0 0 15px var(--primary), 0 0 25px var(--primary); } 100% { box-shadow: 0 0 5px var(--primary); } }
+
+        /* Estrutura Principal */
+        #app {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        /* Cabeçalho */
+        header {
+            text-align: center;
+            padding: 25px 15px 15px;
+            background: linear-gradient(to bottom, #110000, transparent);
+            border-bottom: 1px solid rgba(255, 0, 0, 0.2);
+        }
+        header h1 {
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--primary);
+        }
+        header h1 span { color: var(--primary); }
+        header p {
+            color: var(--primary);
+            font-size: 12px;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        /* Navegação */
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            gap: 10px;
+        }
+        .nav-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+        .nav-btn.active {
+            color: var(--text-main);
+            border-color: var(--primary);
+            background: rgba(255, 0, 0, 0.1);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        /* Containers de Telas */
+        .screen { display: none; padding: 15px; animation: fadeIn 0.4s ease forwards; flex: 1; }
+        .screen.active { display: block; }
+
+        /* Formulários e Inputs */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 14px; margin-bottom: 6px; color: #ddd; }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: var(--card-bg);
+            border: 1px solid #333;
+            color: var(--text-main);
+            border-radius: 8px;
+            outline: none;
+            transition: 0.3s;
+            font-size: 15px;
+            appearance: none; /* Para selects */
+        }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 8px var(--primary-glow); }
+        select.form-control { background-image: linear-gradient(45deg, transparent 50%, var(--primary) 50%), linear-gradient(135deg, var(--primary) 50%, transparent 50%); background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px); background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+
+        /* Botões Globais */
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+            animation: pulseGlow 2s infinite;
+        }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-secondary { background: #222; border: 1px solid var(--primary); color: #fff; padding: 10px; border-radius: 6px; cursor: pointer; transition: 0.3s; font-size: 14px; width: 100%; margin-top: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-secondary:active { background: var(--primary); }
+
+        /* Cards de Resultado e Histórico */
+        .result-card, .history-card {
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.15);
+            position: relative;
+        }
+        .history-card { margin-top: 0; margin-bottom: 15px; padding: 15px; }
         
-        /* Telas (Menu / Vitória) */
-        #menu, #victory { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; z-index: 100; }
-        .box { background: #333; padding: 30px; border-radius: 10px; text-align: center; color: white; box-shadow: 0 0 20px rgba(0,0,0,0.5); border: 2px solid #555; }
-        input { padding: 10px; margin: 10px 0; width: 80%; border-radius: 5px; border: none; font-size: 16px; text-align: center; }
-        button { padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
-        button:hover { background: #c0392b; }
+        .result-header { text-align: center; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .result-header h3 { color: var(--primary); font-size: 20px; }
+        .result-header p { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+        .sensi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .sensi-item { background: #1a1a1a; padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--primary); }
+        .sensi-label { font-size: 13px; color: #ccc; }
+        .sensi-value { font-weight: bold; font-size: 16px; color: var(--primary); text-shadow: 0 0 5px var(--primary-glow); }
+
+        /* Ícones em CSS (Formas geométricas) */
+        .icon { display: inline-block; position: relative; }
+        .icon-copy { width: 14px; height: 16px; border: 2px solid #fff; border-radius: 2px; }
+        .icon-copy::after { content: ''; position: absolute; top: 4px; left: 4px; width: 14px; height: 16px; border: 2px solid #fff; border-radius: 2px; background: transparent; border-top: none; border-left: none; }
         
-        /* HUD */
-        #hud { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
-        #ranking { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5); color: white; padding: 10px; border-radius: 5px; pointer-events: auto; font-size: 12px; }
+        .icon-save { width: 16px; height: 16px; border: 2px solid #fff; border-radius: 2px; }
+        .icon-save::before { content: ''; position: absolute; top: 0; left: 3px; width: 6px; height: 6px; border: 1px solid #fff; border-top: none; }
+        .icon-save::after { content: ''; position: absolute; bottom: 0; left: 2px; width: 8px; height: 4px; border: 1px solid #fff; border-bottom: none; background: #fff; }
+
+        .icon-trash { width: 12px; height: 14px; border: 2px solid #fff; border-top: none; border-radius: 0 0 3px 3px; margin-top: 2px; }
+        .icon-trash::before { content: ''; position: absolute; top: -4px; left: -3px; width: 14px; height: 2px; background: #fff; }
+        .icon-trash::after { content: ''; position: absolute; top: -6px; left: 2px; width: 4px; height: 2px; background: #fff; }
+
+        /* Notificação (Toast) */
+        #toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 14px; font-weight: bold; box-shadow: 0 0 10px var(--primary-glow); transition: 0.3s; z-index: 1000; }
+        #toast.show { bottom: 20px; }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 11px;
+            color: var(--text-muted);
+            background: #0a0a0a;
+            border-top: 1px solid #222;
+            margin-top: auto;
+        }
+
+        /* Mensagem de Vazio */
+        .empty-msg { text-align: center; color: var(--text-muted); padding: 30px 10px; font-size: 14px; }
         
-        /* Chat */
-        #chat-container { position: absolute; bottom: 80px; left: 10px; width: 300px; max-height: 150px; display: flex; flex-direction: column; pointer-events: auto; }
-        #chat-msgs { flex: 1; overflow-y: auto; color: white; font-size: 12px; text-shadow: 1px 1px 0 #000; margin-bottom: 5px; }
-        #chat-input { padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #555; color: white; width: 100%; border-radius: 3px; }
-        
-        /* Controles Mobile */
-        .mobile-control { display: none; position: absolute; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; pointer-events: auto; }
-        #joystick-area { bottom: 30px; left: 30px; width: 120px; height: 120px; }
-        #joystick-knob { position: absolute; top: 35px; left: 35px; width: 50px; height: 50px; background: rgba(255,255,255,0.5); border-radius: 50%; }
-        #btn-fire { bottom: 40px; right: 40px; width: 90px; height: 90px; background: rgba(231, 76, 60, 0.4); }
-        #btn-fire:active { background: rgba(231, 76, 60, 0.8); }
-        
-        @media (max-width: 800px) { .mobile-control { display: block; } }
+        /* Utilitários */
+        .flex-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-delete { background: #330000; border: 1px solid #ff0000; width: auto; padding: 10px 15px; }
     </style>
 </head>
 <body>
-    <div id="menu">
-        <div class="box">
-            <h1 style="margin-top:0; color: #e74c3c;">BATTLE CANVAS</h1>
-            <input type="text" id="ipt-name" placeholder="Seu Apelido" maxlength="10">
-            <input type="text" id="ipt-room" placeholder="Código da Sala (ex: sala1)">
-            <button onclick="joinGame()">Entrar na Batalha</button>
-            <p style="font-size:12px; color:#aaa; margin-top:20px;">Use WASD + Mouse no PC, ou Touch no Celular.</p>
-        </div>
+
+    <div id="app">
+        <header>
+            <h1>FF Sensi <span>Pro AI</span></h1>
+            <p>CRIADO POR VYTOR FF</p>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" onclick="switchTab('gerador')">Gerador</button>
+            <button class="nav-btn" onclick="switchTab('historico')">Histórico</button>
+            <button class="nav-btn" onclick="switchTab('favoritos')">Favoritos</button>
+        </nav>
+
+        <!-- TELA: GERADOR -->
+        <main id="gerador" class="screen active">
+            <div class="form-group">
+                <label>Modelo do Celular:</label>
+                <input type="text" id="deviceInput" class="form-control" list="deviceList" placeholder="Ex: Poco X3, iPhone 13, Galaxy S22...">
+                <datalist id="deviceList">
+                    <!-- DB Simulado -->
+                    <option value="iPhone 11"><option value="iPhone 12"><option value="iPhone 13"><option value="iPhone 14"><option value="iPhone 15">
+                    <option value="Poco X3 Pro"><option value="Poco X4 Pro"><option value="Poco F3"><option value="Poco F4"><option value="Poco F5">
+                    <option value="Xiaomi Redmi Note 10"><option value="Xiaomi Redmi Note 11"><option value="Xiaomi Redmi Note 12">
+                    <option value="Samsung Galaxy S20"><option value="Samsung Galaxy S21"><option value="Samsung Galaxy S22"><option value="Samsung Galaxy S23">
+                    <option value="Samsung Galaxy A34"><option value="Samsung Galaxy A54"><option value="Samsung Galaxy A73">
+                    <option value="Motorola Moto G200"><option value="Motorola Edge 30"><option value="Asus ROG Phone 6">
+                </datalist>
+            </div>
+
+            <div class="form-group">
+                <label>Estilo de Jogo:</label>
+                <select id="playstyle" class="form-control">
+                    <option value="Capa">Capa (Foco em Headshot)</option>
+                    <option value="Rush">Rush (Movimentação Rápida)</option>
+                    <option value="X1">X1 (Sensibilidade Extrema)</option>
+                    <option value="Precisão">Precisão (Controle Total)</option>
+                    <option value="Sniper">Sniper (Foco em AWM/M82B)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Quantidade de Dedos (HUD):</label>
+                <select id="fingers" class="form-control">
+                    <option value="2">2 Dedos</option>
+                    <option value="3">3 Dedos</option>
+                    <option value="4" selected>4 Dedos</option>
+                    <option value="5">5 Dedos</option>
+                </select>
+            </div>
+
+            <button class="btn-primary" onclick="generateSensi()">Gerar Sensibilidade Inteligente</button>
+
+            <!-- Container do Resultado (Escondido até gerar) -->
+            <div id="resultContainer" class="result-card" style="display: none;">
+                <div class="result-header">
+                    <h3>Configuração Otimizada</h3>
+                    <p id="resultSubtitle">Recomendação IA para Aparelho X</p>
+                </div>
+                
+                <div class="sensi-grid">
+                    <div class="sensi-item"><span class="sensi-label">DPI</span><span class="sensi-value" id="resDpi">600</span></div>
+                    <div class="sensi-item"><span class="sensi-label">Geral</span><span class="sensi-value" id="resGeral">100</span></div>
+                    <div class="sensi-item"><span class="sensi-label">Ponto Vermelho</span><span class="sensi-value" id="resRedDot">95</span></div>
+                    <div class="sensi-item"><span class="sensi-label">Mira 2x</span><span class="sensi-value" id="res2x">98</span></div>
+                    <div class="sensi-item"><span class="sensi-label">Mira 4x</span><span class="sensi-value" id="res4x">100</span></div>
+                    <div class="sensi-item"><span class="sensi-label">AWM</span><span class="sensi-value" id="resAwm">50</span></div>
+                    <div class="sensi-item"><span class="sensi-label">Olhadinha</span><span class="sensi-value" id="resFreeLook">65</span></div>
+                    <div class="sensi-item"><span class="sensi-label">Botão de Tiro</span><span class="sensi-value" id="resFireBtn">55%</span></div>
+                </div>
+
+                <div class="flex-actions">
+                    <button class="btn-secondary" onclick="copyConfig()"><span class="icon icon-copy"></span> Copiar</button>
+                    <button class="btn-secondary" onclick="saveToFavorites()"><span class="icon icon-save"></span> Salvar</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- TELA: HISTÓRICO -->
+        <main id="historico" class="screen">
+            <div class="result-header" style="border:none; text-align:left;">
+                <h3 style="font-size: 18px;">Histórico de Pesquisas</h3>
+                <p>Suas últimas sensibilidades geradas.</p>
+            </div>
+            <div id="historyList"></div>
+        </main>
+
+        <!-- TELA: FAVORITOS -->
+        <main id="favoritos" class="screen">
+            <div class="result-header" style="border:none; text-align:left;">
+                <h3 style="font-size: 18px;">Minhas Favoritas</h3>
+                <p>Sensibilidades salvas por você.</p>
+            </div>
+            <div id="favoritesList"></div>
+        </main>
+
+        <footer>
+            Desenvolvido por VYTOR FF © Todos os direitos reservados.
+        </footer>
     </div>
 
-    <div id="victory" style="display:none;">
-        <div class="box">
-            <h1 style="color: #f1c40f;">VITÓRIA!</h1>
-            <h2 id="winner-name"></h2>
-            <p>A sala será reiniciada em breve...</p>
-        </div>
-    </div>
+    <!-- Toast Notification -->
+    <div id="toast">Mensagem</div>
 
-    <div id="hud">
-        <div id="ranking"><h3>Ranking (Kills)</h3><div id="rank-list"></div></div>
-        <div id="chat-container">
-            <div id="chat-msgs"></div>
-            <input type="text" id="chat-input" placeholder="Pressione Enter para falar..." onkeypress="sendChat(event)">
-        </div>
-        <!-- Joysticks -->
-        <div id="joystick-area" class="mobile-control"><div id="joystick-knob"></div></div>
-        <div id="btn-fire" class="mobile-control"></div>
-    </div>
-
-    <canvas id="gameCanvas"></canvas>
-
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        // CONFIGURAÇÕES DO CLIENTE E RENDERIZAÇÃO
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const socket = io();
-        
-        let gameState = { map: null, players: {}, bullets: [] };
-        let myId = null, mapSize = 0;
-        let particles = [];
-        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        
-        // INPUT STATE
-        let input = { dx: 0, dy: 0, angle: 0, fire: false };
-        let keys = {};
-        let mouse = { x: 0, y: 0 };
+        // Variável global para armazenar a última configuração gerada
+        let currentConfig = null;
 
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-
-        // ÁUDIO PROCEDURAL (Web Audio API)
-        let audioCtx;
-        function initAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-        function playSnd(type) {
-            if(!audioCtx || audioCtx.state !== 'running') return;
-            let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            let now = audioCtx.currentTime;
-            if(type === 'shoot') {
-                osc.type = 'square'; osc.frequency.setValueAtTime(400, now); osc.frequency.exponentialRampToValueAtTime(100, now+0.1);
-                gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.1);
-                osc.start(now); osc.stop(now+0.1);
-            } else if(type === 'hit') {
-                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.linearRampToValueAtTime(50, now+0.1);
-                gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0.01, now+0.1);
-                osc.start(now); osc.stop(now+0.1);
-            } else if(type === 'die') {
-                osc.type = 'sine'; osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(10, now+0.5);
-                gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now+0.5);
-                osc.start(now); osc.stop(now+0.5);
-            }
-        }
-
-        // REDE (SOCKETS)
-        function joinGame() {
-            const name = document.getElementById('ipt-name').value || 'Jogador';
-            const room = document.getElementById('ipt-room').value || 'geral';
-            initAudio(); if(audioCtx.state === 'suspended') audioCtx.resume();
-            socket.emit('joinRoom', { name, roomId: room });
-        }
-
-        socket.on('init', (data) => {
-            document.getElementById('menu').style.display = 'none';
-            document.getElementById('hud').style.display = 'block';
-            gameState.map = data.map; myId = data.id; mapSize = data.MAP_SIZE;
-            requestAnimationFrame(gameLoop);
-        });
-
-        socket.on('update', (data) => {
-            gameState.players = Object.assign(gameState.players, data.players);
-            gameState.bullets = data.bullets;
-            updateRanking();
-        });
-
-        socket.on('chat', (data) => {
-            let div = document.getElementById('chat-msgs');
-            div.innerHTML += \`<div><b style="color:#e74c3c">\${data.sender}:</b> \${data.msg}</div>\`;
-            div.scrollTop = div.scrollHeight;
-        });
-
-        socket.on('sound', playSnd);
-        socket.on('particle', (p) => {
-            for(let i=0; i<10; i++) particles.push({
-                x: p.x, y: p.y, 
-                vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10,
-                life: 30, color: p.color
-            });
-        });
-
-        socket.on('victory', (name) => {
-            document.getElementById('victory').style.display = 'flex';
-            document.getElementById('winner-name').innerText = name;
-            setTimeout(() => location.reload(), 5000);
-        });
-
-        socket.on('error', (msg) => { alert(msg); });
-
-        // CONTROLES
-        // Teclado PC
-        window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
-        window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
-        
-        // Mouse PC
-        canvas.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        canvas.addEventListener('mousedown', () => input.fire = true);
-        canvas.addEventListener('mouseup', () => input.fire = false);
-
-        // Joystick Mobile
-        const joyArea = document.getElementById('joystick-area');
-        const joyKnob = document.getElementById('joystick-knob');
-        let joyActive = false; let joyCenter = {x:0, y:0};
-        
-        joyArea.addEventListener('touchstart', e => {
-            e.preventDefault(); joyActive = true;
-            let rect = joyArea.getBoundingClientRect();
-            joyCenter = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
-            handleJoyMove(e.touches[0]);
-        });
-        joyArea.addEventListener('touchmove', e => { e.preventDefault(); if(joyActive) handleJoyMove(e.touches[0]); });
-        joyArea.addEventListener('touchend', e => { e.preventDefault(); joyActive = false; input.dx=0; input.dy=0; joyKnob.style.transform = \`translate(0px, 0px)\`; });
-        
-        function handleJoyMove(t) {
-            let dx = t.clientX - joyCenter.x; let dy = t.clientY - joyCenter.y;
-            let dist = Math.sqrt(dx*dx + dy*dy);
-            let maxDist = 35;
-            if(dist > maxDist) { dx = (dx/dist)*maxDist; dy = (dy/dist)*maxDist; }
-            joyKnob.style.transform = \`translate(\${dx}px, \${dy}px)\`;
-            input.dx = dx/maxDist; input.dy = dy/maxDist;
-            input.angle = Math.atan2(dy, dx);
-        }
-
-        const btnFire = document.getElementById('btn-fire');
-        btnFire.addEventListener('touchstart', e => { e.preventDefault(); input.fire = true; });
-        btnFire.addEventListener('touchend', e => { e.preventDefault(); input.fire = false; });
-
-        // Chat input
-        function sendChat(e) {
-            if(e.key === 'Enter') {
-                let ipt = document.getElementById('chat-input');
-                if(ipt.value.trim() !== '') { socket.emit('chat', ipt.value); ipt.value = ''; }
-                ipt.blur();
-            }
-        }
-
-        // LOOP DE RENDERIZAÇÃO
-        function gameLoop() {
-            const p = gameState.players[myId];
-            if(!p) return requestAnimationFrame(gameLoop);
-
-            // Atualiza Input localmente e manda pro server
-            if(!isMobile) {
-                input.dx = (keys['d']?1:0) - (keys['a']?1:0);
-                input.dy = (keys['s']?1:0) - (keys['w']?1:0);
-                // Normaliza diagonal
-                if(input.dx!=0 && input.dy!=0) { input.dx*=0.707; input.dy*=0.707; }
-                input.angle = Math.atan2(mouse.y - canvas.height/2, mouse.x - canvas.width/2);
-            }
-            socket.emit('input', input);
-
-            // Câmera
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.save();
-            ctx.translate(canvas.width/2 - p.x, canvas.height/2 - p.y);
-
-            // Desenha Chão/Fundo (Grid)
-            ctx.fillStyle = '#3a5b3a'; ctx.fillRect(-50, -50, mapSize+100, mapSize+100);
-            ctx.strokeStyle = 'rgba(0,0,0,0.1)'; ctx.lineWidth = 1;
-            for(let i=0; i<mapSize; i+=100) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, mapSize); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(mapSize, i); ctx.stroke();
-            }
-
-            if(gameState.map) {
-                // Desenha Pedras
-                ctx.fillStyle = '#7f8c8d';
-                gameState.map.rocks.forEach(r => {
-                    ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, Math.PI*2); ctx.fill();
-                    ctx.strokeRect(r.x, r.y, 0, 0); // contorno fake
-                });
-                // Desenha Paredes
-                ctx.fillStyle = '#8e44ad'; ctx.strokeStyle = '#2c3e50'; ctx.lineWidth = 4;
-                gameState.map.walls.forEach(w => {
-                    ctx.fillRect(w.x, w.y, w.w, w.h); ctx.strokeRect(w.x, w.y, w.w, w.h);
-                });
-                // Desenha Árvores
-                ctx.fillStyle = '#27ae60'; ctx.strokeStyle = '#2ecc71';
-                gameState.map.trees.forEach(t => {
-                    ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, Math.PI*2);
-                    ctx.fill(); ctx.stroke();
-                });
-            }
-
-            // Desenha Tiros
-            ctx.fillStyle = '#f1c40f';
-            gameState.bullets.forEach(b => {
-                ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fill();
-            });
-
-            // Desenha Jogadores
-            for(let id in gameState.players) {
-                let o = gameState.players[id];
-                if(o.dead) continue;
-                
-                ctx.save();
-                ctx.translate(o.x, o.y);
-                ctx.rotate(o.angle);
-                
-                // Arma
-                ctx.fillStyle = '#7f8c8d';
-                ctx.fillRect(10, -5, 25, 10);
-                
-                // Corpo
-                ctx.beginPath(); ctx.arc(0, 0, o.r, 0, Math.PI*2);
-                ctx.fillStyle = id === myId ? '#3498db' : '#e74c3c';
-                ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#2c3e50'; ctx.stroke();
-                ctx.restore();
-
-                // Nome e HP
-                ctx.fillStyle = 'white'; ctx.font = '14px sans-serif'; ctx.textAlign = 'center';
-                ctx.fillText(o.name, o.x, o.y - 30);
-                
-                ctx.fillStyle = '#c0392b'; ctx.fillRect(o.x - 20, o.y + 25, 40, 6);
-                ctx.fillStyle = '#2ecc71'; ctx.fillRect(o.x - 20, o.y + 25, 40 * (o.hp/100), 6);
-            }
-
-            // Partículas
-            for(let i=particles.length-1; i>=0; i--) {
-                let p = particles[i];
-                p.x += p.vx; p.y += p.vy; p.life--;
-                ctx.globalAlpha = p.life / 30;
-                ctx.fillStyle = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
-                ctx.globalAlpha = 1;
-                if(p.life <= 0) particles.splice(i, 1);
-            }
-
-            ctx.restore();
+        // Navegação entre abas
+        function switchTab(tabId) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             
-            // Minimapa (Overlay)
-            drawMinimap(p);
-            requestAnimationFrame(gameLoop);
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabId === 'historico') loadList('historyList', 'ff_history');
+            if (tabId === 'favoritos') loadList('favoritesList', 'ff_favorites');
         }
 
-        function drawMinimap(me) {
-            const mmSize = 150;
-            const sx = canvas.width - mmSize - 10; const sy = canvas.height - mmSize - 10;
-            ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(sx, sy, mmSize, mmSize);
-            ctx.strokeStyle = 'white'; ctx.strokeRect(sx, sy, mmSize, mmSize);
+        // Função de Hash simples para gerar resultados "aleatórios mas consistentes" baseados no nome do aparelho
+        function hashStr(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return Math.abs(hash);
+        }
+
+        // Lógica Principal de Geração de Sensi
+        function generateSensi() {
+            const device = document.getElementById('deviceInput').value.trim() || 'Aparelho Desconhecido';
+            const style = document.getElementById('playstyle').value;
+            const fingers = document.getElementById('fingers').value;
+
+            // Seed consistente
+            const seed = hashStr(device.toLowerCase() + style);
+
+            // Bases (Variação criada através da seed)
+            let baseDpi, baseGeral, baseRedDot, base2x, base4x, baseAwm, baseLook, baseBtn;
+
+            // Ajuste do Botão de tiro baseado nos dedos e no aparelho (40% a 65%)
+            baseBtn = 40 + (seed % 25);
+            if(fingers === "2") baseBtn += 5; 
+            if(fingers >= "4") baseBtn -= 5;
+
+            // Ajustes baseados no estilo de jogo
+            switch(style) {
+                case 'Capa':
+                    baseDpi = 600 + (seed % 300); // 600 - 900
+                    baseGeral = 90 + (seed % 10); // 90 - 100
+                    baseRedDot = 85 + (seed % 15); 
+                    base2x = 90 + (seed % 10);
+                    base4x = 90 + (seed % 10);
+                    baseAwm = 30 + (seed % 20);
+                    break;
+                case 'Rush':
+                    baseDpi = 500 + (seed % 250);
+                    baseGeral = 100;
+                    baseRedDot = 95 + (seed % 5);
+                    base2x = 100;
+                    base4x = 95 + (seed % 5);
+                    baseAwm = 50 + (seed % 20);
+                    break;
+                case 'X1':
+                    baseDpi = 700 + (seed % 260); // Max 960
+                    baseGeral = 100;
+                    baseRedDot = 100;
+                    base2x = 100;
+                    base4x = 100;
+                    baseAwm = 40 + (seed % 20);
+                    break;
+                case 'Precisão':
+                    baseDpi = 411 + (seed % 200); // Mais baixa para n tremer
+                    baseGeral = 80 + (seed % 15);
+                    baseRedDot = 75 + (seed % 15);
+                    base2x = 80 + (seed % 15);
+                    base4x = 80 + (seed % 15);
+                    baseAwm = 20 + (seed % 20);
+                    break;
+                case 'Sniper':
+                    baseDpi = 450 + (seed % 150);
+                    baseGeral = 85 + (seed % 10);
+                    baseRedDot = 80 + (seed % 10);
+                    base2x = 80 + (seed % 15);
+                    base4x = 75 + (seed % 15);
+                    baseAwm = 10 + (seed % 25); // Especialidade
+                    break;
+            }
+
+            // Olhadinha varia de 50 a 100
+            baseLook = 50 + (seed % 50);
+
+            // Regra especial para Apple (Geralmente não usam alteração de DPI nativa)
+            let isApple = device.toLowerCase().includes('iphone') || device.toLowerCase().includes('ipad');
+            let dpiDisplay = isApple ? "Padrão" : baseDpi;
+
+            // Objeto com a config final
+            currentConfig = {
+                id: Date.now(),
+                device: device,
+                style: style,
+                fingers: fingers,
+                dpi: dpiDisplay,
+                geral: baseGeral,
+                redDot: baseRedDot,
+                m2x: base2x,
+                m4x: base4x,
+                awm: baseAwm,
+                look: baseLook,
+                fireBtn: baseBtn
+            };
+
+            // Atualizar UI
+            document.getElementById('resultSubtitle').innerText = `${device} | ${style} | ${fingers} Dedos`;
+            document.getElementById('resDpi').innerText = currentConfig.dpi;
+            document.getElementById('resGeral').innerText = currentConfig.geral;
+            document.getElementById('resRedDot').innerText = currentConfig.redDot;
+            document.getElementById('res2x').innerText = currentConfig.m2x;
+            document.getElementById('res4x').innerText = currentConfig.m4x;
+            document.getElementById('resAwm').innerText = currentConfig.awm;
+            document.getElementById('resFreeLook').innerText = currentConfig.look;
+            document.getElementById('resFireBtn').innerText = currentConfig.fireBtn + "%";
+
+            // Mostrar container
+            document.getElementById('resultContainer').style.display = 'block';
+
+            // Scrollar para o resultado
+            document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
+
+            // Salvar no histórico
+            saveToStorage('ff_history', currentConfig, 10); // Limite de 10 no histórico
             
-            let scale = mmSize / mapSize;
-            for(let id in gameState.players) {
-                let p = gameState.players[id];
-                if(p.dead) continue;
-                ctx.fillStyle = id === myId ? '#3498db' : '#e74c3c';
-                ctx.beginPath();
-                ctx.arc(sx + p.x * scale, sy + p.y * scale, 3, 0, Math.PI*2);
-                ctx.fill();
+            showToast("Sensibilidade Inteligente Gerada!");
+        }
+
+        // Função para Copiar
+        function copyConfig() {
+            if(!currentConfig) return;
+            const texto = `🔥 FF SENSI PRO AI - VYTOR FF 🔥
+📱 Aparelho: ${currentConfig.device}
+🎮 Estilo: ${currentConfig.style} | HUD: ${currentConfig.fingers} Dedos
+⚙️ DPI: ${currentConfig.dpi}
+🎯 Geral: ${currentConfig.geral}
+🔴 Ponto Vermelho: ${currentConfig.redDot}
+🔎 Mira 2x: ${currentConfig.m2x}
+🔭 Mira 4x: ${currentConfig.m4x}
+🎯 AWM: ${currentConfig.awm}
+👀 Olhadinha: ${currentConfig.look}
+🔘 Botão de Tiro: ${currentConfig.fireBtn}%
+© Desenvolvido por VYTOR FF`;
+
+            navigator.clipboard.writeText(texto).then(() => {
+                showToast("Configuração Copiada!");
+            }).catch(() => {
+                showToast("Erro ao copiar.");
+            });
+        }
+
+        // Gerenciamento de LocalStorage
+        function saveToFavorites() {
+            if(!currentConfig) return;
+            saveToStorage('ff_favorites', currentConfig, 20); // Limite de 20 favs
+            showToast("Salvo nos Favoritos!");
+        }
+
+        function saveToStorage(key, item, limit) {
+            let data = JSON.parse(localStorage.getItem(key)) || [];
+            // Se for favoritos, checar duplicata
+            if(key === 'ff_favorites') {
+                const exists = data.find(d => d.device === item.device && d.style === item.style);
+                if(exists) return; // já favoritado
+            }
+            data.unshift(item); // Adiciona no início
+            if(data.length > limit) data.pop(); // Remove o mais antigo
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function deleteFromStorage(key, id) {
+            let data = JSON.parse(localStorage.getItem(key)) || [];
+            data = data.filter(item => item.id !== id);
+            localStorage.setItem(key, JSON.stringify(data));
+            loadList(key === 'ff_history' ? 'historyList' : 'favoritesList', key);
+            showToast("Item removido.");
+        }
+
+        // Carregar listas (Histórico/Favoritos)
+        function loadList(containerId, storageKey) {
+            const container = document.getElementById(containerId);
+            const data = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<div class="empty-msg">Nenhuma configuração encontrada aqui.</div>';
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'history-card';
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:8px; margin-bottom:10px;">
+                        <h4 style="color:var(--primary); font-size:15px;">${item.device}</h4>
+                        <span style="font-size:11px; color:#888;">${item.style}</span>
+                    </div>
+                    <div class="sensi-grid" style="grid-template-columns: repeat(4, 1fr); gap:5px;">
+                        <div style="text-align:center; background:#1a1a1a; padding:5px; border-radius:4px;"><div style="font-size:10px; color:#aaa;">DPI</div><div style="color:var(--primary); font-weight:bold; font-size:12px;">${item.dpi}</div></div>
+                        <div style="text-align:center; background:#1a1a1a; padding:5px; border-radius:4px;"><div style="font-size:10px; color:#aaa;">Geral</div><div style="color:var(--primary); font-weight:bold; font-size:12px;">${item.geral}</div></div>
+                        <div style="text-align:center; background:#1a1a1a; padding:5px; border-radius:4px;"><div style="font-size:10px; color:#aaa;">2x</div><div style="color:var(--primary); font-weight:bold; font-size:12px;">${item.m2x}</div></div>
+                        <div style="text-align:center; background:#1a1a1a; padding:5px; border-radius:4px;"><div style="font-size:10px; color:#aaa;">4x</div><div style="color:var(--primary); font-weight:bold; font-size:12px;">${item.m4x}</div></div>
+                    </div>
+                    <div class="flex-actions" style="margin-top:10px; gap:5px;">
+                        <button class="btn-secondary" style="padding:6px; font-size:12px;" onclick="copySpecific(${item.id}, '${storageKey}')">Copiar</button>
+                        <button class="btn-secondary btn-delete" style="padding:6px;" onclick="deleteFromStorage('${storageKey}', ${item.id})"><span class="icon icon-trash"></span></button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Copiar de listas específicas
+        function copySpecific(id, key) {
+            const data = JSON.parse(localStorage.getItem(key)) || [];
+            const item = data.find(d => d.id === id);
+            if(item) {
+                // Seta temporariamente para copiar
+                const temp = currentConfig;
+                currentConfig = item;
+                copyConfig();
+                currentConfig = temp;
             }
         }
 
-        function updateRanking() {
-            let list = Object.values(gameState.players).sort((a,b) => b.kills - a.kills);
-            let html = '';
-            list.forEach((p, i) => {
-                html += \`<div>\${i+1}. \${p.name} - \${p.kills} ⚔️</div>\`;
-            });
-            document.getElementById('rank-list').innerHTML = html;
+        // Sistema de Toast
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
     </script>
 </body>
 </html>
-`;
-
-// Servir a aplicação enviando a string HTML diretamente (Sem precisar criar arquivo)
-app.get('/', (req, res) => {
-    res.send(HTML_CONTENT);
-});
-
-// Inicialização
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(\`✅ BATTLE CANVAS LIGADO!\`);
-    console.log(\`Jogue abrindo o navegador em: http://localhost:\${PORT}\`);
-    console.log(\`Para jogar pelo celular, conecte no mesmo Wi-Fi e acesse o IP do seu PC na porta \${PORT}.\`);
-});
